@@ -17,10 +17,25 @@ rm "$PARENTPATH/paralelo/"wrf*
 
 # TODO(ericmiguel): descompactar ARW e WPS aqui
 
+echo "descompactando WPS..."
+tar -zxvf "$PARENTPATH/paralelo/"wps* -C "$PARENTPATH/paralelo/"
+rm "$PARENTPATH/paralelo/"wps*
+
+echo "descompactando ARWPost..."
+tar -zxvf "$PARENTPATH/paralelo/"arw* -C "$PARENTPATH/paralelo/"
+rm "$PARENTPATH/paralelo/"arw*
+
 echo "descompactando dependências..."
 ARQS="$PARENTPATH/paralelo/bibliotecas/"*.gz
 for arq in $ARQS; do
     tar -zxvf $arq -C "$PARENTPATH/paralelo/bibliotecas/"
     rm $arq
 done
+
+# baixando dados geograficos
+cd "$PARENTPATH/paralelo/"
+echo "Baixando dados geograficos..."
+wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz" 
+tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
+rm "$PARENTPATH/paralelo/"geog*
 
