@@ -52,7 +52,7 @@ cd "$PARENTPATH/paralelo/WPS"
 # 3 = opção(Linux x86_64, gfortran(dmpar))
 
 echo "3" | ./configure
-sed -i ‘42s/WRFV3/WRF/g’ configure.wps
+sed -i '42s/WRFV3/WRF/g' configure.wps
 
 # compilando WPS
 echo "compilando WPS. Aguarde..."

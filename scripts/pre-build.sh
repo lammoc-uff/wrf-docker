@@ -33,9 +33,17 @@ for arq in $ARQS; do
 done
 
 # baixando dados geograficos
-cd "$PARENTPATH/paralelo/"
+echo "Criando Volume para os dados geográficos.."
+sudo docker volume create GEOG_volume
+cd "$PARENTPATH/../docker/volumes/GEOG_volume"
 echo "Baixando dados geograficos..."
-wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz" 
-tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
-rm "$PARENTPATH/paralelo/"geog*
+sudo wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz"
+sudo tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
+
+#cd "$PARENTPATH"
+#echo "Baixando dados geograficos..."
+#wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz" 
+#tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
+#rm "$PARENTPATH/"geog*
+
 
