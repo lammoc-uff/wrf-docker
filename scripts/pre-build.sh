@@ -10,6 +10,7 @@ mv "$PARENTPATH/downloads/"wrf* "$PARENTPATH/paralelo"
 mv "$PARENTPATH/downloads/"arw* "$PARENTPATH/paralelo"
 mv "$PARENTPATH/downloads/"wps* "$PARENTPATH/paralelo"
 mv "$PARENTPATH/downloads/"*.tar.gz "$PARENTPATH/paralelo/bibliotecas"
+cd "$PARENTPATH/paralelo" && mkdir GEOG_files   #arquivos geográficos do volume sem sobrepor os arq. do paralelo
 
 echo "descompactando modelo..."
 tar -zxvf "$PARENTPATH/paralelo/"wrf* -C "$PARENTPATH/paralelo/"

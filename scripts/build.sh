@@ -60,7 +60,7 @@ echo "compilando WPS. Aguarde..."
 
 # alterando caminho dos dados geograficos no namelist do wps
 cd "$PARENTPATH/paralelo/WPS"
-sed -i '39s+glade/p/work/wrfhelp/WPS_GEOG+'$PARENTPATH'/paralelo/WPS_GEOG+g' namelist.wps
+sed -i '39s+glade/p/work/wrfhelp/WPS_GEOG+'$PARENTPATH'/paralelo/GEOG_files/WPS_GEOG+g' namelist.wps
 
 # se tudo deu certo, aparecerÃo 3 executaveis do geogrid, metgrid e ungrib no diretorio WPS
 
