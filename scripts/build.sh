@@ -87,4 +87,8 @@ cp -r include ../../
 cd "$PARENTPATH/paralelo/ARWpost"
 ./compile
 
-# Download e instalaÇÃo do grads
+# InstalaÇÃo do GrADS
+cd "$PARENTPATH/paralelo"
+mv grads-2.0.2 /opt/
+cd
+#sed -i "18i export PATH=/opt/grads-2.0.2/bin:$PATH" .bashrc

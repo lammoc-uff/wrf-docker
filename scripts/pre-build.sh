@@ -41,10 +41,13 @@ echo "Baixando dados geograficos..."
 sudo wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz"
 sudo tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
 
-#cd "$PARENTPATH"
-#echo "Baixando dados geograficos..."
-#wget "https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz" 
-#tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
-#rm "$PARENTPATH/"geog*
+# Criando diretorio do GFS e Volume para receber os arquivos de entrada
+cd "$PARENTPATH/paralelo/WRF" && mkdir GFS
+sudo docker volume create GFS_volume
 
-
+# Download do GrADS e descompactação
+echo "Baixando GrADS.."
+cd "$PARENTPATH/paralelo"
+wget "ftp://cola.gmu.edu/grads/2.0/grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz"
+tar -zxvf grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
+rm grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
