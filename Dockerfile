@@ -15,6 +15,8 @@ RUN apt-get update
 RUN apt-get install csh
 # opcional, porém útil para inspeção em modo interativo
 RUN apt-get install nano
+# caso queira editar algum script dentro do container
+RUN apt-get install -y vim
 
 # configuração das variáveis de ambiente
 ENV CC /usr/local/bin/gcc
@@ -31,8 +33,8 @@ ENV CPPFLAGS -I/usr/local/grib2/include
 ENV NETCDF /usr/local/netcdf
 ENV NETCDF_classic 1
 ENV MPI /usr/local/mpich
-ENV LD_LIBRAY_PATH $LD_LIBRARY_PATH:/usr/local/grib2/lib:/usr/local/lib:$MPI/lib
-ENV PATH="/opt/opengrads:$MPI/bin:${PATH}"
+ENV LD_LIBRARY_PATH=/usr/local/grib2/lib:$LD_LIBRARY_PATH
+ENV PATH="/opt/grads-2.0.2/bin:$PATH"
 
 # instalação das dependências
 RUN bash ./scripts/build.sh
