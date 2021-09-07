@@ -1,6 +1,6 @@
 # LAMMOC WRFv4
 
-Automação de instalação do modelo WRFv4.
+Automação de instalação do modelo WRFv4
 
 ## :warning: Pré-requisitos
 
@@ -151,6 +151,11 @@ O processo de construção da imagem deverá levar algo entre 15 e 30 minutos po
 Se tudo der certo (e provavelmente vai dar, por que é Linux), você deve receber esta mensagem no fim do processo:
 
 ![mensagem_final_compilacao_wrf](https://user-images.githubusercontent.com/12076399/126083031-2ef3a98e-b6ce-4ebc-8cd8-f0c6474e6d74.png)
+
+Se a compilação do WPS for bem sucedida, serão criados três executáveis no diretório WPS:
+geogrid.exe -> geogrid/src/geogrid.exe
+ungrib.exe -> ungrib/src/ungrib.exe
+metgrid.exe -> metgrid/src/metgrid.exe
 
 ### Execução
 
