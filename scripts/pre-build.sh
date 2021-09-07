@@ -16,7 +16,7 @@ echo "descompactando modelo..."
 tar -zxvf "$PARENTPATH/paralelo/"wrf* -C "$PARENTPATH/paralelo/"
 rm "$PARENTPATH/paralelo/"wrf*
 
-# TODO(ericmiguel): descompactar ARW e WPS aqui
+# Descompactar ARW e WPS
 
 echo "descompactando WPS..."
 tar -zxvf "$PARENTPATH/paralelo/"wps* -C "$PARENTPATH/paralelo/"
@@ -45,9 +45,6 @@ sudo tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
 cd "$PARENTPATH/paralelo/WRF" && mkdir GFS
 sudo docker volume create GFS_volume
 
-# Download do GrADS e descompactação
-echo "Baixando GrADS.."
-cd "$PARENTPATH/paralelo"
-wget "ftp://cola.gmu.edu/grads/2.0/grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz"
-tar -zxvf grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
-rm grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
+# Criando diretorio no Volume para receber os arquivos de saída do modelo
+sudo docker volume create WRF_out_volume
+

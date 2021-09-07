@@ -62,11 +62,11 @@ echo "compilando WPS. Aguarde..."
 cd "$PARENTPATH/paralelo/WPS"
 sed -i '39s+glade/p/work/wrfhelp/WPS_GEOG+'$PARENTPATH'/paralelo/GEOG_files/WPS_GEOG+g' namelist.wps
 
-# se tudo deu certo, aparecerÃo 3 executaveis do geogrid, metgrid e ungrib no diretorio WPS
+# Se tudo deu certo, aparecerão 3 executaveis do geogrid, metgrid e ungrib no diretorio WPS
 
 ################# INSTALAÇÃO DO PÓS-PROCESSAMENTO##############
 
-echo "instalando ARWpost e GrADS..."
+echo "instalando ARWpost..."
 
 cd "$PARENTPATH/paralelo/ARWpost"
 #3 = opção 3 ( gfortran)
@@ -87,8 +87,3 @@ cp -r include ../../
 cd "$PARENTPATH/paralelo/ARWpost"
 ./compile
 
-# InstalaÇÃo do GrADS
-cd "$PARENTPATH/paralelo"
-mv grads-2.0.2 /opt/
-cd
-#sed -i "18i export PATH=/opt/grads-2.0.2/bin:$PATH" .bashrc
