@@ -4,7 +4,7 @@
 FROM gcc:8.5.0
 LABEL version="0.0.1"
 LABEL description="Instalação do modelo WRFv4 pelo Laboratório de Monitoramento \
-e Modelagem de Sistemas Climáticos (LaMMoC) da Universidade Federal Fluminense (UFF)"
+    e Modelagem de Sistemas Climáticos (LaMMoC) da Universidade Federal Fluminense (UFF)"
 LABEL maintainer="ericmiguel@id.uff.br"
 
 COPY paralelo /paralelo
@@ -34,7 +34,7 @@ ENV NETCDF /usr/local/netcdf
 ENV NETCDF_classic 1
 ENV MPI /usr/local/mpich
 ENV LD_LIBRARY_PATH=/usr/local/grib2/lib:$LD_LIBRARY_PATH
-ENV PATH="/opt/grads-2.0.2/bin:$PATH"
+
 
 # instalação das dependências
 RUN bash ./scripts/build.sh
