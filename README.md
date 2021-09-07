@@ -31,13 +31,13 @@ docker build . -t wrflammoc:0.1.0
 :x: instalação WPS-v4  
 :x: instalação ARWpost-v3  
 :white_check_mark: download das dependências via Google Drive  
-:white_check_mark: download (alternativo) das dependência a partir da fonte  
+:white_check_mark: download (alternativo) das dependência a partir da fonte
 
 ## :wrench: Preparação
 
 Esta seção cuidará das instruções de download dos arquivos necessários para a instalação do modelo, da preparação da estrutura de diretórios e outras eventuais necessidades prévias à instalação.
 
-Essencialmente todas as ações do manual estarão abstraídas em makefiles e scripts bash. Se quiser, pode olhar as coisas lá no ```Makefile``` e no diretório ```scripts``` para garantir que não vou usar seu computador para minerar criptomoedas.
+Essencialmente todas as ações do manual estarão abstraídas em makefiles e scripts bash. Se quiser, pode olhar as coisas lá no `Makefile` e no diretório `scripts` para garantir que não vou usar seu computador para minerar criptomoedas.
 
 ### Iniciando
 
@@ -57,7 +57,7 @@ As seguintes dependências serão utilizadas na instalação do modelo:
 - [Libpng 1.2.59](https://github.com/glennrp/libpng/releases/tag/v1.2.59)
 - [MPICH 3.0.4](https://www.mpich.org/static/downloads/3.0.4/mpich-3.0.4.tar.gz)
 
-O modelo e ferramentas associadas podem ser encontrados no diretório ```wrf```, pois o link de download oficial não é aberto.
+O modelo e ferramentas associadas podem ser encontrados no diretório `wrf`, pois o link de download oficial não é aberto.
 
 - [WRF v4](https://github.com/wrf-model/WRF/releases/tag/v4.0)
 
@@ -68,7 +68,7 @@ Todo o necessário deve estar hospedado no seu Google Drive ou em uma pasta comp
 A automação com Google Drive utiliza o [Gdrive](https://github.com/prasmussen/gdrive). O Gdrive é uma ferramenta para facilitar o download (via linha de comando) de arquivos hospedados no Google Drive.
 
 ```bash
-make gdrive       
+make gdrive
 ```
 
 Para autorizar a ferramenta a utilizar sua conta Google, execute:
@@ -101,14 +101,16 @@ make pre-build
 
 O script irá procurar os seguintes arquivos localmente (caso não-sensitivo).
 
-- wrf*
-- wps*
-- arw*
-- zlib*
-- netcdf*
-- jasper*
-- libpng*
-- mpich*
+- wrf\*
+- wps\*
+- arw\*
+- zlib\*
+- netcdf\*
+- jasper\*
+- libpng\*
+- mpich\*
+
+O download dos dados geográficos necessários para rodar o modelo é executado nesta etapa. A criação dos volumes para comunicação entre a máquina host e o container também.
 
 ### Estrutura de diretórios
 
@@ -118,6 +120,8 @@ Após a execução do script de preparação, você deve ter uma estrutura de di
 .
 ├── paralelo
 │   ├── WRF (ou WRF-4.0 pela opção de download da fonte)
+│   ├── WPS
+│   ├── GEOG_files
 │   └── bibliotecas
 │       ├── jasper-1.900.1
 │       ├── libpng-1.2.50
@@ -147,22 +151,22 @@ Se tudo der certo (e provavelmente vai dar, por que é Linux), você deve recebe
 
 ### Execução
 
-Após a construção da imagem do modelo compilado, o container pode ser executado.
+Após a construção da imagem do modelo compilado, o container pode ser executado. Para linkar com os dados geográficos, é necessário especificar o volume no momento da execução. O mesmo deverá ser feito futuramente com os dados de entrada do GFS e de saída do modelo, quando for operacionalizado.
 
 ```bash
-docker run --rm -it wrflammoc:0.0.1
+docker run --rm -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0
 ```
 
 Já que o modelo foi compilado durante o processo de construção da imagem, futuras execuções dispensarão todas as etapas anteriores - exceto se a intensão for alterar algo relativo a própria construção da imagem.
 
-Para fins de inspeção e _debugging_, é possível também executar o container em modo interativo com terminal:
+Para fins de inspeção e _debugging_, é possível também executar o container em modo interativo com terminal (recomendado):
 
 ```bash
 # terminal bash padrão:
-docker run --rm -it wrflammoc:0.0.1 bash
+docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0 bash
 
 # ou em shell compatível com C:
-docker run --rm -it wrflammoc:0.0.1 csh
+docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0 csh
 ```
 
 ## :construction_worker: Desenvolvimento
@@ -173,7 +177,7 @@ As tags do projeto seguem o [versionamento semântico](https://semver.org/lang/p
 
 ### Como contribuir
 
-O fluxo de contribuição é o clássico ```fork -> clone -> edit -> pull request```.
+O fluxo de contribuição é o clássico `fork -> clone -> edit -> pull request`.
 
 - Crie um fork do repositório.
 
