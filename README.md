@@ -162,7 +162,7 @@ metgrid.exe -> metgrid/src/metgrid.exe
 Após a construção da imagem do modelo compilado, o container pode ser executado. Para linkar com os dados geográficos, é necessário especificar o volume no momento da execução. O mesmo deverá ser feito futuramente com os dados de entrada do GFS e de saída do modelo, quando for operacionalizado.
 
 ```bash
-docker run --rm -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0
+docker run --rm -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo/GEOG_files wrflammoc:0.1.0
 ```
 
 Já que o modelo foi compilado durante o processo de construção da imagem, futuras execuções dispensarão todas as etapas anteriores - exceto se a intensão for alterar algo relativo a própria construção da imagem.
@@ -171,10 +171,10 @@ Para fins de inspeção e _debugging_, é possível também executar o container
 
 ```bash
 # terminal bash padrão:
-docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0 bash
+docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo/GEOG_files wrflammoc:0.1.0 bash
 
 # ou em shell compatível com C:
-docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo wrflammoc:0.1.0 csh
+docker run -it --name wrf-teste -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo/GEOG_files wrflammoc:0.1.0 csh
 ```
 
 ## :construction_worker: Desenvolvimento
