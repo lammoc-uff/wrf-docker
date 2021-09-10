@@ -48,3 +48,6 @@ sudo docker volume create GFS_volume
 # Criando diretorio no Volume para receber os arquivos de saída do modelo
 sudo docker volume create WRF_out_volume
 
+# Criando diretorio que receberá as saídas do modelo e será linkado com volume
+cd "$PARENTPATH/paralelo/WRF"
+mkdir WRF_out
