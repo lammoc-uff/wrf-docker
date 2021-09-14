@@ -3,6 +3,8 @@
 # TODO(ericmiguel): remover redundância dessas variáveis ao longo dos scripts
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 PARENTPATH=`dirname $SCRIPTPATH`
+export NETCDF = /usr/local/netcdf
+export NETCDF_classic = 1
 
 
 echo "organizando diretórios..."
@@ -44,7 +46,7 @@ sudo tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
 # Criando diretorio do GFS e Volume para receber os arquivos de entrada
 cd "$PARENTPATH/paralelo/WRF" && mkdir GFS
 sudo docker volume create GFS_volume
-mv "$PARENTPATH/scripts/"baixa_gfs_0p25.sh "$PARENTPATH/../docker/volumes/GFS_volume"
+sudo mv "$PARENTPATH/scripts/"baixa_gfs_0p25.sh "$PARENTPATH/../docker/volumes/GFS_volume"
 
 # Criando diretorio no Volume para receber os arquivos de saída do modelo
 sudo docker volume create WRF_out_volume
@@ -84,6 +86,7 @@ tar -zxvf grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
 rm grads-2.0.2-bin-CentOS5.8-x86_64.tar.gz
 
 # InstalaÇÃo do GrADS
+export PATH="/opt/grads-2.0.2/bin:$PATH"
 cd "$PARENTPATH/paralelo"
 mv grads-2.0.2 /opt/
 cd
