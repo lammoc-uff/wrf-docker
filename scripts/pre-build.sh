@@ -44,6 +44,7 @@ sudo tar -zxvf geog_high_res_mandatory.tar.gz #cria um diretório WPS_GEOG
 # Criando diretorio do GFS e Volume para receber os arquivos de entrada
 cd "$PARENTPATH/paralelo/WRF" && mkdir GFS
 sudo docker volume create GFS_volume
+mv "$PARENTPATH/scripts/"baixa_gfs_0p25.sh "$PARENTPATH/../docker/volumes/GFS_volume"
 
 # Criando diretorio no Volume para receber os arquivos de saída do modelo
 sudo docker volume create WRF_out_volume
@@ -52,7 +53,7 @@ sudo docker volume create WRF_out_volume
 cd "$PARENTPATH/paralelo/WRF"
 mkdir WRF_out
 
-################# INSTALAÇÃO DO PÓS-PROCESSAMENTO - FORA DO CONTAINER##############
+################# INSTALAÇÃO DO PÓS-PROCESSAMENTO - FORA DO CONTAINER ##############
 
 echo "instalando ARWpost..."
 
