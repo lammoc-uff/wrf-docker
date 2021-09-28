@@ -8,8 +8,8 @@
 /
 
 &io
- input_root_name = '/home/lammoc/wrfoperacional/WRF_paral/dominio/wrfout_d01_ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA*'
- output_root_name = './ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00_d01'
+ input_root_name = '/paralelo/WRF/WRF_out/wrfout_d01_ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA*'
+ output_root_name = '/paralelo/WRF/WRF_out/ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00_d01'
  plot = 'all_list'
  fields = 'olr,height,geopt,theta,tc,tk,td,td2,rh,rh2,umet,vmet,pressure,u10m,v10m,wdir,wspd,wd10,ws10,slp,mcape,mcin,lcl,lfc,cape,cin,dbz,max_dbz,clfr'
  output_type = 'grads'

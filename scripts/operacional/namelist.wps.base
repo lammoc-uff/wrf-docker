@@ -1,11 +1,11 @@
 &share
  wrf_core = 'ARW',
- max_dom = 3,
+ max_dom = 1,
  start_date = 'ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00','ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00','ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00','ANO_HOJE-MES_HOJE-DIA_HOJE_RODADA:00:00',
  end_date   = 'ANO_FUTURO-MES_FUTURO-DIA_FUTURO_RODADA:00:00','ANO_FUTURO-MES_FUTURO-DIA_FUTURO_RODADA:00:00','ANO_FUTURO-MES_FUTURO-DIA_FUTURO_RODADA:00:00','ANO_FUTURO-MES_FUTURO-DIA_FUTURO_RODADA:00:00',
  interval_seconds = 21600,
  io_form_geogrid = 2,
- opt_output_from_geogrid_path = '/home/lammoc/wrfoperacional/WRF_paral/dominio',
+ opt_output_from_geogrid_path = './',
  debug_level = 0,
 /
 
@@ -25,8 +25,8 @@
  truelat1  = -24.878,
  truelat2  = 0,
  stand_lon = -45.858, 
- geog_data_path = '/home/lammoc/wrfoperacional/WRF_paral/WPS_GEOG',
- opt_geogrid_tbl_path = '/home/lammoc/wrfoperacional/WRF_paral/dominio',
+ geog_data_path = '/paralelo/GEOG_files/WPS_GEOG',
+ opt_geogrid_tbl_path = '/paralelo/WPS/geogrid',
  ref_x = 50.0,
  ref_y = 59.0,
 /
@@ -39,8 +39,8 @@
 &metgrid
  fg_name = 'FILE',
  io_form_metgrid = 2,
- opt_output_from_metgrid_path = '/home/lammoc/wrfoperacional/WRF_paral/dominio',
- opt_metgrid_tbl_path = '/home/lammoc/wrfoperacional/WRF_paral/dominio',
+ opt_output_from_metgrid_path = '/paralelo/WRF/run',
+ opt_metgrid_tbl_path = '/paralelo/WPS/metgrid',
 
 /
 
