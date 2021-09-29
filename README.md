@@ -171,7 +171,6 @@ sudo docker run -v /home/lammoc/docker/volumes/GEOG_volume:/paralelo/GEOG_files 
 # o bash padrão é utilizado para fins de inspeção e _debugging_, para executar o container em modo interativo com terminal (recomendado)
 ```
 
-Já que o modelo foi compilado durante o processo de construção da imagem, futuras execuções dispensarão todas as etapas anteriores - exceto se a intensão for alterar algo relativo a própria construção da imagem.
 
 Para operacionalização do modelo:
 
