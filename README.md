@@ -30,7 +30,7 @@ docker build . -t wrflammoc:0.1.0
 
 ## :bulb: O que está implementado
 
-:white_check_mark: WRF-v4 (operacional)
+:white_check_mark: WRF-v4 (operacional)  
 :white_check_mark: WPS  
 :white_check_mark: ARWpost  
 :white_check_mark: download das dependências via Google Drive  
