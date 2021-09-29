@@ -30,15 +30,14 @@ docker build . -t wrflammoc:0.1.0
 
 ## :bulb: O que está implementado
 
-:white_check_mark: instalação WRF-v4
-:white_check_mark: instalação WPS  
-:white_check_mark: instalação ARWpost
-:white_check_mark: download das dependências via Google Drive
-:white_check_mark: download (alternativo) das dependência a partir da fonte
+:white_check_mark: WRF-v4 (operacional)
+:white_check_mark: WPS  
+:white_check_mark: ARWpost  
+:white_check_mark: download das dependências via Google Drive  
+:white_check_mark: download (alternativo) das dependência a partir da fonte  
 :white_check_mark: download dos dados geográficos  
-:white_check_mark: estruturação do volume com os dados de entrada (GFS) e mudanças nos namelists
-:white_check_mark: estruturação do volume com as saídas do modelo para pós-processamento gráfico
-:white_check_mark: script para operacionalização do modelo
+:white_check_mark: estruturação do volume com os dados de entrada (GFS) e mudanças nos namelists  
+:white_check_mark: estruturação do volume com as saídas do modelo para pós-processamento gráfico  
 
 ## :wrench: Preparação
 
