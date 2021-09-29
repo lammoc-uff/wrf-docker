@@ -31,7 +31,7 @@ ENV CPPFLAGS -I/usr/local/grib2/include
 ENV NETCDF /usr/local/netcdf
 ENV NETCDF_classic 1
 ENV MPI /usr/local/mpich
-ENV LD_LIBRAY_PATH $LD_LIBRARY_PATH:/usr/local/grib2/lib:/usr/local/lib:$MPI/lib
+ENV LD_LIBRAY_PATH="/usr/local/grib2/lib:$LD_LIBRARY_PATH"
 ENV PATH="/opt/opengrads:$MPI/bin:${PATH}"
 
 # instalação das dependências

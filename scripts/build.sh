@@ -43,3 +43,49 @@ echo "34 1" | ./configure
 
 echo "compilando modelo. Vai lá pegar um café..."
 ./compile em_real
+
+######### instalação do WPS ########
+echo "preparando wps..."
+
+cd "$PARENTPATH/paralelo/WPS" 
+
+# 3 = opção(Linux x86_64, gfortran(dmpar))
+
+echo "3" | ./configure
+sed -i '42s/WRFV3/WRF/g' configure.wps
+
+# compilando WPS
+echo "compilando WPS. Aguarde..."
+./compile
+echo "compilação concluída! :D" 
+
+# alterando caminho dos dados geograficos no namelist do wps
+cd "$PARENTPATH/paralelo/WPS"
+sed -i '39s+/glade/p/work/wrfhelp/WPS_GEOG+'$PARENTPATH'paralelo/GEOG_files/WPS_GEOG+g' namelist.wps
+
+echo "Se tudo deu certo, aparecerão 3 executaveis do geogrid, metgrid e ungrib no diretorio WPS!"
+
+######### instalação do ARWPost ########
+
+echo "instalando ARWpost..."
+
+cd "$PARENTPATH/paralelo/ARWpost"
+#3 = opção 3 ( gfortran)
+echo "3" | ./configure
+sed -i '38d' configure.arwp
+sed -i '38i CPP             =       /lib/cpp -P -traditional' configure.arwp
+
+# editando Makefile
+
+cd "$PARENTPATH/paralelo/ARWpost/src"
+sed -i '19d' Makefile
+sed -i '19i\                -L$(NETCDF)/lib -I$(NETCDF)/include  -lnetcdff -lnetcdf' Makefile
+
+# Copiamos a pasta include do netcdf para o diretório raiz do WRF e depois compilamos o ARWpost
+
+cd "$PARENTPATH/paralelo/bibliotecas/netcdf-4.1.3"
+cp -r include ../../
+cd "$PARENTPATH/paralelo/ARWpost"
+./compile
+echo "Compilação do ARWPost concluída!!!"
+
