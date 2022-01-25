@@ -1,0 +1,261 @@
+
+                    The OpenGrADS Bundle Distribution
+                    ---------------------------------
+
+                          http://opengrads.org
+
+                          GrADS Version 2.0.2
+                    OpenGrADS Release 2 of 20 June 2014
+
+This OpenGrADS version is based on COLA's 2.0.2 release with updates
+in the OpenGrADS extensions (spherical harmonic Poisson solver, TLE
+based orbital calculator/masking, and pathname name manipulatio and
+regular expressions); see below for the OpenGrADS features that extend
+the standard GrADS functionality provided by COLA, as well as the
+ChangeLog.
+
+As for the new functionality in the COLA release from 11/9/2012 we
+quote from Jennifer Adams' announcement of GrADS v2.0.2:
+
+   "Brian and I are pleased to announce a new release of GrADS, version
+   2.0.2. Support has been added for new GRIB2 products: probability
+   forecasts and aerosol products (product definition templates 5, 9,
+   and 48.) This release also has a set of new functions for getting
+   and locating the min and max values over an area: amin, amax,
+   aminlocx, aminlocy, amaxlocx, and amaxlocy. These are more
+   efficient than using nested min() or max() commands, similar to the
+   use of aave() compared to ave(). There is another new function
+   atot() which is like asum() but weights each grid box by its
+   area. The lterp() function has been beefed up with options that
+   exist in the old regrid UDF and its modern counterpart, re(). Now
+   you can interpolate between grids using an area average as well as
+   bilinear interpolation; a bessel interpolation may also be used to
+   improve bilinear interpolation in areas of sharp gradients. Another
+   new feature is the addition of a third argument when drawing
+   scatter plots for colorization of the marks. This release also has
+   important bug fixes for the reading of 2-byte data, the drawing of
+   streamlines, and the handling of ensemble data with xdfopen. The
+   full text from the ChangeLog is below, please read it carefully,
+   and please look at the new and updated documentation pages."
+
+Consult the ChangeLog file for detailed list of new features and bug
+fixes.
+
+
+OpenGrADS Features
+------------------
+
+Several other important OpenGrADS additions are available with this version:
+
+- this is an OpenGrADS Bundle release, a relocatable, minimum
+  configuration package that has all that you need to run GrADS. See
+  INSTALL for additonal information.
+
+- preview release of the OpenGrADS Extensions; the same extensions 
+  available in GrADS v1.9.0-rc1 are now available with GrADS v2.0.
+
+  Caveat: as COLA is yet to publish the official API for User Defined
+          functions in GrADS v2.0 we have adopted here an API that
+          is based on our work vith v1.9.0-rc1. This is a very low-level
+          API that is *not* endorsed by COLA. As such, it is *not* advisable 
+          that users adopt this API to write their own extensions.
+
+- The following extensions are included: see below.
+
+
+Documentation and Additional Information
+----------------------------------------
+
+Consult 
+           OpenGrADS Website: http://opengrads.org
+               GrADS Website: http://grads.iges.org/grads
+                          
+                      ---------------------        
+                      User Defined Commands
+                      ---------------------        
+   Command            Environment Variables               Function@Library
+ ----------- ---------------------------------------  --------------------------
+ getenv      Get value of environment variable        c_getenv@^env.gex
+ printenv    Expand environment variables             c_xenv@^env.gex
+ runenv      Expand env vars and run command          c_env@^env.gex
+ @           Expand env vars and run command          c_env@^env.gex
+ setenv      Set value of environment variable        c_setenv@^env.gex
+
+   Command         File and Directory Utilities           Function@Library
+ ----------- ---------------------------------------  --------------------------
+ abspath     Get absolute pathname'                   c_path@^path.gex
+ basename    Extract the base portion of a pathname   c_path@^path.gex
+ cd          Change current directory                 c_path@^path.gex
+ chdir       Change current directory                 c_path@^path.gex
+ dirname     Extract the directory portion of a pathname c_path@^path.gex
+ exists      Check whether a file exists              c_path@^path.gex
+ getatime    Get access time of a file                c_path@^path.gex
+ getctime    Get status change time of a file         c_path@^path.gex
+ getmtime    Get modification time of a file          c_path@^path.gex
+ glob        Get list of files matching pattern       c_path@^path.gex
+ isfile      Check whether a file                     c_path@^path.gex
+ isdir       Check whether a directory                c_path@^path.gex
+ match       Perl-compatible matching                 c_path@^path.gex
+ sed         SED-like search & replace                c_path@^path.gex
+ wordexp     Perform word expansion on string         c_path@^path.gex
+
+   Command           GxYAT: Image Generation              Function@Library
+ ----------- ---------------------------------------  --------------------------
+ gxyat       Save images in PNG/SVG/PDF/PS            c_gxyat@^gxyat.gex
+ set_rgba    Set color red/green/blue/alpha           c_rgba@^gxyat.gex
+
+   Command           Simple Extension Example             Function@Library
+ ----------- ---------------------------------------  --------------------------
+ hello       Hello, World! sample command             c_hello@^libhello.gex
+
+   Command          Interprocess Communication            Function@Library
+ ----------- ---------------------------------------  --------------------------
+ ipc_verb    IPC verbose toggle                       c_Verb@^libipc.gex
+ ipc_open    Open stream for save/load                c_Open@^libipc.gex
+ ipc_close   Close stream                             c_Close@^libipc.gex
+ ipc_save    Save expression to stream                c_Save@^libipc.gex
+ ipc_define  Define variable (obsolete)               c_Define@^libipc.gex
+ ipc_error   Print IPC error message                  c_Error@^libipc.gex
+
+   Command    LATS: File Reformatting and Subsetting      Function@Library
+ ----------- ---------------------------------------  --------------------------
+ set_lats    Set LATS parameters                      c_lats_set@^liblats.gex
+ query_lats  Query LATS parameters                    c_lats_query@^liblats.gex
+ lats_grid   Define LATS grid                         c_lats_grid@^liblats.gex
+ lats_data   Write data to LATS file                  c_lats_data@^liblats.gex
+ reinit_lats Re-init LATS parameters                  c_lats_reinit@^liblats.gex
+
+   Command          Mike Fiorino's Extensions             Function@Library
+ ----------- ---------------------------------------  --------------------------
+ mfhilo      Find max/min or H/L in 2D field          c_mfhilo@^libmf.gex
+ tcprop      Properties radinf from central lon/lat   c_tcprop@^libmf.gex
+ tcxy2rt     cartesian -> cylindrical coords results only scriptvar RESULT c_tcxy2rt@^libmf.gex
+ grhist      histogram of expr                        c_grhist@^libmf.gex
+
+   Command          Satellite Orbit Extensions            Function@Library
+ ----------- ---------------------------------------  --------------------------
+ set_orb     Set ORB parameters                       c_set@^orb.gex
+ orb_track   Satellite ground tracks                  c_track@^orb.gex
+
+   Command     TLE-based Satellite Orbit Extensions       Function@Library
+ ----------- ---------------------------------------  --------------------------
+ set_tle     Set TLE parameters                       c_set@^tle.gex
+ tle_track   Satellite ground tracks                  c_track@^tle.gex
+
+                      ----------------------       
+                      User Defined Functions
+                      ----------------------       
+
+  Function         Ben-Jei Tsuang's Extensions            Function@Library
+ ----------- ---------------------------------------  --------------------------
+ lt          Local time                               f_bjt@^libbjt.gex
+ jd          Julian day                               f_bjt@^libbjt.gex
+ cosz        Cosine solar zenith angle                f_bjt@^libbjt.gex
+ dayratio    Daylight ratio                           f_bjt@^libbjt.gex
+ if          Conditional function                     f_bjt@^libbjt.gex
+ maxv        Maximum value                            f_bjt@^libbjt.gex
+ minv        Minimum value                            f_bjt@^libbjt.gex
+ which       Label gridpoints                         f_bjt@^libbjt.gex
+ ftest       F-test                                   f_bjt@^libbjt.gex
+ ttest       T-test                                   f_bjt@^libbjt.gex
+ tfit        Point  linear regression                 f_bjt@^libbjt.gex
+ fit         Global linear regression                 f_bjt@^libbjt.gex
+ tcorr2      Time correlation                         f_bjt@^libbjt.gex
+ tregr2      Point linear regression                  f_bjt@^libbjt.gex
+ tmave2      Time averaging w/masking                 f_bjt@^libbjt.gex
+ madvu       Calculates -d(u*EXPR)/dx                 f_bjt@^libbjt.gex
+ madvv       Calculates -d(V*EXPR)/dy                 f_bjt@^libbjt.gex
+ madvw       Calculates -d(W*EXPR)/dp                 f_bjt@^libbjt.gex
+ muadv       Zonal advection                          f_bjt@^libbjt.gex
+ mvadv       Meridional advection                     f_bjt@^libbjt.gex
+ mwadv       Vertical advection                       f_bjt@^libbjt.gex
+ satvap      Saturated vapor pressure                 f_bjt@^libbjt.gex
+ dew         Dew point temperature                    f_bjt@^libbjt.gex
+ lw          Thermal infrared fluxes                  f_bjt@^libbjt.gex
+ lw2         Thermal infrared fluxes v2               f_bjt@^libbjt.gex
+ pinterp     Pressure interpolation                   f_bjt@^libbjt.gex
+ zinterp     Height interpolation                     f_bjt@^libbjt.gex
+ line        Draws a line                             f_bjt@^libbjt.gex
+ vint2       Mass-weighted vertical integral          f_bjt@^libbjt.gex
+
+  Function     Streamfunction & Velocity Potential        Function@Library
+ ----------- ---------------------------------------  --------------------------
+ fish        Poisson solver                           f_fish@^fish.gex
+ fish_psi    Compute streamfunction                   f_psichi@^fish.gex
+ fish_chi    Compute velocity potential               f_psichi@^fish.gex
+ fish_vor    Compute vorticity                        f_psichi@^fish.gex
+ fish_div    Compute divergence                       f_psichi@^fish.gex
+
+  Function       Saakeskus Wx Function Collection         Function@Library
+ ----------- ---------------------------------------  --------------------------
+ dewpt       Dew-point temperature                    f_gsudf@^gsudf.gex
+ ept         Equivalent potential temperature         f_gsudf@^gsudf.gex
+ epi         Potential Instability                    f_gsudf@^gsudf.gex
+ plcl        Pressure at LCL                          f_gsudf@^gsudf.gex
+ shear       Wind Shear                               f_gsudf@^gsudf.gex
+ srh1km      Storm-relative Helicity 0-1km'           f_gsudf@^gsudf.gex
+ srh3km      Storm-relative Helicity 0-3km'           f_gsudf@^gsudf.gex
+ tlcl        Temperature at LCL                       f_gsudf@^gsudf.gex
+ tsindex     Chance of T-storm Initiation             f_gsudf@^gsudf.gex
+ ttindex     Total Totals Index                       f_gsudf@^gsudf.gex
+ wchill      Wind Chill Index (New)                   f_gsudf@^gsudf.gex
+
+  Function              Masking functions                 Function@Library
+ ----------- ---------------------------------------  --------------------------
+ maskcirc    Circular mask around (lon.lat) point     f_gsudf@^gsudf.gex
+
+  Function           Simple Extension Example             Function@Library
+ ----------- ---------------------------------------  --------------------------
+ hello       Hello, World! sample function            f_hello@^libhello.gex
+
+  Function          Interprocess Communication            Function@Library
+ ----------- ---------------------------------------  --------------------------
+ ipc_save    Save expression to stream                f_Save@^libipc.gex
+ ipc_load    Load variable from file                  f_Load@^libipc.gex
+
+  Function          Mike Fiorino's Extensions             Function@Library
+ ----------- ---------------------------------------  --------------------------
+ smth2d      Shuman smoother/de-smoother              f_smth2d@^libmf.gex
+ xy2rt       cartesian -> cylindrical coord           f_xy2rt@^libmf.gex
+ uv2trw      Find radial/tangential velocity          f_uv2trw@^libmf.gex
+ re2         General interpolator (regrid2)           f_re2@^libmf.gex
+ esmrf       Saturation vapor pressure (old MRF)      f_esmrf@^libmf.gex
+ linreg      Linear regression: mx + b                f_linreg@^libmf.gex
+
+  Function          Satellite Orbit Extensions            Function@Library
+ ----------- ---------------------------------------  --------------------------
+ orb_mask    Satellite orbit masking                  f_mask@^orb.gex
+
+  Function             Regridding Functions               Function@Library
+ ----------- ---------------------------------------  --------------------------
+ re          General interpolator                     ffre@^re.gex
+ re_         General interpolator (verbose)           ffre_dbg@^re.gex
+ regrid2     regrid2-like wrapper for re()            f_gsudf@^gsudf.gex
+ geos        Interpolation to GEOS-5 Grids            f_gsudf@^gsudf.gex
+ reimg       Interpolation for Image Generation'      f_gsudf@^gsudf.gex
+
+  Function           Spherical Harmonic Tools             Function@Library
+ ----------- ---------------------------------------  --------------------------
+ sh_filt     Spherical harmonic filter                f_shfilt@^shfilt.gex
+ sh_power    Spherical harmonic spectra               f_shpowr@^shfilt.gex
+ sh_fish     Poisson solver                           f_pssolv@^shfilt.gex
+ sh_psi      Compute streamfunction                   f_psichi@^shfilt.gex
+ sh_chi      Compute velocity potential               f_psichi@^shfilt.gex
+ sh_vor      Compute vorticity                        f_psichi@^shfilt.gex
+ sh_div      Compute divergence                       f_psichi@^shfilt.gex
+
+  Function     TLE-based Satellite Orbit Extensions       Function@Library
+ ----------- ---------------------------------------  --------------------------
+ tle_mask    Satellite orbit masking                  f_mask@^tle.gex
+
+
+                                 I M P O R T A N T
+                                 -----------------
+
+The following extension has been discontinued as shapefile support is
+now built into GrADS. 
+
+   Command             Shapefile Extensions               Function@Library
+ ----------- ---------------------------------------  --------------------------
+ shp_lines   Draw lines    from shapefile             c_lines@^shape.gex
+ shp_polyf   Draw polygons from shapefile             c_polyf@^shape.gex

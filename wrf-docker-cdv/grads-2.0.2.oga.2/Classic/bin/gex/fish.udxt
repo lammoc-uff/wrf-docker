@@ -1,0 +1,23 @@
+#
+# Sample GrADS table for Dynamic User Defined Commands/Functions.
+# There are 2 types of extensions: 
+#
+#    udc   user defined commands
+#    udf   user defined functions
+#
+# This feature requires OpenGrADS v2.0.a4.oga.3 or later.
+#.................................................................
+
+#      A
+#      P   GrADS     Library      Library                 Short
+# Type I  Function   Function      Path                Description
+# ---- - ---------- ---------- -------------- -------------------------------  
+  udf  0  " "        " "        " "    "Streamfunction & Velocity Potential" 
+  udf  0  fish       f_fish     ^fish.gex     "Poisson solver"
+  udf  0  fish_psi   f_psichi   ^fish.gex     "Compute streamfunction"
+  udf  0  fish_chi   f_psichi   ^fish.gex     "Compute velocity potential"
+  udf  0  fish_vor   f_psichi   ^fish.gex     "Compute vorticity"
+  udf  0  fish_div   f_psichi   ^fish.gex     "Compute divergence"
+#..........................................................................
+
+

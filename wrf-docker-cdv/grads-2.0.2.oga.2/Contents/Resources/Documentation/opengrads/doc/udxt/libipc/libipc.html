@@ -1,0 +1,382 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>libipc.gex - Support Functions for GrADS Inter-process Communication</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:dasilva@mcjuba.home" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;libipc.gex - Support Functions for GrADS Inter-process Communication</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_commands_">GrADS Commands:</a></li>
+			<li><a href="#grads_functions_">GrADS Functions:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#commands_provided">COMMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#ipc_open_filename_mode"><strong>ipc_open</strong> <em>FILENAME</em> <em>MODE</em></a></li>
+		<li><a href="#ipc_save_expr__filename_"><strong>ipc_save</strong> <em>EXPR</em> [<em>FILENAME</em>]</a></li>
+		<li><a href="#ipc_close__mode_"><strong>ipc_close</strong> [<em>MODE</em>]</a></li>
+		<li><a href="#ipc_verb__on_off_"><strong>ipc_verb</strong> [<em>ON|OFF</em>]</a></li>
+		<li><a href="#ipc_error"><strong>ipc_error</strong></a></li>
+	</ul>
+
+	<li><a href="#functions_provided">FUNCTIONS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#define_void___ipc_save___expr____filename___">define <em>void</em> = <strong>ipc_save</strong> ( <em>EXPR</em> [, <em>FILENAME</em>] )</a></li>
+		<li><a href="#define_var___ipc_load____filename___">define <code>var</code> = <strong>ipc_load</strong> ( [<em>FILENAME</em>] )</a></li>
+		<li><a href="#define_var___ipc_pipe____command___">define <code>var</code> = <strong>ipc_pipe</strong> ( [<em>COMMAND</em>] )</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#transfer_file_format">TRANSFER FILE FORMAT</a></li>
+	<ul>
+
+		<li><a href="#1st_record__the_dimension_environment_record_">1st record:  The dimension environment record.</a></li>
+		<li><a href="#2nd_record__this_contains_the_gridded_data_">2nd record:  This contains the gridded data.</a></li>
+		<li><a href="#3rd_record__the_idimension_coordinate_variable">3rd record.  The i-dimension coordinate variable</a></li>
+		<li><a href="#4th_record__the_jdimension_coordinate_variable">4th record.  The j-dimension coordinate variable</a></li>
+	</ul>
+
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>libipc.gex - Support Functions for GrADS Inter-process Communication</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_commands_">GrADS Commands:</a></h3>
+<dl>
+<dt>
+<dd>
+<p><strong>ipc_open</strong> <em>FILENAME</em> <em>MODE</em></p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>ipc_save</strong> <em>EXPR</em> [<em>FILENAME</em>]</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>ipc_close</strong> [<em>MODE</em>]</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>ipc_verb</strong>  [<em>ON|OFF</em>]</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>ipc_error</strong></p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h3><a name="grads_functions_">GrADS Functions:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>define <code>var</code> = <strong>ipc_save</strong> ( <em>EXPR</em> [, <em>FILENAME</em>] )</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>define <code>var</code> = <strong>ipc_load</strong> ( [<em>FILENAME</em>] )</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>define <code>var</code> = <strong>ipc_pipe</strong> ( [<em>COMMAND</em>] )</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library of GrADS extensions implements functions to enable GrADS
+inter-proceess communication.  The primary use of these functions is
+to facilitate the interface of GrADS to other applications by means of
+bi-directional pipes (e.g., Perl, Python, IDL, Octave, etc.). The current
+implementation provides functions and commands for exporting and
+importing gridded fields from and into GrADS. These functions can also
+be used as a convenient alternative to <code>LATS</code> or <code>fwrite</code> for saving
+and retrieving gridded variables to and from disk files.</p>
+<p>Data is exchanged by means of a stream interface: either external
+files or through STDIN and STDOUT, the prefered method when
+interfacing with bi-directional pipes. The actual file format borrows
+from the GrADS classic <em>User Defined Functions</em> (UDFs), with extensions
+to allow exporting/importing of timeseries (more generally, a
+collection of 2D slices). See TRANSFER FILE FORMAT below for a
+description of this format.</p>
+<p>
+</p>
+<hr />
+<h1><a name="commands_provided">COMMANDS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="ipc_open_filename_mode"><strong>ipc_open</strong> <em>FILENAME</em> <em>MODE</em></a></h2>
+<p>This command opens a file for exporting or importing gridded fields
+from or into GrADS. On iput,</p>
+<p><em>FILENAME</em> is the name of the file to open; specify ``-'' for selecting
+standard input/output instead of a disk file.</p>
+<p><em>MODE</em> - it can be either <em>w</em> for exporting gridded data from GrADS
+or <em>r</em> for importing gridded data into GrADS. All data is exchanged
+using the native binary format.</p>
+<p><strong>IMPORTANT</strong>. When standard output is selected, the verbose mode is 
+automatically turned off to avoid corrupting the output stream.</p>
+<p>
+</p>
+<h2><a name="ipc_save_expr__filename_"><strong>ipc_save</strong> <em>EXPR</em> [<em>FILENAME</em>]</a></h2>
+<p>This command evaluates the GrADS expression <em>EXPR</em> and saves the
+resulting gridded field to a file or to standard output. On input,</p>
+<p><em>EXPR</em> is a gridded GrADS expression</p>
+<p><em>FILENAME</em> is an optional parameter specifying a file name to export
+the data to, or ``-'' for exporting the data to standard output. When
+<em>FILENAME</em> is specified as a disk file, the file is opened, written
+to and closed upon completion. Therefore, <em>FILENAME</em> should not be
+specified in the presence of a looping dimension (animation sequence),
+or else the file will be overwritten for each instance of the looping
+dimension. In such cases, explicity <strong>open</strong> and <strong>close</strong> the file
+before and after exporting to it.</p>
+<p>
+</p>
+<h2><a name="ipc_close__mode_"><strong>ipc_close</strong> [<em>MODE</em>]</a></h2>
+<p>This command closes the streams used for exporting/importing gridded
+data. It has no effect when the streams are standard input/output. On input,</p>
+<dl>
+<dt><strong><a name="item_mode_is_set_to_w_the_file_used_for_exporting_data_"><em>MODE</em> is set to <strong>w</strong> the file used for exporting data is
+closed; when <em>MODE</em> is set to <strong>r</strong> the file used for importing data
+is closed. If omitted, both streams are closed.</a></strong>
+
+</dl>
+<p>
+</p>
+<h2><a name="ipc_verb__on_off_"><strong>ipc_verb</strong> [<em>ON|OFF</em>]</a></h2>
+<p>This command toggles verbose ON/OFF; do not use it when using
+STDIN/STDOUT as transfer streams. If not argument is provided 
+it will toggle the verbose mode ON or OFF.</p>
+<p>
+</p>
+<h2><a name="ipc_error"><strong>ipc_error</strong></a></h2>
+<p>This command reprints the last IPC error message, returning its error code. 
+This is useful when exchanging data using bi-directional pipes.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions_provided">FUNCTIONS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="define_void___ipc_save___expr____filename___">define <em>void</em> = <strong>ipc_save</strong> ( <em>EXPR</em> [, <em>FILENAME</em>] )</a></h2>
+<p>This function is similar to the <strong>ipc_save</strong> command above. It is
+provided as a function for symmetry with the <strong>imp</strong> function below,
+and to allow exporting a timeseries to a single file using the GrADS
+<strong>define</strong> command. For saving a timeseries, setup the dimension
+environment in GrADS as usual for an animation sequence and issue a
+<code>define</code> command such as</p>
+<pre>
+        define void = ipc_save(sqrt(ua*ua+va*va))</pre>
+<p>Remember not to specify a disk <em>FILENAMNE</em> as an argument to
+<strong>ipc_save()</strong> when intending to save a timeseries to a single file, or
+else your file will contain only the last 2D field in the sequence.</p>
+<p>
+</p>
+<h2><a name="define_var___ipc_load____filename___">define <code>var</code> = <strong>ipc_load</strong> ( [<em>FILENAME</em>] )</a></h2>
+<p>This function imports gridded data from the currently open stream or
+from file <em>FILENAME</em>, if specified. Do not specify <em>FILENAMNE</em> when
+intending to import a timeseries from a single file. In such cases,
+explicity <strong>open</strong> and <strong>close</strong> the file before and after exporting to
+it.</p>
+<p>
+</p>
+<h2><a name="define_var___ipc_pipe____command___">define <code>var</code> = <strong>ipc_pipe</strong> ( [<em>COMMAND</em>] )</a></h2>
+<p>This function implements an interface to external processes by means
+of an uni-directional pipe. This is accomplished my means of the C
+function <code>popen()</code>, and the command being executed is assumed to
+write out a sequential (Fortran) binary file, where the first 4 bytes
+contain an integer with the size of the remaining data to be read.</p>
+<p>Although extremely useful, this function is not intented for the
+casual user. When issuing a <code>ipc_pipe()</code>, the dimension environment
+should match exactly the size of the data being read.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Saving/loading simple variables with only 2 varying dimensions (say,
+fixed time), specifying a transfer file:</p>
+<pre>
+        ga-&gt; ipc_save ps ps.bin
+        ga-&gt; define saved = ipc_load(&quot;ps.bin&quot;) 
+        ga-&gt; display ps-saved</pre>
+<p>The same example, using <strong>open</strong> and <strong>close</strong>:</p>
+<pre>
+        ga-&gt; ipc_open ps.bin w
+        ga-&gt; ipc_save ps
+        ga-&gt; ipc_close</pre>
+<pre>
+        ga-&gt; ipc_open ps.bin r
+        ga-&gt; display ps-ipc_load()
+        ga-&gt; ipc_close</pre>
+<p>Saving a timeseries:
+</p>
+<pre>
+
+        ga-&gt; set lon 0 360
+        ga-&gt; set lat -90 90
+        ga-&gt; set lev 300
+        ga-&gt; set t 1 5
+        ga-&gt; ipc_open zg.bin w
+        ga-&gt; define void = ipc_save(zg)
+        ga-&gt; ipc_close</pre>
+<p>Retrieving the same time series:</p>
+<pre>
+        ga-&gt; set t 1 5
+        ga-&gt; ipc_open zg.bin r
+        ga-&gt; define saved = ipc_load()
+        ga-&gt; display saved 
+        ga-&gt; ipc_close</pre>
+<p>
+</p>
+<hr />
+<h1><a name="transfer_file_format">TRANSFER FILE FORMAT</a></h1>
+<p>The format of the transfer file borrows from GrADS traditional UDF
+transfer files, but it has been simplified a bit since only gridded
+fields need to be exchanged. It has also been slightly extended to
+allow the saving/loading of a collection of 2D fields to a single
+file, as is the case when dealing with timeseries data. In particular,
+the first header record with 20 float point numbers used in
+traditional UDF files has been eliminated.</p>
+<p>Since the argument is always an expression, GrADS will evaluate the
+expression and write the result to the transfer file.  Currently only
+gridded data is supported, but support of station data is planned for
+future releases.  Several records will be written to the file for each
+value of the looping dimension (usually time).</p>
+<p>
+</p>
+<h2><a name="1st_record__the_dimension_environment_record_">1st record:  The dimension environment record.</a></h2>
+<p>This record contains 20 values, all floating point.  Note that some of
+the values are essentially integer, but for convenience they are
+written as a floating point array.  Appropriate care should be taken
+in converting these values back to integer. The description of each
+one of these 20 float point numbers follow:</p>
+<pre>
+                 1:  Undefined value for the grid
+                 2:  i dimension (idim).  Dimensions are:
+                     -1 - None
+                      0 - X dimension (lon)
+                      1 - Y dimension (lat)
+                      2 - Z dimension (lev)
+                      3 - T dimension (time)
+                 3:  j dimension (jdim).  Note:  if idim and
+                     jdim are -1, the grid is a single value.
+                     If jdim is -1, the grid is a 1-D grid.
+                 4:  number of elements in the i direction (isiz)
+                 5:  number of elements in the j direction (jsiz)
+                     Array is dimensioned (isiz,jsiz).
+                 6:  i direction linear flag.  If 0, the
+                     i dimension has non-linear scaling.
+                 7:  j dimension linear flag.
+                 8:  istrt.  This is the world coordinate value
+                     of the first i dimension, ONLY if the i dimension
+                     has linear scaling and the i dimension is not
+                     time.
+                 9:  iincr.  Increment in the i dimension of the
+                     world coordinate.  ONLY if the i dimension has
+                     linear scaling.
+                 10: jstrt.  World coordinate of the first j
+                     dimension, only if the j dimension has linear
+                     scaling, and the j dimension is not time.
+                 11: jincr.  World coordinate increment for j
+                     dimension.
+                 12: If one of the dimensions is time, values
+                     12 to 16 are defined as the start time
+                     12 is the start year.
+                 13: start month
+                 14: start day
+                 15: start hour
+                 16: start minute
+                 17: Values 17 and 18 contain the time increment
+                     for the time dimension.  17 contains the
+                     increment in minutes.
+                 18: increment in months.  (GrADS handles all
+                     increments in terms of minutes and months).
+                 19,20: reserved</pre>
+<p>
+</p>
+<h2><a name="2nd_record__this_contains_the_gridded_data_">2nd record:  This contains the gridded data.</a></h2>
+<p>It has isiz*jsiz floating point numbers.</p>
+<p>
+</p>
+<h2><a name="3rd_record__the_idimension_coordinate_variable">3rd record.  The i-dimension coordinate variable</a></h2>
+<p>Whether or not the i or j dimension scaling is non-linear, the world
+coordinate values at each integral <code>i(j)</code> dimension value is written.
+Thus, isiz float point numbers will be written. Notice that this is a
+departure from the classic UDF format.</p>
+<p>
+</p>
+<h2><a name="4th_record__the_jdimension_coordinate_variable">4th record.  The j-dimension coordinate variable</a></h2>
+<p>This record has the j dimension world coordinate values; it contains
+jsiz floating point numbers.</p>
+<p>Unlike the classic UDF file format, the 3rd or 4th records are always
+written.  Note that the time dimension is ALWAYS linear as currently
+implemented in GrADS.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>), based on code fragments from GrADS.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2007 Arlindo da Silva; portions derived from GrADS source 
+code Copyright (C) 1988-2007 by Brian Doty and the Institute of Global 
+Environment and Society (IGES).</p>
+<p>This is free software; see the source for copying conditions.  There is
+NO  warranty;  not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;libipc.gex - Support Functions for GrADS Inter-process Communication</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

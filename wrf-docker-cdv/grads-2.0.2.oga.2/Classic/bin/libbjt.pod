@@ -1,0 +1,1465 @@
+# 1 "libbjt.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "libbjt.c"
+# 6496 "libbjt.c"
+=pod
+
+=head1 NAME
+
+libbjt.gex - Ben-Jei Tsuang`s Collection of GrADS v1.9 Extensions
+
+=head1 SYNOPSIS
+
+=head2 Time Related Functions
+
+=over 4
+
+=item
+
+display B<lt>(I<EXPR>) - Local time
+
+=item
+
+display B<jd>(I<EXPR>) - Julian day
+
+
+=item
+
+display B<cosz>(I<EXPR>, I<H|D|M>) - Cosine of solar zenith angle
+
+=item
+
+display B<dayratio>(I<EXPR>) - Daylight ratio
+
+=back
+
+=head2 Statistical Functions
+
+=over 4
+
+=item
+
+display B<ftest>(I<RATIO>,I<DF1>,I<DF2>) - F-Test
+
+=item
+
+display B<ttest>(I<DIFF>,I<DF>) - T-Test
+
+=item
+
+display B<tfit>(I<Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]>) - Local multiple linear regression
+
+=item
+
+display B<fit>(I<Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]>) - Global multiple linear regression
+
+=item
+
+display B<tcorr2>(I<X1,X2,time=TBEG,time=TEND [,DT]>) - Time correlation (r)
+
+=item
+
+display B<tregr2>(I<X,Y,time=TBEG,time=TEND [,DT]>) - Gives the expected value of y departure given a 1 unit departure in x. (Same as tregr with less contrained)
+
+=item
+
+display B<tmave2>(I<MASKEXPR,EXPR,time=TBEG,time=TEND [,DT]>) - Time averaging with masking
+
+=back
+
+
+=head2 Advection Functions
+
+=over 4
+
+=item
+
+display B<muadv>(I<U>,I<EXPR>) - Changing rate [EXPR/s] due to zonal advection
+
+=item
+
+display B<mvadv>(I<V>,I<EXPR>) - Changing rate [EXPR/s] due to meridional advection
+
+=item
+
+display B<mwadv>(I<W>,I<EXPR>) - Changing rate [EXPR/s] due to vertical advection
+
+=item
+
+display B<madvu>(I<U,EXPR>) - Zonal flux gradient: -d(U*EXPR)/dx
+
+=item
+
+display B<madvv>(I<V,EXPR>) - Meridional flux gradient: -d(V*EXPR)/dy
+
+=item
+
+display B<madvw>(I<W,EXPR>) - Vertical flux gradient: -d(W*EXPR)/dz
+
+=back
+
+=head2 Thermodynamic Functions
+
+=over 4
+
+=item
+
+display B<satvap>(I<T>) - Saturated vapor pressure
+
+=item
+
+display B<dew>(I<PVAP>) - Dew-point Temperature
+
+=back
+
+
+=head2 Radiative Transfer Functions
+
+=over 4
+
+=item
+
+display B<lw>(I<PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,TAUCLB,FCLDB [,BINFILE,CTLFILE,-r|-c|-h|-l]>) - Longwave radiative coolimg rate (K/d)
+
+=item
+
+display B<lw2>(I<PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,PM,TM,WM,TAUCLM,FCLDM [,BINFILE,CTLFILE,-r|-c|-h|-l]>) - Longwave radiative coolimg rate (K/d) (same as lw but requires data at the top of mixed layer)
+
+=back
+
+=head2 Vertical Interpolation/Integration Functions
+
+=over 4
+
+=item
+
+display B<pinterp>(I<EXPR,PGRID,PLEV,[-l|-s|-p]>) - Vertical interpolation within a 3-D grid to a specified p level.
+
+=item
+
+display B<zinterp>(I<field,zgrid,zlev,[-l|-s|-p]>) - Vertical interpolation within a 3-D grid to a specified z level.
+
+=item
+
+display B<vint2>(I<PSEXPR,EXPR,TOP>) - Modified vertical integration
+
+=back
+
+
+=head2 Miscelaneous Functions
+
+=over 4
+
+=item
+
+display B<if>(I<EXPR1,OP,EXPR2,TRUE_EXP,FALSE_EXP>) - Compare expressions
+
+=item
+
+display B<which>(I<EXPR1,COND1,EXP1,COND2,EXPR2,...,ELSE_EXP>) - Label gridpoints according to expressions
+
+=item
+
+display B<maxv>(I<EXPR1>,I<EXPR2>) - Maximum value
+
+=item
+
+display B<minv>(I<EXPR1>,I<EXPR2>) - Minimum value
+
+=item
+
+display B<line>(I<EXPR,LON1,LAT1,LON2,LAT2[,-l|-m|-r]>) - Draw a Line
+
+=back
+
+
+=head1 DESCRIPTION
+
+This library implements Ben-Jei Tsuang`s collection GrADS extensions,
+including a variety of statistical, mathematical and otherwise utility
+functions.
+
+These functions were initially built in an experimental version of
+GrADS v1.8 contributed by Ben-Jei Tsuang ca. 2003. With the
+introduction of dynamic linked extensions by the OpenGrADS project in
+2006 these functions were among the first set of user defined functions
+to be implemented as such.
+
+=head1 COMMAND LINE HELP
+
+Usage notice for most of these functions can be obtained at the GrADS
+command line. For example,
+
+   ga-> d lw
+
+produces
+
+   lw
+   Error from LW: 10-13 arguments expected
+   lw(pl,ta,wa,taucl,fcld,ps,tg,eg,tb,wb [,'binfile','ctlfile',-r-c-h-l])
+   usage:
+   Function returns: thermal infrared fluxes
+   Following the NASA Technical Memorandum (NASA/TM-2001-104606,
+   Vol. 19) of Chou, Suarez, Liang, and Yan (2001). This NASA TM
+   has been revised a few timessince. It computes thermal infrared
+   fluxes due to emission by water vapor, ozone, co2, o2, minor
+   trace gases, clouds, and aerosols and due to scattering by
+   clouds and aerosols.
+
+   Arguments:
+      pl = level pressure (hPa)
+      ta = layer temperature (K)
+      wa = layer specific humidity (kg/kg)
+      taucl= cloud optical thickness (dimensionless)
+    ...
+
+=head1 TIME RELATED FUNCTIONS
+
+=head2 B<lt>(I<EXPR>)
+
+=over 4
+
+This function calculates local time (in hours); specify any valid
+GrADS expression on input.
+
+=back
+
+=head2 B<jd>(I<EXPR>)
+
+=over 4
+
+This function computes the Julian day since January 0001; specify any valid
+GrADS expression on input.
+
+=back
+
+=head2 B<cosz>(I<EXPR>, I<h|d|m>)
+
+=over 4
+
+This function calculates the cosine of solar zenith angle on various
+time scale. On input,
+
+=over 8
+
+=item I<EXPR>
+
+Any GrADS vaild expression, e.g., C<lat>
+
+=back
+
+Specify one of the following for the time scale:
+
+=over 8
+
+=item I<h>
+
+Hourly value of the cosine of solar zenith angle.
+
+=item I<d>
+
+Daily mean of the cosine of solar zenith angle.
+
+=item I<m>
+
+Monthly mean of the cosine of solar zenith angle.
+
+=back
+
+=back
+
+
+
+=head2 B<dayratio>(I<EXPR>)
+
+=over 4
+
+This function calculates daylight ratio of EXPR during the time interval of the variable, where 1 argument is required..
+
+=over 8
+
+=item I<EXPR>
+
+Any GrADS valid expression, e.g., C<lat>.
+
+=back
+
+=back
+
+
+=head1 STATISTICAL FUNCTIONS
+
+=head2 B<ftest>(I<RATIO>,I<DF1>,I<DF2>)
+
+=over 4
+
+This function conducts the F test. It calculates the probability for
+the I<ratio> of two variances, where 3 arguments are expected.
+
+=over 8
+
+=item I<RATIO>
+
+The ration of variances: (variance 1)/(variance 2)
+
+=item I<DF1>
+
+Degrees of freedom for variance 1
+
+=item I<DF2>
+
+Degrees of freedom for variance 2
+
+=back
+
+=back
+
+
+=head2 B<ttest>(I<DIFF>,I<DF>)
+
+=over 4
+
+This function conducts the T test. It calculates the probability two
+means to be different, where 2 arguments are expected.
+
+=over 8
+
+=item I<DIFF>
+
+The normalized difference between 2 means:
+
+   DIFF = (m1-m2)/stdv
+
+where C<m1> and C<m2> are the 2 means, and C<stdv> is the standard deviation.
+
+=item I<DF>
+
+Degrees of freedom.
+
+=back
+
+=back
+
+
+
+=head2 B<tfit>(I<Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]>)
+
+=over 4
+
+This function conducts point multiple linear regression for
+
+   Y1 = F(X1,X2,X2,..,XN)
+
+for each grid point seperately during the period between I<TBEG> and
+I<TEND>, with time interval I<DT> to skip. The correlation
+coefficients (r) at each grid are returned. If the option FILENAME
+is provided, many statistical summaries are written to the file.
+
+=over 8
+
+=item I<Y1,X1,X2,X3,..,XN>
+
+Must be expressions.
+
+=item I<time=TBEG>
+
+Begining of the time, which can be any valid time variable with
+formats like C<time=jan1990> or C<t=100>.
+
+=item I<time=TEND>
+
+End of the time period, which can be any valid time variable with
+formats like C<time=dec2000>, C<t=500> or C<t+100>.
+
+=item I<DT> (optional)
+
+Time interval to skip, which can be any valid time variable
+(e.g. C<1mon, 1day>).
+
+=item I<FILENAME> (optional)
+
+Filename to which many statistical summaries are written to.
+
+=back
+
+=back
+
+
+=head2 B<fit>(I<Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]>)
+
+=over 4
+
+
+This function conducts global multiple linear regression for
+
+   Y1 = F(X1,X2,X2,..,XN)
+
+for all the grid points simultaneously during the period between
+I<TBEG> and I<TEND>, with time interval I<DT> to skip. The results
+are written to screen. If the option I<FILENAME> is provided, many
+statictical summaries are written to the file.
+
+=over 8
+
+=item I<Y1,X1,X2,X3,..,XN>
+
+Must be expressions.
+
+=item I<time=TBEG>
+
+Begining of the time, which can be any valid time variable with
+formats like C<time=jan1990> or C<t=100>.
+
+=item I<time=TEND>
+
+End of the time period, which can be any valid time variable with
+formats like C<time=dec2000>, C<t=500> or C<t+100>.
+
+=item I<DT> (optional)
+
+Time interval to skip, which can be any valid time variable
+(e.g. C<1mon, 1day>).
+
+=item I<FILENAME> (oprional)
+
+Filename to which many statistical summaries are written to.
+
+=back
+
+=back
+
+
+=head2 B<tregr2>(I<X,Y,time=TBEG,time=TEND[,DT]>)
+
+=over 4
+
+This function calculates C<m> coefficient for the linear regression
+
+   Y = m * X + C
+
+at each grid during the period between I<TBEG> and I<TEND>, with
+timeinterval I<DT> to skip. (Same as B<tregr>, but with I<DT> option).
+
+=over 8
+
+=item I<Y, X>
+
+must be expressions.
+
+=item I<time=TBEG>
+
+Begining of the time, which can be any valid time variable with
+formats like C<time=jan1990>. or C<t=100>.
+
+=item I<time=TEND>
+
+End of the time, which can be any valid time variable with formats
+like C<time=dec2000>, C<t=500> or C<t+100>.
+
+=item I<DT>
+
+Time interval to skip, which can be any valid time variable
+(e.g. C<1mon>, C<1day>.).
+
+=back
+
+=back
+
+
+=head2 B<tmave2>(I<MASKEXPR,EXPR,time=TBEG,time=TEND[,DT]>)
+
+=over 4
+
+This function does time averaging while applying a mask.
+(Same as B<tmave>, but with I<DT> option.)
+
+=over 8
+
+=item I<MASKEXPR>
+
+The mask expression; when evaluated at a fixed time, it must give a
+single value.
+
+=item I<EXPR>
+
+The expression to be averaged
+
+=item I<time=TBEG>
+
+Begining of the time, which can be any valid time variable with
+formats like C<time=jan1990> or C<t=100>.
+
+=item I<time=TEND>
+
+End of the time, which can be any valid time variable with formats
+like C<time=dec2000>, C<t=500> or C<t+100>.
+
+=item I<DT>
+
+Time interval to skip, which can be any valid time variable
+(e.g. C<1mon>, C<1day>).
+
+=item I<Usage Notes>
+
+This function works similarly to the ave function, except for the
+masking. Using B<tmave2> is much more efficient than using B<maskout> with
+ave).
+
+The function loops through the specified time steps, and evaluates
+I<MASKEXPR> at each fixed time. I<MASKEXPR> must yeild a single
+value. If this value is the undefined/missing data value, then expr
+for that time is not included in the average. If I<MASKEXPR> is not
+the undefined data value, it is used as the weight for I<EXPR> in the
+average. So if you define I<MASKEXPR> accordingly, you can use the
+B<tmave2> function to do weighted time averaging.
+
+The tricky aspect of using B<tmave2> is setting up I<MASKEXPR>. If I<EXPR> is a
+grid with X and/or Y and/or Z varying, then I<MASKEXPR> B<must> refer to
+either a defined variable or a file with only time varying. In
+general, you have to set up I<MASKEXPR> in advance.
+
+=item I<Examples>
+
+Say you want to average C<slp> over some time range but only when C<sst>
+over some region is above some value. You can do this by:
+
+   ga-> set x 1
+   ga-> set y 1
+   ga-> set t 1 last
+   ga-> define sstmask = aave(sst,lon=-180,lon=-90,lat=-20,lat=20)
+   ga-> define sstmask = const(maskout(sstmask,sstmask-25.0),1)
+
+Now I<SSTMASK> is a time series where the value is 1 when the C<sst> areal
+average is above 25 and undefined when the value is below 25. B<maskout>
+set the values below 25 to missing; const set the non-missing values
+to 1. We can now do our tmave2:
+
+   ga-> set lon -180 -90
+   ga-> set lat -20 20
+   ga-> set t 1
+   ga-> d tmave2(sstmask,slp,t=1,t=last)
+
+The mask could also be written to a file with all dimensions
+nonvarying except for time. Here is what some of the records in the
+data descriptor file might look like:
+
+   DSET maskfilename
+   XDEF 1 linear 1 1
+   YDEF 1 linear 1 1
+   ZDEF 1 linear 1 1
+   TDEF 100 linear
+
+=back
+
+=back
+
+
+=head1 ADVECTION FUNCTIONS
+
+=head2 B<madvu>(I<U>,I<EXPR>)
+
+=over 4
+
+This function calculates
+
+   -d(u*EXPR)/dx
+
+=over 8
+
+=item I<U>
+
+Zonal wind speed (u component), m/s.
+
+=item I<EXPR>
+
+An expression
+
+=back
+
+=back
+
+
+
+=head2 B<madvv>(I<V>,I<EXPR>)
+
+=over 4
+
+This function calculates
+
+   -d(V*EXPR)/dy
+
+=over 8
+
+=item I<V>
+
+Meridional wind speed (v component), m/s.
+
+=item I<EXPR>
+
+An expression
+
+=back
+
+=back
+
+
+
+=head2 B<madvw>(I<W>,I<EXPR>)
+
+=over 4
+
+This function calculates
+
+   -d(W*EXPR)/dp
+
+using an upwind scheme.
+
+=over 8
+
+=item I<W>
+
+Vertical wind speed (w component) (unit of vertical coordinate/s, such as hPa/s for the vertical coordinate in hPa)
+
+=item I<EXPR>
+
+An expression.
+
+=item I<Remarks>
+
+Note that no-slip boundary conditions are assumed. i.e.,
+
+      w(lev=0)=0
+      C(lev=0)=C(lev=1)
+
+      concp, wp
+           |---cn
+      conc, w
+           |---cnm
+      concm, wm
+
+
+=back
+
+=back
+
+
+
+=head2 B<muadv>(I<U>,I<EXPR>)
+
+=over 4
+
+This function computes the time rate of change I<EXPR> at each grid point due
+to zonal advecion (plus increase) according to Bott`s 4-level scheme.
+
+=over 8
+
+=item I<U>
+
+Zonal wind speed (u component), m/s.
+
+=item I<EXPR>
+
+An expression
+
+=item I<Reference>
+
+Bott, A., 1989a: A positive definite advection scheme obtained by
+nonlinear renormalization of the advection flux. I<Mon. Wea.
+Rev.>, B<117>, 1006-1015.
+
+Bott, A., 1989b: Notes and correspondance. I<Mon. Wea. Rev.>,
+B<117>, 2633-2636.
+
+
+=back
+
+=back
+
+
+
+=head2 B<mvadv>(I<V>,I<EXPR>)
+
+=over 4
+
+This function computes the time rate of change I<EXPR> at each grid point due
+to meridional advecion (plus increase) according to Bott`s 4-level scheme.
+
+=over 8
+
+=item I<V>
+
+Meridional wind speed (v component), m/s.
+
+=item I<EXPR>
+
+An expression
+
+=item I<Reference>
+
+Bott, A., 1989a: A positive definite advection scheme obtained by
+nonlinear renormalization of the advection flux. I<Mon. Wea.
+Rev.>, B<117>, 1006-1015.
+
+Bott, A., 1989b: Notes and correspondance. I<Mon. Wea. Rev.>,
+B<117>, 2633-2636.
+
+
+=back
+
+=back
+
+
+=head2 B<mwadv>(I<W>,I<EXPR>)
+
+=over 4
+
+This function computes the time rate of change I<EXPR> at each grid point due
+to vertical advecion (plus increase) using an upwind scheme.
+
+=over 8
+
+=item I<W>
+
+Vertical wind speed (w component) (unit of vertical coordinate/s, such
+as hPa/s for the vertical coordinate in hPa)
+
+=item I<EXPR>
+
+An expression
+
+=back
+
+=back
+
+=head1 THERMODYNAMICAL FUNCTIONS
+
+=head2 B<satvap>(I<T>)
+
+=over 4
+
+This function calculates the saturated vapor pressure (Pa)
+
+=over 8
+
+=item I<T>
+
+Temperature (K)
+
+=back
+
+=back
+
+
+=head2 B<dew>(I<PVAP>)
+
+=over 4
+
+This function calcuates the dew point temperature (K).
+
+=over 8
+
+=item I<PVAP>
+
+Vapor pressure (Pa)
+
+=back
+
+=back
+
+=head1 RADIATIVE TRANSFER FUNCTIONS
+
+=head2 B<lw>(I<PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,TAUCLB,FCLDB[,BINFILE,CTLFILE,-r|-c|-h|-l]>)
+
+=over 4
+
+This function computes the cooling rate [K/day] and thermal infrared
+fluxes and returns it in a file.
+
+=over 8
+
+=item I<PL>
+
+level pressure (hPa)
+
+=item I<TA>
+
+layer temperature (K)
+
+=item I<WA >
+
+layer specific humidity (kg/kg)
+
+=item I<TAUCL>
+
+cloud optical thickness (dimensionless)
+
+=item I<FCLD>
+
+cloud fraction
+
+=item I<PS>
+
+surface pressure (hPa)
+
+=item I<TG>
+
+land or ocean surface temperature (K)
+
+=item I<EG>
+
+land or ocean surface emissivity (fraction)
+
+=item I<TB>
+
+surface air temperature (K)
+
+=item I<WB>
+
+surface air specific humidity (kg/kg)
+
+=item I<TAUCLB>
+
+surface cloud optical thickness (dimensionless)
+
+=item I<FCLDB>
+
+surface cloud amount (fraction)
+
+=item I<BINFILE>
+
+binary file name ('null' or blank for no output)
+
+=item I<CTLFILE>
+
+ctl file name ('null' or blank for no output)
+
+=item I<-r>
+
+using Roberts et al. (1976) water vaopr continuum
+
+=item I<-c>
+
+using Clough et al. (1989) water vaopr continuum (default)
+
+=item I<-h >
+
+using look-up table (high acc but slow) (default)
+
+=item I<-l>
+
+using k-dist method (low acc but fast)
+
+=item I<Reference>
+
+Following the NASA Technical Memorandum (NASA/TM-2001-104606,
+Vol. 19) of Chou, Suarez, Liang, and Yan (2001). This NASA TM
+has been revised a few times since. It computes thermal infrared
+fluxes due to emission by water vapor, ozone, CO2, O2, minor
+trace gases, clouds, and aerosols and due to scattering by
+clouds and aerosols.
+
+=back
+
+=back
+
+
+=head2 B<lw2>(I<PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,PM,TM,WM,TAUCLM,FCLDM [,BINFILE,CTLFILE,-r|-c|-h|-l]>)
+
+=over 4
+
+This function computes the cooling rate [K/day] and thermal infrared
+fluxes and returns it in a file. (Same as lw, but required data at the
+top of mixed layer)
+
+=over 8
+
+
+=item I<PL >
+
+level pressure (hPa)
+
+=item I<TA >
+
+layer temperature (K)
+
+=item I<WA >
+
+layer specific humidity (kg/kg)
+
+=item I<TAUCL>
+
+cloud optical thickness (dimensionless)
+
+=item I<FCLD>
+
+cloud amount (fraction)
+
+=item I<PS >
+
+surface pressure (hPa)
+
+=item I<TG >
+
+land or ocean surface temperature (K)
+
+=item I<EG >
+
+land or ocean surface emissivity (fraction)
+
+=item I<TB >
+
+surface air temperature (K)
+
+=item I<WB >
+
+surface air specific humidity (kg/kg)
+
+=item I<TAUCLB>
+
+surface cloud optical thickness (dimensionless)
+
+=item I<FCLDB>
+
+surface cloud amount (fraction)
+
+=item I<PM >
+
+pressure at the top of mixed layer (hPa)
+
+=item I<TM >
+
+temperature at the top of mixed layer (K)
+
+=item I<WM >
+
+specific humidity at the top of mixed layer (kg/kg)
+
+=item I<TAUCLM >
+
+cloud optical thickness at the top of mixed layer (dimensionless)
+
+=item I<FCLDM >
+
+cloud amount at the top of mixed layer (fraction)
+
+=item I<BINFILE >
+
+binary file name ('null' or blank for no output)
+
+=item I<CTLFILE >
+
+ctl file name ('null' or blank for no output)
+
+=item I<-r > (optional)
+
+using Roberts et al. (1976) water vaopr continuum
+
+=item I<-c > (optional)
+
+using Clough et al. (1989) water vaopr continuum (default)
+
+=item I<-h > (optional)
+
+using look-up table (high acc but slow) (default)
+
+=item I<-l > (optional)
+
+using k-dist method (low acc but fast)
+
+=item I<Reference>
+
+Following the NASA Technical Memorandum (NASA/TM-2001-104606, Vol. 19)
+of Chou, Suarez, Liang, and Yan (2001). This NASA TM has been revised
+a few timessince. It computes thermal infrared fluxes due to emission
+by water vapor, ozone, co2, o2, minor trace gases, clouds, and
+aerosols and due to scattering by clouds and aerosols.
+
+=back
+
+=back
+
+
+=head1 VERTICAL INTERPOLATION/INTEGRATION FUNCTIONS
+
+=head2 B<pinterp>(I<FIELD,PGRID,PLEV,[-l|-s|-p]>)
+
+=over 4
+
+This function interpolates a 3-D field to a specified pressure level.
+Can also be used on non-pressure level data, such as sigma or
+eta-coordinate output where pressure is a function of time and grid
+level.
+
+=over 8
+
+=item I<Function returns>
+
+Defined grid C<vinterp> holding interpolated values
+
+=item I<FIELD>
+
+Name of 3-D grid to interpolate
+
+=item I<PGRID>
+
+Name of 3-D field holding pressure values at each gridpoint. If you
+are using regular pressure-level data, this should be set to the
+builtin GrADS variable C<lev>.
+
+=item I<PLEV>
+
+Pressure level at which to interpolate (can be 3-D, such as reserved
+variable C<lev>)
+
+
+=item I<-l> (optional)
+
+for piecewise linear interpolation (fast) (default)
+
+=item I<-s> (optional)
+
+for spline interpolation (slow & problematic while dx is small)
+
+=item I<-p> (optional)
+
+for polynomnial interpolation (fast but problematic with extrapolation)
+
+
+=back
+
+=back
+
+
+
+=head2 B<zinterp>(I<FIELD,ZGRID,ZLEV,[-l|-s|-p]>)
+
+=over 4
+
+This function interpolates a 3-D field to a specified z level. Can
+also be used on non-z level data, such as sigma or eta-coordinate
+output where C<z> is a function of time and grid level.
+
+=over 8
+
+=item I<Function returns>
+
+Defined grid C<vinterp> holding interpolated values
+
+=item I<FIELD>
+
+Name of 3-D grid to interpolate
+
+=item I<ZGRID>
+
+Name of 3-D grid holding z values at each gridpoint
+
+=item I<ZLEV>
+
+z level at which to interpolate
+
+=item -l (optional)
+
+for piecewise linear interpolation (fast) (default)
+
+=item -s (optional)
+
+for spline interpolation (slow & problematic while dx is small)
+
+=item -p (optional)
+
+for polynomnial interpolation (fast but problematic with extrapolation)
+
+
+=back
+
+=back
+
+
+=head2 B<vint2>(I<PSEXPR,EXPR,TOP>)
+
+=over 4
+
+This function performs a mass-weighted vertical integral in mb
+pressure coordinates.
+
+The calculation is a sum of the mass-weighted layers:
+
+        f/g * sum(expr * Delta(level))
+
+The bounds of the integration are the surface pressure and the
+indicated top value. The scale factors are C<f=100> and C<g=9.8>. The
+summation is done for each layer present that is between the bounds.
+The layers are determined by the Z levels of the default file. Each
+layer is considered to be from the midpoints between the levels actually
+present, and is assumed to have the same value throughout the layer, namely
+the value of the gridpoint at the middle of the layer.
+
+=over 8
+
+=item I<PSEXPR>
+
+A GrADS expression for the surface pressure, in mb, which bounds the
+integral on the bottom.
+
+=item I<EXPR>
+
+A GrADS expression representing the quantity to be integrated.
+
+=item I<TOP>
+
+The bounding top pressure, in mb. This value must be a constant and
+cannot be provided as an expression.
+
+=item I<Usage Notes>
+
+The summation is done using the Z levels from the default file, so it
+is important that the default file have the same Z dimension
+coordinates as I<EXPR>. Data levels below and above the bounds of the
+summation are ignored. The Z dimension in world-coordinate units is
+assumed to be pressure values given in millibars (mb). The units of C<g>
+are such that when the expression integrated is specific humidity (C<q>)
+in units of g/g, the result is kg of water per square meter, or
+precipitable water in mm. It is usually a good idea to make the top
+pressure value to be at the top of a layer, which is midway between
+grid points. For example, if the default file (and the data) have
+pressure levels of ...,500,400,300,250,... then a good value for top
+might be 275, the value at the top of the layer that extends from 350
+to 275 mb. The B<vint2> function operates only in an X-Y varying dimension
+environment.
+
+=item I<Example>
+
+A typical use of vint might be:
+
+   ga-> d vint(ps,q,275)
+
+This expression will integrate specific humidity to obtain
+precipitable water, in mm.
+
+=back
+
+=back
+
+
+=head1 MISCELANEOUS FUNCTIONS
+
+
+=head2 B<if>(I<EXPR1,OP,EXPR2,TRUE_EXPR,FALSE_EXPR>)
+
+=over 4
+
+This function compares I<EXPR1> and I<EXPR2>, where 5 arguments are
+expected. if their relation is true, I<TRUE_EXP> is returned, otherwise
+expression I<FALSE_EXPR> is returned.
+
+=over 8
+
+=item I<OP>
+
+One of the following: ==, =, >, <, >=, <=, !=
+
+=item I<EXPR2, TRUE_EXPR, FALSE_EXPR>
+
+These can be a expression, constant or -u.
+
+=back
+
+=back
+
+
+=head2 B<which>(I<EXPR,COND1,EXPR1,COND2,EXPR2,...,ELSE_EXPR>)
+
+=over 4
+
+This function labels gridpoints according to specified conditions,
+where an even number of arguments is expected. The number of arguments
+is limited by the maximum characters (about 128 charcters) being
+handled by the argument string. If I<EXPR> equals to I<COND1>, then I<EXPR1> is
+returned. Otherwise, if I<EXPR> equals to I<COND2>, then I<EXPR2> is returned. If
+none of the conditions are met, I<ELSE_EXPR> is returned.
+
+=over 8
+
+=item I<EXPR>
+
+A valid GrADS expression
+
+=item I<EXPR2, TRUE_EXPR, FALSE_EXPR>
+
+These can be a expression, constant or -u.
+
+=back
+
+=back
+
+
+
+=head2 B<maxv>(I<EXPR1>,I<EXPR2>)
+
+=over 4
+
+This function displays the maximum value between I<EXPR1> and I<EXPR2>,
+where 2 arguments are expected.
+
+=over 8
+
+=item I<EXPR1>
+
+Must be an expression
+
+=item I<EXPR2>
+
+Can be an expression, constant or -u.
+
+=back
+
+=back
+
+
+
+=head2 B<minv>(I<EXPR1>,I<EXPR2>)
+
+=over 4
+
+This function displays the minimum value between I<EXPR1> and I<EXPR2>,
+where 2 arguments are expected.
+
+=over 8
+
+=item I<EXPR1>
+
+Must be an expression
+
+=item I<EXPR2>
+
+Can be an expression, constant or -u.
+
+=back
+
+=back
+
+
+=head2 B<line>(I<EXPR,LON1,LAT1,LON2,LAT2[,-l|-m|-r]>)
+
+=over 4
+
+This function draws a line from I<(LON1,LAT1)> to I<(LON2,LAT2)>. Set
+the line at the value I<VAL> (default 1) using the template of I<EXPR>.
+
+=over 8
+
+=item I<LON1,LAT1>
+
+Starting longitude/latitude
+
+=item I<LON2,LAT2>
+
+Ending longitude/latitude
+
+=item I<-l> (optional)
+
+ return the length [km] in each grid
+
+=item I<-m> (optional)
+
+ return the logics (1:pass, 0: non-passing)
+
+=item I<-r> (optional)
+
+return the length ratio of each segment (fraction)
+
+
+=back
+
+=back
+
+=head1 EXAMPLES
+
+=head2 C<Minv>: displaying the minimum value between I<EXP1> and I<EXP2>
+
+  set clevs -12 -9 -6 -3 0 3 6 9 12
+  d minv(u,0)
+  run cbarn.gs
+  draw title d minv(u,0)
+
+=head2 C<Maxv>: displaying the maximum value between I<EXP1> and I<EXP2>
+
+  set clevs -12 -9 -6 -3 0 3 6 9 12
+  d maxv(u,0)
+  run cbarn.gs
+  draw title d maxv(u,0)
+
+=head2 C<If>: selectively displaying values according to the relationship between two expressions.
+
+  d if(u,>,0,t,-u)
+  run cbarn.gs
+  draw title if(u,>,0,t,-u)
+
+=head2 C<Which>: label gridpoints according to specific conditions
+
+  set clevs 0 1 2
+  d which(minv(maxv(u,0),10),0,0,10,2,1)
+  run cbarn.gs
+  draw title u<=0: 0; 0<u<10: 1; u>=10: 2
+
+=head2 C<tfit>: performing multiple linear regression on individual gridpoints
+
+  set t 1
+  d tfit('var.0','var.3','var.4',t=1,t=100)
+  d tfit('var.0','var.3',t=1,t=100,1mo,"/silver/data/nchu/fit/dmdtE")
+  d tfit('var.0','var.3','var.4',t='mon',t+100,1mo,"/silver/data/nchu/fit/dmdtEP")
+
+  d tfit('var.0','var.3','var.4',time=jan1990,time=dec2002)
+  d tfit('var.0','var.3',time=jan1990,time=dec2002,1mo,"/silver/data/nchu/fit/dmdtE")
+  d tfit('var.0','var.3','var.4',time=jan1990,time=dec2002,1mo,"/silver/data/nchu/fit/dmdtEP")
+
+=head2 C<fit>: performing global multiple linear regression
+
+  set t 1
+  d fit('var.0','var.3','var.4',t=1,t=100)
+  d fit('var.0','var.3',t=1,t=100,1mo,"/silver/data/nchu/fit/dmdtE")
+  d fit('var.0','var.3','var.4',t='mon',t+100,1mo,"/silver/data/nchu/fit/dmdtEP")
+
+  d fit('var.0','var.3','var.4',time=jan1990,time=dec2002)
+  d fit('var.0','var.3',time=jan1990,time=dec2002,1mo,"/silver/data/nchu/fit/dmdtE")
+  d fit('var.0','var.3','var.4',time=jan1990,time=dec2002,1mo,"/silver/data/nchu/fit/dmdtEP")
+
+=head2 C<muadv>: computing zonal advecion
+
+  d muadv(u,t)
+  run cbarn.gs
+  draw title -u*dT/dx (K s`a-1`n)
+
+=head2 C<mvadv>: computing meridional advecion
+
+  d mvadv(v,t)
+  run cbarn.gs
+  draw title -v*dT/dy (K s`a-1`n)
+
+=head2 C<mwadv>: computing vertical advecion using an upwind scheme
+
+  d mwadv(w,t)/100
+  run cbarn.gs
+  draw title -w*dT/dz (K s`a-1`n)
+
+Notice that the 100 factor above converts the unit of C<w> from C<Pa/s> to
+C<hPa/s> if the vertical coordinate is in C<hPa>.
+
+=head2 C<cosz>: computing the cosine of the solar zenith angle
+
+  d cosz(lat,h)
+  run cbarn.gs
+  draw title hourly cosine zenith angle
+
+  d cosz(lat,d)
+  run cbarn.gs
+  draw title daily mean cosine zenith angle
+
+  d cosz(lat,m)
+  run cbarn.gs
+  draw title monthly mean cosine zenith angle
+
+=head2 C<lt>: computing the local time
+
+  d lt(lat)
+  run cbarn.gs
+  draw title local time (h)
+
+=head2 C<dayratio>: computing the daytime ratio
+
+  d dayratio(lat)
+  run cbarn.gs
+  draw title daytime ratio (lat)
+
+=head2 C<jd>: computing the Julian day sice January 0001
+
+  d jd(lat)
+  run cbarn.gs
+  draw title julian date from 1 January 0001 (jd=1)\d jd(lat)
+
+=head2 C<dew>: computing the dew point temperature
+
+  d dew(q/0.622*lev*100)
+  run cbarn.gs
+  draw title dew point (K)
+
+=head2 C<satvap>: computing the saturated temperature
+
+  d satvap(t)
+  run cbarn.gs
+  draw title saturated temperature (Pa)
+
+=head2 C<line>: drawing lines
+
+  d line(u,30,60,200,-40,-r)
+  run cbarn.gs
+  draw title draw line\d line(u,lon0,lat0,lon1,lat1,-r)
+
+=head2 C<vint2>: modified vertical integration
+
+  d vint2(1000,dtdt,300)
+  run cbarn.gs
+  draw title Integrate[dTdt,{dp,1000,300}] (K/s*kg/m2)
+
+  d vint2(pressfc/100,dTdt,presML/100)
+  run cbarn.gs
+  draw title (K/s*kg/m2)
+
+  d vint(ps,q,275)
+  draw title Integrate q from surface to 275 hPa\ Total Precipitable Water (mm)
+
+=head2 C<zinterp>: Vertical interpolation to a specified p level.
+
+First, conduct 3-d vertical interpolation from file 3 p level to file 1 level.
+
+  define cbtzw=pinterp(cbtzw.3,lev.3,lev)
+
+Then conduct vertical interpolation to 1000 hPa:
+
+  define sxdflmc=pinterp(sxdfl1,pl1,1000)
+  define flxmc=pinterp(flx.'id',pl.'id',levmc.2)
+  define tml=pinterp(tprs.2*pow(1000/lev.2,0.286),lev.2,levmh.2(z=1))
+  define tsfc=pinterp(tprs.2*pow(1000/lev.2,0.286),lev.2,pressfc.3(z=1)/100)
+
+=head2 C<zinterp>: Vertical interpolation to a specified z level.
+
+  define tmp1=zinterp(tprs.2,zprs.2/9.8,h1)
+  define tmp2=zinterp(tprs.2,zprs.2/9.8,h2)
+  define pressfc=zinterp(lev.4,zprs.4/9.8,elv.1(t=1))
+  define levmh=zinterp(lev.4,zprs.4/9.8,elvmh)
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<http://opengrads.org/> - OpenGrADS Home Page
+
+=item *
+
+L<http://opengrads.org/wiki/index.php?title=User_Defined_Extensions> - OpenGrADS User Defined Extensions
+
+=item *
+
+L<http://www.iges.org/grads/> - Official GrADS Home Page
+
+=back
+
+=head1 AUTHORS
+
+Ben-Jei Tsuang <btsuang@yahoo.com>. Arlindo da Silva
+<dasilva@opengrads.org> implemented these functions as dynamic User
+Defined Extensions.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003-2008 by Ben-Jei Tsuang <btsuang@yahoo.com>.
+All Rights Reserved.
+
+This is free software released under the GNU General Public License;
+see the source for copying conditions. There is NO warranty; not even
+for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+=cut

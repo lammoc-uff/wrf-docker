@@ -1,0 +1,23 @@
+#
+# Sample GrADS table for Dynamic User Defined Commands/Functions.
+# There are 2 types of extensions: 
+#
+#    udc   user defined commands
+#    udf   user defined functions
+#
+# This feature requires GrADS v2.0.a4.oga.3 or later.
+#.................................................................
+
+#      A
+#      P   GrADS     Library      Library                 Short
+# Type I  Function   Function      Path                Description
+# ---- - ---------- ---------- -------------- -------------------------------  
+  udf  0  " "        " "        " "    "Regridding Functions"
+  udf  0   re        ffre       ^re.gex       "General interpolator"
+  udf  0   re_       ffre_dbg   ^re.gex       "General interpolator (verbose)"
+  udf  0   regrid2   f_gsudf    ^gsudf.gex    "regrid2-like wrapper for re()"
+  udf  0   geos      f_gsudf    ^gsudf.gex    "Interpolation to GEOS-5 Grids"
+  udf  0   reimg     f_gsudf    ^gsudf.gex    "Interpolation for Image Generation'
+#.............................................................................
+
+

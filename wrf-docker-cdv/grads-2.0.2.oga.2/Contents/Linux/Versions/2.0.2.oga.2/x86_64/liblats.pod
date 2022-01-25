@@ -1,0 +1,638 @@
+# 1 "liblats.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "liblats.c"
+# 984 "liblats.c"
+=pod
+
+=head1 NAME
+
+liblats.gex - GrADS Extension Library for File Subsetting and Reformatting
+
+=head1 SYNOPSIS
+
+=head3 GrADS Commands:
+
+=over 4
+
+=item
+
+run B<set_lats> I<PARAMETER> I<VALUE> - Set internal parameters
+
+=item
+
+run B<query_lats> - Print internal paramaters
+
+=item
+
+run B<lats_grid> I<EXPR> - Set horizontal grid
+
+=item
+
+run B<lats_data> I<EXPR> - Write data to file
+
+=back
+
+=head1 DESCRIPTION
+
+This library provides GrADS extensions (I<gex>) for interfacing to
+LATS (Library of AMIP II Transmission Standards), a collection of I/O
+functions for creating lon/lat gridded datasets in the GRIB, NetCDF-3,
+NetCDF-4/HDF-5 and HDF-4 formats. This is the low level LATS interface
+in GrADS. Usually, one uses the wrapper B<lats4d.gs> script
+(L<http://opengrads.org/doc/scripts/lats4d/>) for a more user friendly
+interface which has reasonable defaults for most internal parameters.
+
+The GrADS interface to LATS is implemented by means of 4 I<User
+Defined Commands> (UDCs). Most parameters defining the output file are
+set by means of the B<set_lats> command; the current LATS state can
+queried with command B<query_lats>. Command B<lats_grid> is used to
+define the horizontal longitude/lattude grid (vertical levels are set
+with the B<set_lats> command.) Command B<lats_data> is used to write a
+2-dimensional (longitude x latitude) slice of a variable, for a given time
+and level.
+
+The following sub-section describes the main attributes of the LATS
+library which this extension interfaces to. It has been adapted from the
+original LATS manual page.
+
+=head2 Overview of the LATS Library
+
+LATS is a subroutine library developed by the Program for Climate
+Model Diagnosis and Intercomparison (PCMDI) to output lon/lat gridded
+data for the AMIP II (Atmospheric Model Intercomparison Project II)
+and other intercomparison projects. In addition to outputting data,
+LATS optionally performs basic quality control on the data
+written. LATS outputs data in the GRIB and/or netCDF formats and
+provides an interface to GrADS and VCS. The LATS library is no longer
+supported by the original developers at PCMDI but remains as a viable
+mechanism for producing GRID-1, NetCDF and HDF output from GrADS.
+
+The main features of LATS are:
+
+=over 4
+
+=item 1
+
+LATS is designed to output rectilinear, generally global, gridded,
+spatio-temporal data. The amount of data written with a single
+function call is a horizontal longitude-latitude slice of a variable.
+
+=item 2
+
+Data may be output in the machine-independent formats GRIB and/or
+netCDF and are directly readable by GrADS.
+
+=item 3
+
+Acceptable variable names are prescribed. The units, datatype, and
+basic structure (e.g., single-level or multi-level) are inferred from
+the variable name. This information is tabled in an external, ASCII
+I<parameter table>. If no parameter table is specified, a default list of
+AMIP II parameters is used.
+
+=item 4
+
+More than one LATS file may be open simultaneously for
+output. In GrADS, one usually write one file at a time.
+
+=item 5
+
+Data must be written in increasing time sequence. All variables in a
+file share a common time frequency (e.g., hourly, monthly,
+etc.). Originally LATS did not support minutes, but a patch has ben
+developed in version used by GrADS to allow minutes are a valid time
+sequence.
+
+=item 6
+
+For a given timepoint, variables, and multiple levels for a variable, may be written in any order.
+
+=item 7
+
+Although GrADS Version 2 uses doubles (64 bits) to store variable
+data, all data written to file by this interface are floating-point or
+integer. INTEGER*8), and C int data can be written.
+
+=item 8
+
+Data written to GRIB files are packed to a predefined bit width or
+numerical precision depending on the variable. The precision and bit
+width is specified in the I<parameter table> file. Floating-point data written
+to netCDF files are saved as 32-bit IEEE floating-point values;
+integer data are written as 32-bit 2's complement integers.
+
+=back
+
+
+=head1 ANATOMY OF A LATS BASED GRADS SCRIPT
+
+The skeleton of a GrADS script using the LATS interface is as follows:
+
+=over 4
+
+=item 1.
+
+Optionally, specify an external parameter file, with
+B<set_lats> I<parmtab>.
+
+=item 2.
+
+Define the horizontal grid with B<lats_grid>. Define all vertical
+dimensions (e.g., pressure level) with B<set_lats> I<vertdim>. If a default
+surface dimension is defined for a variable, it does not
+have to be redefined with B<set_lats> I<vertdim>. Grids and vertical
+dimensions are shared across variables. NOTE: At
+present, only one grid may be defined for a GrADS/GRIB file.
+
+=item 3.
+
+Create a LATS file, with B<set_lats> I<create>.
+
+=item 4.
+
+Optionally, set the basetime, with B<set_lats> I<basetime>.
+
+=item 5.
+
+For EACH AND EVERY variable to be written, declare the
+variable with B<set_lats> I<var>. The LATS requirement that ALL variables
+be declared up front (before writing) is necessitated by the netCDF
+interface.
+
+=item 6.
+
+For each time-point, in increasing time order and, for each
+horizontal level of each variable, write the data for this level,
+time-point, with B<set_lats> I<write> and B<lats_data>.
+
+=item 7.
+
+Close the file, with B<set_lats> I<close>.
+
+=back
+
+By default, all errors are reported.
+
+=head2 QUALITY CONTROL
+
+LATS performs some basic quality control on the data written. The
+intention is to provide a quick check of data validity. For each level
+written the following statistics are calculated: range
+(maximum-minimum) and area-weighted average. If a missing data flag is
+defined for the variable, any missing data are ignored in calculating
+the statistics. Quality control is not performed on integer-valued
+variables.
+
+A QC exception is generated if abs(average - observed_average) >
+(tolerance * observed_standard_deviation). Similarly, an exception is
+generated if range > (range_tolerance * observed_range). In either
+case, a warning is issued, and an entry is written to the QC log
+file. The values of observed_average, tolerance,
+observed_standard_deviation, range_tolerance, and observed_range are
+tabled in the QC section of the I<Parameter Table> file. If no entry in this
+section is found for the given (variable,level_type,level), then no
+quality control is performed for that level.
+
+Data are always written, regardless of whether a QC exception is
+generated.
+
+The default name of the log file is I<lats.log>. This name is
+superseded by the value of the environment variable LATS_LOG, if
+defined.
+
+=head1 COMMANDS PROVIDED
+
+=head2 B<set_lats> I<basetime YEAR MONTH DAY HOUR>
+
+Set the basetime for file with ID fileid. The basetime is the initial
+time in which the file can be referenced. The function
+returns 1 if successful, 0 if an error oc- curs.
+
+=head2 B<set_lats> I<close>
+
+Close the file. The function returns 1 if successful, 0 if an error
+occurs.
+
+=over 8
+
+=item B<NOTE:>
+It is important to call B<set_lats close>, to ensure that any
+buffered output is written to the file.
+
+=back
+
+=head2 B<set_lats> I<create FILENAME>
+
+Create a LATS file with the given I<FILENAME>, a string of length <=
+256. If I<FILENME> does not end in the proper extension ('.nc' for
+netCDF, '.grb' for GRIB), the extension will be appended to the path.
+
+=head2 B<set_lats> I<convention CONVENTION>
+
+Deprecated. Same as B<set_lats> I<format>.
+
+=head2 B<set_lats> I<format FORMAT>
+
+The parameter I<FORMAT> defines the data format to be written, and the
+metadata convention to be followed when writing the format. The
+options are:
+
+=over 8
+
+=item I<grads_grib>
+
+WMO GRIB format, plus a GrADS control file and the ancillary GRIB map
+file. If this format is used the time step (see B<set_lats deltat>)
+must be non-zero, implying that timepoints are evenly-spaced. All
+variables in a file must share the same horizontal grid. This
+convention is readable with GrADS. The GRIB data may be processed by
+the utility B<wgrib> shipped with most GrADS distributions.
+
+=item I<grib>
+
+Similar to I<grads_grib> but without a GrADS control file and the
+ancillary GRIB map file.
+
+=item I<netcdf>
+
+NetCDF-3 format, observing the COARDS metadata standard. When this
+format is specified, the calendar must be I<STANDARD>. Climatologies
+are indicated by specifying I<year = 2> in B<set_lats write>. For the
+I<clim> and I<climleap> calendars, the year is automatically set to
+2. Files wiritten with this format are readable with GrADS.
+
+=item I<netcdf4>
+
+Like the I<netcdf> format, except that the files are in the new
+NetCDF-4 (actually HDF-5) format.
+
+=item I<hdf4>
+
+Like the I<netcdf> format, except that the files are in the new HDF-4
+format. Notice that in GrADS v2, NetCDF and HDF-4 files are produced
+with the same GrADS executables.
+
+=back
+
+
+=head2 B<set_lats> I<calendar CALENDAR>
+
+I<CALENDAR> is the calendar type, one of the following values:
+
+=over 4
+
+=item I<STANDARD>
+
+Standard Gregorian calendar. This is the default.
+
+=item I<NOLEAP>
+
+365days/year, no leap years
+
+=item I<CLIM>
+
+Climatological time (no associated year), 365 days
+
+=item I<CLIMLEAP>
+
+Climatological time, 366 days
+
+=back
+
+
+=head2 B<set_lats> I<center CENTER>
+
+I<CENTER> is the name of the modeling center or group creating the
+file, a string of <= 128 characters. For GRIB output, center must
+match one of the centers listed in the parameter file.
+
+=head2 B<set_lats> I<deltat DeltaT>
+
+I<DeltaT> is the number of time units in the time increment, where the
+units are specified by frequency. For example, data which are defined
+at multiples of 6 hours would be specified with
+
+   ga-> set_lats frequency hourly
+   ga-> set_lats deltat 6
+
+Similarly, monthly average data would be indicated by
+
+   ga-> set_lats frequency monthly
+   ga-> set_lats deltat 1
+
+Note that times may be skipped for formats other than I<GRADS_GRIB>;
+the only requirement imposed by the LATS interface is that timepoints,
+as specified via B<set_lats write>, be at a multiple of the time
+increment, relative to the base time (the first time written).
+
+=head2 B<set_lats> I<frequency FREQUENCY>
+
+I<FREQUENCY> is the time frequency of variables to be written to the
+file, and has one of the values:
+
+=over 4
+
+=item I<YEARLY>
+
+Only the year component of time is significant. I<DeltaT> (see
+B<set_lats>) is expressed in years.
+
+=item I<MONTHLY>
+
+The year and month components of time are significant. I<DeltaT> (see
+B<set_lats>) is expressed in months. Floating-point data in the
+I<GRADS_GRIB> format are compressed to 16-bits.
+
+=item I<MONTHLY_TABLE_COMP>
+
+The year and month components of time are significant. I<DeltaT> (see
+B<set_lats>) is expressed in months. Floating-point data in the
+I<GRADS_GRIB> format are compressed according to the specification in
+the parameter table.
+
+=item I<WEEKLY>
+
+The year, month, and day component of time are significant. I<DeltaT> is
+expressed in weeks.
+
+=item I<DAILY>
+
+The year, month, and day component of time are significant. delta is
+expressed in days.
+
+=item I<HOURLY>
+
+The year, month, day, and hour component of time are significant.
+I<DeltaT> is expressed in hours.
+
+=item I<MINUTES>
+
+The year, month, day, hour, and minute component of time are significant.
+I<DeltaT> is expressed in minutes.
+
+=item I<FORECAST_HOURLY>
+
+The year, month, day, and hour component of time are significant.
+I<DeltaT> is expressed in hours.
+
+=item I<FORECAST_MINUTES>
+
+The year, month, day, hour, and minute component of time are significant.
+I<DeltaT> is expressed in minutes.
+
+=item I<FIXED>
+
+Data are not time-dependent, e.g., for surface type, orography, etc.
+I<DeltaT> is ignored and year is set to 1 by convention.
+
+=back
+
+=head2 B<set_lats> I<gridtype GRIDTYPE>
+
+Define the type of horizontal grid. I<GRIDTYPE> is GAUSSIAN for
+Gaussian grids, LINEAR for evenly spaced grids, or GENERIC
+otherwise. The actual horizontal grid definition is performed with
+command B<lats_grid>.
+
+=head2 B<set_lats> I<gzip COMPRESSION_LEVEL>
+
+When writing NetCDF-4 files, specifes the level of GZIP compression to
+be employed. The higher the level, the harder the library works doing
+compression, usually (but not always) producing smaller files. The
+default is -1, meaning no compression. Notice that only NetCDF-4 files
+can be compressed. When I<COMPRESION_LEVEL> > 0 is specified with
+NetCDF-3 files, the format is automatically changed to NetCDF-4. For
+improving the compression effectiveness see B<set_lats> I<shave>.
+
+
+=head2 B<set_lats> I<model MODEL>
+
+I<MODEL> is the name of the model version which created this data.
+comments is a string of length 256 or less , including any null-
+terminator. The command returns an integer file ID, or 0 if the file
+cannot be created.
+
+=head2 B<set_lats> I<parmtab TABLE_FILENAME>
+
+Specify an external parameter table file. I<TABLE_FILENAME> is the
+pathname of a file containing a list of variable descriptions, and is
+a string of length <= 256 characters. Use of an external parameter
+table is optional. The location of the parameter table is determined
+as follows: (1) if the command B<set_lats> I<parmtab> is issued, the
+value of I<TABLE_FILENAME> is used, otherwise (2) if the environment
+variable LATS_PARMS is defined, its value is used, else (3) an
+internally-defined table of AMIP parameters is used. The command
+returns 1 on success, 0 on failure.
+
+=head2 B<set_lats> I<shave NBITS>
+
+Shave I<NBITS> off the mantissa of float-point numbers. By definition,
+IEEE float numbers have 24 bits dedicated for the mantissa. This
+command set to zero the last I<NBITS> of the mantissa, this way
+reducing entropy and improving the effectiveness of GZIP compression
+(see B<set_lats> I<gzip>). I<NBITS> must be in the range [1,23]. When
+I<NBITS> > 0 is specified, it automatically sets GZIP compression on
+at level 2, unless the compression level has already been
+set. (Currently compression is implemented only for NetCDF04 output.)
+
+NOTE: The actual shaving algorithm, first scales the variable being written
+for each horizontal layer, and then shaves bits off the mantissa. See
+      http://en.wikipedia.org/wiki/Ieee_float
+for additional information on IEEE float-point numbers.
+
+=head2 B<set_lats> I<var VARNAME TIMESTAT LEVEL_ID>
+
+Declare a variable to be written to a LATS file. fileid is the integer
+file ID returned from lats_create. The variable name I<VARNAME> must
+match a name in the parameter table, and is a string of length <= 128
+characters.
+
+
+I<TIMESTAT> is a time statistic identifier, one of:
+
+=over 4
+
+=item I<AVERAGE>
+
+An average over the delta time interval frequency
+defined by lats_create.
+
+=item I<INSTANT>
+
+The field is valid at the instan- taneous time set by the year, month,
+day, hour.
+
+=item I<ACCUM>
+
+Accumulation during delta time interval I<DeltatT> (see B<set_lats deltat>).
+
+=back
+
+I<LEVID> is the ID of the vertical dimension of the variable, as
+returned from B<set_lats> I<vertdim>. If the variable has a default surface
+defined in the parameter table, or has no associated
+vertical dimension, I<LEVID> should be 0. (Note: if levid is 0 and the
+variable has a default surface defined, the netCDF representation
+of the variable will not have an explicit vertical dimension, but
+will have a I<level_description> attribute).
+
+B<set_lats var> should be called exactly once for each variable to be
+written to a LATS file and must be called BEFORE B<set_lats> I<write>.
+The function returns the integer variable ID on success, or 0 on
+failure.
+
+=head2 B<set_lats> I<vertdim DIM_NAME LEV_TYPE LEV_1 ... LEV_N>
+
+I<DIM_NAME> is the name of the vertical dimension (e.g., "height",
+"depth", "level"), and it should not contain any whitespace
+characters.
+
+I<LEV_TYPE> is the vertical dimension type. It must match one of the level
+types defined in the vertical dimension types section of the
+parameterfile, e.g., I<plev, hybrid>, etc.
+
+I<LEV_1>, ..., I<LEV_N> is a strictly monotonic list of level
+values.
+
+Multi-level variables must have a vertical dimension defined. If a
+single-level (e.g., surface) variable has a default level type
+specified in the parameter table, it is not necessary to call
+B<set_lats> I<vertdim>, since the level type will be associated with
+the variable by default. Note that the level units are determined from
+the vertical dimension type table entry for name.
+
+This command returns an integer level ID on success, or 0 on
+failure.
+
+=head2 B<set_lats> I<write VAR_ID [LEVEL]>
+
+Specifies which variable in the file will be written next.
+
+I<VAR_ID> is the integer variable ID returned from B<set_lats>
+I<var>.
+
+I<LEVEL> is the level value, and must match one of the levels
+declared via lats_vert_dim. (Exception: if the variable was declared
+with levid=0, the value of I<LEVEL> is ignored.) year is the four-digit
+integer year, month is the month number (1-12), day is the day in
+month (1-31), and hour is the integer hour (0-23).
+
+=head2 B<lats_grid> I<EXPR>
+
+Define a horizontal, longitude-latitude grid, based on the dimension
+environment associated with the GrADS expression I<EXPR>. The grid
+type is specified with command B<set_lats> I<gridtype>.
+
+=head2 B<lats_data> I<EXPR>
+
+Write a horizontal longitude-latitude cross-section of a variable
+contained in the GrADS expression I<EXPR>. The actual variable on file
+being written to is specified with he B<set_lats> I<write> command.
+
+For monthly data, as specified by lats_create, day and hour are
+ignored. For daily and weekly data, the hour is ignored. For fixed
+data, the year, month, day, and hour are ignored. For surface
+variables, lev is ignored.
+
+This command returns 1 if successful, 0 on failure.
+
+=head2 B<query_lats>
+
+Prints out the value of all internal parameters.
+
+=head1 ENVIRONMENT VARIABLES
+
+=over 4
+
+=item LATS_PARMS
+
+Parameter table file (supersedes internal table if
+defined)
+
+=item LATS_LOG
+
+Log file (default: lats.log)
+
+=back
+
+=head1 HISTORICAL NOTES
+
+LATS was first introduced in GrADS v1.7 in the late 1990's by Mike
+Fiorino as means of producing GRIB-1/NetCDF output from GrADS. With
+the introduction of GrADS v2.0 in 2008, COLA removed LATS from the
+GrADS code base. In 2009, the OpenGrADS Project reintroduced LATS in
+GrADS v2.0 as a User Defiend Extension, adding support for
+NetCDF-3, NetCDF-4/HDF-5 and HDF-4 all from the same executable.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<http://opengrads.org/> - OpenGrADS Home Page
+
+=item *
+
+L<http://cookbooks.opengrads.org/index.php?title=Main_Page> -
+OpenGrADS Cookbooks
+
+=item *
+
+L<http://opengrads.org/wiki/index.php?title=User_Defined_Extensions> - OpenGrADS User Defined Extensions
+
+=item *
+
+L<http://www.iges.org/grads/> - Official GrADS Home Page
+
+=item *
+
+L<http://www-pcmdi.llnl.gov> - PCMDI
+
+
+=item *
+
+L<http://www-pcmdi.llnl.gov/software/lats> - LATS
+
+=item *
+
+L<http://www.unidata.ucar.edu/packages/netcdf> - NetCDF
+
+=item *
+
+L<ftp://ncardata.ucar.edu/docs/grib/guide.txt> - GRIB
+
+=item *
+
+L<http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html> - COARDS
+
+=item *
+
+L<http://wesley.wwb.noaa.gov/wgrib.html> - wgrib
+
+=item *
+
+L<http://opengrads.org/doc/scripts/lats4d/> - LATS4D
+
+=item *
+
+L<http://en.wikipedia.org/wiki/Ieee_float> - IEEE Float numbers
+
+=back
+
+=head1 AUTHORS
+
+Arlindo da Silva (dasilva@opengrads.org) wrote the GrADS UDXT
+interface and created this dcumentation from the LATS manual page.
+Mike Fiorino (mfiorino@gmail) wrote the actual LATS interface to
+GrADS. Robert Drach, Mike Fiorino and Peter Gleckler (PCMDI/LLNL)
+wrote the original LATS library.
+
+=head1 COPYRIGHT
+
+The code implementing the GrADS extension has been placed in the public domain.
+Portions (C) 1996, Regents of the University of California.
+
+See the source for copying conditions. There is NO warranty; not even
+for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

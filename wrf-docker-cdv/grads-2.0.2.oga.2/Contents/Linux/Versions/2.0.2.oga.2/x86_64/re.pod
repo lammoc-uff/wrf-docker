@@ -1,0 +1,576 @@
+# 1 "re.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "re.c"
+# 59 "re.c"
+=pod
+
+=head1 NAME
+
+re.gex - A 2D regridding function for GrADS
+
+=head1 SYNOPSIS
+
+=head3 Short-hand
+
+=over 2
+
+B<re>(expr,dlon), while dlon=dlat
+
+B<re>(expr,dlon,dlat,['ig',nyig],['ba'|'bl'|'bs'|'vt',vtmax,vtmin|'ma',min]
+
+B<re>(expr,dlon,gYY,['ig',nyig],['ba'|'bl'|'bs'|'vt',vtmax,vtmin|'ma',min]
+
+=back
+
+=head3 Linear Y-mapping
+
+=over 2
+
+B<re>(expr,nx,'linear',lon,dlon,ny,'linear',lat,dlat,
+['ig',nyig],['ba'|'bl'|'bs'|'vt',vtmax,vtmin|'ma',min]
+
+=back
+
+=head3 Gaussian Y-mapping
+
+=over 2
+
+B<re>(expr,nx,'linear',lon,dlon,ny,'gaus',gstart,njog,
+['ig',nyig],['ba'|'bl'|'bs'|'vt',vtmax,vtmin|'ma',min]
+
+=back
+
+=head1 DESCRIPTION
+
+The regrid function C<re> solves a common problem of transforming
+I<horizontal> 2-D gridded fields from/to different resolutions/grid
+types for quantitative intercomparison. For example, a model monthly
+mean precipitation field on a T126 gaussian grid can be compared to an
+observed climatology on a 2.5x2.5 grid using C<re>. The function C<re>
+offers many transform options ranging from simple bilinear
+interpolation to box averaging with I<voting.> Additional methods can
+be added to C<re> as needed.
+
+C<re> transforms two-dimensional (2-D) lat/lon GrADS grids from
+one grid type/resolution to another. The input is any 2-D
+lat/lon grid defined by the current GrADS lat/lon dimension
+environment. C<re> handles input grids which are cyclically
+continuous in longitude and excludes undefined input grid values
+from participation in the transform. If a valid transform cannot
+be made (i.e., insufficient defined data points), the output grid
+is set to undefined. C<re> supports two output grid types: 1)
+lat/lon with fixed increments; and 2) gaussian. Four transforms
+are available: 1) box averaging for regridding fine to coarse
+grids; 2) box averaging with "voting" for noncontinuous/index
+data such, as soil type; 3) bilinear interpolation; and 4)
+4-point bessel interpolation.
+
+=head1 REQUIRED PARAMETERS
+
+=over 4
+
+=item I<expr>:
+
+Any valid GrADS grid expression (e.g., z or ave(z.3(t+0,t=120,1yr)),
+real number, 'undef' or '-u'.
+
+=item I<nx>:
+
+The number of points in longitude (integer)
+
+=item I<lon>:
+
+Beginning longitude (center of the lower left hand corner grid
+or the grid (1,1)) of the output domain (float)
+
+=item I<dlon>:
+
+Delta longitude (dlon) or number of gaussian longitudes on the GLOBE (float)
+
+=item I<ny>:
+
+The number of points in latitude (integer)
+
+=item I<lat>:
+
+Beginning latitude (center of the lower left hand corner grid
+or the grid (1,1)) of the output domain (float)
+
+=item I<dlat>:
+
+Delta latitude (dlat) or the number of gaussian latitudes on the GLOBE (float)
+
+=item I<gstart>:
+
+The first gaussian grid number. If the data span all latitudes, start would
+be 1, indicating the southernmost gaussian grid latitude (integer)
+
+=item I<njog>:
+
+The number of GLOBAL gaussian latitudes on the output grid. (integer)
+
+=item I<'linear'>:
+
+Linear mapping (string)
+
+=item I<'gaus'>:
+
+Gaussian latitide mapping (string)
+
+=item I<Note>:
+
+All strings are CASE INSENSITIVE.
+
+=back
+
+=head1 OPTIONAL PARAMETERS
+
+=head3 Input Gaussian Grid:
+
+=over 4
+
+=item I<'ig', nyig>:
+
+Input grid is gaussian with I<nyig> being the number of
+gaussian latitudes (e.g., ig92 for the NMC T62
+grid). I<nyig> must be >= 8 and a multiple of four.
+This parameter is used to invoke a more precise
+calculation of the boundary between gaussian grid boxes.
+
+=back
+
+=head3 Interpolation Method:
+
+=over 4
+
+=item I<'ba'>
+
+Box averaging (the default, while regrids to coarse resoultion)
+
+=item I<'bl'>:
+
+Bi-linear interpolation (the default, when regridding to a finer
+resolution)
+
+=item I<'bs'>:
+
+3rd order Bessel interpolation
+
+=item I<'vt', vtmax, vtmin>:
+
+I<Vote> interpolation or box averaging with voting. The parameters
+I<(vtmax,vtmin)> (range: [0-1]) set the fraction of an output grid box
+that must be covered by defined input grid data for a "winner" to be chosen in
+the election. The default is I<vtmax>=I<vtmin>=1/2.
+
+The parameter I<vtmin> must be the same as I<vtmax> except for three or more
+candidates. The fraction for two candidates is midway between vtmax
+and vtmin.
+
+When there is only one candidate, I<vtmax> is the minimum fraction
+of an output grid point hat must be covered by defined input grid
+data for a "winner" to be chosen in the election.
+
+Specifying I<vtmax> = I<vtmin> = 1 would require that 100% of the output
+grid box must be covered by a single, unique value from the input grid
+whereas I<vtmax> = I<vtmin> = 0 would allow a winner to be chosen if ANY
+candidates where running. The default value of 0.5 means that a
+simple majority is required to have a winner.
+
+=item I<'ma', fraction>:
+
+This option applies ONLY to box averaging without voting when the
+input grid has undefined points. The parameter I<fraction> (range: [0-1])
+specifies the minimum area which must be covered with DEFINED
+data boxes to be considered a valid interpolation. The old
+I<regrid> v1.0 assumed I<fraction> was 0 or that if ANY input grid
+boxes contained defined data which intersected the output grid
+produced a box average. This was clearly too liberal and I<fraction> is
+now set by default to 50% or that half the output grid box must
+be covered with defined data to produced a defined output grid
+point.
+
+=back
+
+=head1 EXAMPLES
+
+=over 4
+
+=item 1)
+
+Regrid a global T62 gaussian grid (192x94) to a 2.5 deg lat/lon by box
+averaging,
+
+   open /reanl1/pilot20/fluxgrb8508.ctl
+   set x 1 192
+   set y 1 94
+   define p25=re(p,144,linear,0,2.5,72,linear,-88.75,2.5,ba)
+
+or
+   set lon 0 360
+   set lat -90 90
+   define p25=re(p,2.5,2.5,ba)
+
+or more simply,
+
+   define p25=re(p,2.5)
+
+Note: The lat/lon dimension environment is set using grid
+coordinates (x,y) to make the input and output grids global. To
+minimize future graphics/analysis calculations with the regridded
+field, we use the GrADS define function to store the grid in
+memory where it can be referenced as any other GrADS grid.
+
+
+=item 2)
+
+Regrid a 4x5 SiB vegetation type to a R15 (48x40) gaussian
+grid using box averaging with "voting." Require that at least
+60% of the output grid box must be covered with a single
+candidate value from the input grid for an election to occur.
+Otherwise the output grid box is set to undefined. Relax the
+one-candidate election requirement to 20% when there are three or
+more candidates,
+
+  open /export/sgi18/fiorino/data/sib/sib.param.annual.ctl
+  set lon 0 360
+  set lat -90 90
+  define i21=re(index,48,linear,0,7.5,40,gaus,1,40,vt,0.60,0.20)
+  set gxout grfill
+  d index
+  d i21
+
+B<Note> : During candidate selection, undefined input grid points do
+not contribute to the fraction of the output grid box covered
+with input grid boxes. The best way to display index type data
+in GrADS is to use the "grid fill" display option (set gxout
+grfill). GrADS will draw the grid box and color it according to
+the grid value.
+
+=item 3)
+
+Regrid 1x1 Aviation run 500 mb z to 2.5x2.5 grid for the region
+(-140, 20) to (-40, 70) using bessel interpolation,
+
+  open /export/sgi39/wd22sl/grads/avn/avn.93092800.fcst.ctl
+  set lev 500
+  set lat -180 180
+  set lon -90 90
+
+  d re(z,40,linear,-138.75,2.5,20,linear,21.25,2.5,bs)
+
+or
+
+  set lat 20 70
+  set lon -140 -40
+
+  d re(z,40,linear,-138.75,2.5,20,linear,21.25,2.5,bs)
+
+or
+
+  d re(z,2.5,2.5,bs)
+
+
+B<Note>: The above three regrid commands produce exactly the same results.
+Box averaging would be more appropriate when regridding to
+a coarser grid.
+
+=item 4)
+
+Regrid 1x1 Aviation run 500 mb z to 2.5x2.5 grid using box averaging and
+setting the grid to start at a specific lat/lon,
+
+  open /export/sgi39/wd22sl/grads/avn/avn.93092800.fcst.ctl
+  set lev 500
+  set lat -20 70
+  set lon -140 -40
+  d re(z,40,linear,-138.75,2.5,20,linear,21.25,2.5,ba)
+  set lat 30 50
+  set lon -50 50
+  d re(z,40,linear,-138.75,2.5,20,linear,21.25,2.5,ba)
+
+B<Note>: The above two regrids produce DIFFERENT results
+since the input domain does not cover the entire output domain. Missing
+values will be filled for the uncovered regions.
+
+=back
+
+=head1 RESTRICTIONS
+
+=over 4
+
+=item 1)
+
+There is no restriction in the dimension of input/output grids while
+there is sufficient memory. Note that there was a restriction
+of input/output grids of dimension 730x380 (~T225) in version 2.0
+and earlier.
+
+=item 2)
+
+Any valid GrADS grid can be regridded. However, GrADS (V1.5)
+currently only supports lat/lon grids where the mapping between
+grid and world coordinates is one dimensional, i.e.,
+longitude(i,j)=f(i) vice longitude(i,j)=f(i,j).
+
+=item 3)
+
+Only two output grid types have been implemented: 1) lat/lon
+(dlat does NOT have to equal dlon); and 2) gaussian grids.
+Mercator output grids could be added as lon(i,j)=f(i) and
+lat(i,j)=f(j) in this projection.
+
+=back
+
+=head1 METHODOLOGY
+
+The first step in the regrid transform is to define a
+relationship between the input and output grids within a common
+frame of reference or coordinate system. regrid bases the
+inter-grid relationship on "world" coordinates, and the GrADS map
+between grid coordinates (i,j) and world coordinates (lon, lat).
+As noted above, the world-grid mapping in GrADS is
+one-dimensional. Thus, the world-grid map of an input GrADS grid
+takes the form,
+
+   lat(i,j)=f(j) and lon(i,j)=g(i).
+
+By specifying a similar mapping for an output GrADS grid of the
+form
+
+   LAT(I,J)=F(J) and LON(I,J)=G(I),
+
+as defined by the input parameters X1, X2 and X3-6, regrid
+calculates,
+
+   X(I)=i(G(I)) and Y(J)=j(F(J)),
+
+where i(G(I)) is the location of the output grid with respect to
+the input grid dimension i and j(F(J)) for j.
+
+For simplicity, and greater generality, regrid assumes that the
+grid point is at the center of a rectangular grid box and maps
+the location of the boundaries of the output grid box to that of
+the input grid box. By default the boundaries are assumed to lie
+midway between grid points and while this is not strictly true
+for a gaussian grid near the poles, it is close nonetheless. The
+boundaries for gaussian grids can be calculated by specifying
+ig XXX in options. The reason why this cannot be automatic is that
+GrADS does not directly support gaussian grids (i.e., there is no
+ydef gauss 40 option in the data descriptor .ctl file, just
+linear and levels).
+
+Given the inter-grid map X(I) and Y(J), regrid uses two basic
+methods for doing the transform: 1) box averaging; or 2)
+interpolation. Box averaging is simply the area-weighted
+integral of all input grid boxes which intersect an output grid
+box, divided by the area of the output grid box. This approach
+is most appropriate: 1) for transforming from fine (e.g., dlon =
+1 deg) to coarse grids (e.g., dlon = 2.5 deg); and 2) when
+approximate conservation of an integral quantity (e.g., global
+average) is desired.
+
+Box averaging is also useful for regridding noncontinuous,
+parametric or "index" data. For example, suppose you have been
+given a 0.5x0.5 deg global grid of vegetation type and want to
+use these data in an R43 global model. The intuitive solution is
+to assign the output grid the value of the intersecting input
+grid box(es) which account(s) for the greatest percentage of the
+output grid box surface area. In the example of vegetation data,
+if 70% of the output grid box is covered by deciduous forest,
+then it might be reasonable to call the output grid deciduous
+forest. However, if there were 5 distinct vegetation types or
+"candidates" available, then regrid, being an American function,
+holds an "election" and select a "winner" based on the candidate
+covering the greatest percentage of the total surface area in the
+output grid box. Of course, coming from an imperfect democracy,
+the election can be "rigged" for a desired effect....
+
+This grid transform strategy is invoked using the "vote" option
+in box averaging (vt in C1). Conditions on the percentage of the
+output grid box (number of candidates and what it takes to get
+elected) can be finely controlled by the X4 and X5 parameters.
+
+Perhaps the most conventional way of regridding meteorological
+data (e.g., 500 mb geopotential heights) is interpolation because
+weather data tend to be continuous . regrid features a 4x4 point
+bessel interpolation routine developed at Fleet Numerical
+Meteorology and Oceanography Center (courtesy of D. Hensen,
+FNMOC). While this routine is in wide use at FNMOC, the regrid
+implementation has been substantially improved to handle more
+general input grids.
+
+First, bilinear interpolation is performed at all points to
+produce a "first guess." Improvements to the bilinear
+"first guess" are made using the higher-order terms in the bessel
+interpolator, but only if the bessel option is set (i.e., bs in
+options). Second, an undefined value in the 2x2 bilinear stencil
+causes the output grid to be undefined. If the bilinear value is
+defined, but any of the points in the larger 4x4 bessel stencil
+are undefined, the output grid is assigned the bilinear value.
+The third improvement is that the routine handles grids which are
+cyclically continuous in longitude.
+
+It is generally recommended that you use the bessel option when
+interpolating because the higher-order terms in the polynomial
+interpolation function produce a closer fit to the original data
+in regions of rapid changes (e.g., large gradients of the
+gradient around low pressure centers).
+
+By default, the box averaging is used while the resolution of input
+grid is finer than the out grid. Otherwise, the bessel interlopation
+is used.
+
+=head1 ADDITIONAL NOTES
+
+=head2 Using regridded fields in other GrADS functions
+
+The only down side to a regridded field is that its dimension
+environment cannot be controlled by its "grid" coordinate system.
+The best way to understand this is by an example. Suppose you
+regrid a T62 global Gaussian grid (192x94) to a uniform 2.5 deg
+grid (144x73) using box averaging and the GrADS define
+capability, e.g.,
+
+    define p25=re(p,2.5,2.5,ba)
+
+You now want to calculate the global average of the original
+field p and the defined regridded field p25. The only
+unambiguous way (using all grid boxes) of doing this calculation
+for p would be,
+
+   d aave(p,x=1,x=192,y=1,y=94)
+
+and not,
+
+   d aave(p,lon=0,lon=360,lat=-90,lat=90)
+
+This is because the cyclic continuity feature in GrADS would
+count grid boxes at the prime meridian twice, i.e., GrADS would
+really be doing,
+
+   d aave(p,x=1,x=193,y=1,y=94)
+
+Trying to find the global average of the 2.5 deg regridded field
+p25 using,
+
+   d aave(p25,x=1,x=144,y=1,y=73)
+
+would not yield a global average even though p25 IS 144x73!
+However,
+
+   d aave(p25,x=1,x=192,y=1,y=94)
+
+would because GrADS converts the grid coordinate range to
+(x=1,x=192) to world coordinates (lon=0,lon=360-1.875) and grabs
+all grid boxes in p25 within that range when putting together the
+data for the areal averaging calculation. Despite this
+restriction on grid coordinates, you can access specific chunks
+of a regridded defined variable using world coordinates. Suppose
+you want to look at the latitudinal variation of the u wind
+component at 180 deg and 500 mb on a 1 deg grid, e.g.,
+
+   set lev 500
+   set lon 180
+   set lat -90 90
+   d u
+
+if the you had,
+
+   define u5=regrid2(u,5)
+
+you could then,
+
+   d u5(lon=175)
+
+but not,
+
+   d u5(x=1)
+
+
+=head2 Diagnostic messages from regrid
+
+regrid sends information on the transform process
+(starting/ending lat/lon, number of grid points and the
+regridding method) to the terminal window where you are running
+GrADS. Additionally, errors during the call to regrid (e.g.,
+trying to regrid a two-dimensional longitude-pressure cross
+section) will be displayed, the process terminated, and control
+returned back to GrADS.
+
+=head1 HISTORY
+
+I<Regrid>, a Grid Analysis and Display System (GrADS) function
+developed originally for the Development Division of the former
+National Meteorological Center (now NOAA`s National Centers for
+Environmental Predection, NCEP), was substantially improved by Mike
+Fiorino at the Program for Climate Model Diagnosis and Intercomparison
+(PCMDI), Lawrence Livermore National Laboratory, from 1995 to about
+2003. Fiorino introduced a simpler calling syntax and made it
+available through the Internet as a GrADS User Defined Function (UDF).
+
+Starting in 2003 Ben-Jei Tsuang converted the original I<regrid> from
+Fortran to C and implemented it as an intrinsic function in GrADS
+v1.8, making his source code patches available to the
+community. However, this regrid patch was not adopted by COLA for
+GrADS v1.9. The porting was done with the utility C<f2c> to convert
+original f77 code to C, and the resulting C code was modified to
+eliminate the dependency on the C<f2c> library. Among the improvements
+Tsuang made to regrid are:
+
+=over 4
+
+=item
+
+Removed the restriction on the sizes of input/output dimensions.
+
+=item
+
+The function was renamed from C<regrid()> to C<re()>, and the
+arguments were reorganized to a syntax that closely followed the
+conventions used by the standard GrADS file descriptor. In this new
+syntax, the size and the locations of output grids can be exactly
+described.
+
+=item
+
+The function is now aware of the longitudinal cyclic continuity in GrADS
+(where the first and last longitudinal grid point is repeated), and does
+not generate an extra-x column as its predecessor C<regrid>.
+This feature is useful when using fwrite to create binary files.
+
+=item
+
+
+The output domain can be smaller or larger than the input domain.
+If the input domain is smaller than the output domain missing values
+will be filled for the uncovered regions.
+
+=item
+
+Due to the cyclic continuity feature in GrADS, you may not see your
+results correctly on the screen when using C<display>. It is strongly
+suggested to use C<lats4d> or C<fwrite> to write your results to a
+disk file, and then visualize your results afterwards.
+For convenience, the function writes out XDEF, YDEF and UNDEF records
+which can be cut-and-pasted to create a ctl file when using this
+function in conjunction with C<fwrite> or C<lats4d>.
+
+=back
+
+In 2006 Arlindo da Silva implemented C<re()> as dynamic user defined
+function and it became a poster child for the new User Defined Extensions
+(UDXTs) in GrADS. In 2008 adjustments were made for GrADS v2.
+
+=head1 COPYRIGHT
+
+Copyright (c) 1995-2003 by Mike Fiorino <mfiorino@gmail.com>
+
+Copyright (c) 2003-2007 by Ben-Jei Tsuang <btsuang@yahoo.com>
+
+This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+
+=cut

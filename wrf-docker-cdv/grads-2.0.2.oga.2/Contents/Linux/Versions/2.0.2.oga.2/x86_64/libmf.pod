@@ -1,0 +1,347 @@
+# 1 "libmf.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "libmf.c"
+# 2005 "libmf.c"
+=pod
+
+=head1 NAME
+
+libmf.gex - Mike Fiorino`s Collection of GrADS Extensions
+
+=head1 SYNOPSIS
+
+=head3 GrADS Commands
+
+=over 4
+
+=item
+
+B<tcprop> I<EXPR> I<LAT> I<LON> I<RADIUS[nm]> - Properties relative to lon/lat
+
+=item
+
+B<tcxy2rt> I<EXPR> I<LAT> I<LON> I<DR [nm]> I<DTHETA [deg]> I<RADMAX [nm]> - convert lat/lon grid expression from cartesian [x,y] to cylindrical [r,theta] coordinates
+
+=item
+
+B<mfhilo> I<EXPR> [I<METHOD>[,I<OPTIONS>] - Find max/min or H/L in 2D field
+
+=item
+
+B<grhist> I<EXPR> [I<METHOD>[,I<OPTIONS>] - histogram of grid expression
+
+=back
+
+=head3 GrADS Functions:
+
+=over 4
+
+=item
+
+B<smth2d>(I<EXPR>[,I<N>,I<nu1>,...,I<nuN>]) - Shuman smoother/de-smoother
+
+=item
+
+B<uv2trw>(I<U,V>,[I<OPT>],[I<LON,LAT>]) - Find radial/tangential velocity
+
+=back
+
+
+=head1 DESCRIPTION
+
+This library implements Mike Fiorino`s collection GrADS extensions,
+including his classic I<regrid2> regridding function as an extension now
+called I<re2>, I<smth2d> for applying the Shuman smoother-desmother and
+computing radial/tangential velocities relative to a lat/lon point.
+Commands are also provided to find H/L of a 2D field and to calculate
+properties of a tropical cyclone (TC).
+
+These functions were initially developed as I<classic> User Defined
+Function (UDFs) in GrADS v1.x. These extensions were later implemented as
+I<dynamic> linked extensions in GrADS v1.10.
+
+
+=head1 COMMANDS PROVIDED
+
+=head2 B<tcxy2rt> I<EXPR> I<LAT> I<LON> I<DR [nm]> I<DTHETA [deg]> I<RADMAX [nm]> - convert lat/lon grid expression from cartesian [x,y] to cylindrical [r,theta] coordinates
+
+=over 4
+
+This transforms the I<EXPR> lat/lon grid from cartesian to cylindrical
+coordinates relative to the I<LON,LAT> point, typically a tropical
+cyclone. The parameters are returned to the calling GrADS script via
+script variable I<result> ONLY.
+
+Sample output:
+
+tcxy2rt for expr: psl clat: 28.90 clon: 287.80 NB: OUTPUT ONLY to script var RESULT
+nr: 9 nt: 8 drad: 30 [nm] dtheta: 45 radmax: 252
+   i j r theta val
+   0 0 0 0 28.90 287.80 100593.36
+   0 1 0 45 28.90 287.80 100593.36
+      .
+      .
+      .
+   8 6 240 270 28.90 285.33 100967.55
+   8 7 240 315 30.43 286.04 101041.14
+
+
+
+
+=back
+
+
+=over 4
+
+I<EXPR> - a valid GrADS expression
+
+I<LAT> - latitude of the center
+
+I<LON> - longitude of the center
+
+I<DR> - delta r [nm]
+
+I<DTHETA> - delta theta [deg]
+
+I<RADMAX> - maximum distance/extent [nm] of the cicle
+
+=back
+
+
+=head2 B<tcprop> I<EXPR> I<LAT> I<LON> I<RADIUS [nm]> I<BEARING [deg]>
+
+=over 4
+
+This command computes the I<EXPR> properties relative to a point located
+at I<LON,LAT>, typically a tropical cyclone. The parameters are returned
+to the calling GrADS script via script variable I<result>.
+
+Sample output:
+
+=back
+
+ tcprop for expr: psl Latc: 16.80 Lonc: 129.70 Radinf: 200 [nm] Bearing: 60 Hemi1: 60-240 Hemi2: 240-420
+ MAXCntRadGrad: 1.249e-02 minCntRadGrad: 8.694e-03 MeanCntRadGrad: 1.063e-02 [units: (out-ctr)/nm]
+ MeanFieldInsideRadinf: 100573
+ Hemi1: 60-240 Hemi2: 240-420
+ MeanHemi1: 100572 MeanHemi2: 100573
+ QuadNE: 60-150 QuadSE: 150-240 QuadSW: 240-330 QuadNW: 330-420
+ MeanNE: 100598 MeanSE: 100545 MeanSW: 100548 MeanNW: 100597
+
+=over 4
+
+I<EXPR> - a valid GrADS expression
+
+I<LON,LAT> - longitude/latitude of the center
+
+I<RADIUS> - distance in nm away from I<LON,LAT> to calculate properties
+
+I<BEARING> - direction (0-360 deg) to calculate mean of the field within
+I<RADIUS> in four quadrants and two hemispheres, e.g., of a TC is
+heading towards the West (270 deg), then C<MeanHemi1> will be the right
+hemisphere (North or right of track) and C<MeanHemi2> the left (South or
+left of the motion). The quadrants are defined NE,SE,SW,NW relative to
+I<BEARING> (0 deg or North)
+
+=back
+
+
+=head2 B<mfhilo> I<EXPR> [I<METHOD>[,I<OPTIONS>]
+
+=over 4
+
+This command finds maximun/minimum values in a 2-D lat/lon field, returning
+the location and value between grid points via the GrADS script variable
+I<result>.
+
+=over 4
+
+I<EXPR> is a GrADS valid expression
+
+I<METHOD> - can be either I<CL> or I<GR>
+
+For method B<CL> -- Contour-Level based from NCEP -- the I<OPTIONS> are
+
+=over 4
+
+I<MaXMin> - specify I<L> for lows only, I<H> for highs only; A|B for both (case insensitive)
+
+I<RADIUS> - radius in nm, default is 120, bigger radius leads to finding fewer H/L
+
+I<CINTINF> - contour interval between max and nearby point; smaller contour interval leads to finding more negative extrema.
+
+=back
+
+For method B<GR> -- GRid-based written by Mike Firoino -- the I<OPTIONS> are
+
+=over 4
+
+I<MaXMin> - specify I<L> for lows only, I<H> for highs only; A|B for both (case insensitive)
+
+I<SORTby> - I<d> distance from either center of grid or a specified
+lat/lon; I<m> order by mag/value at extrema; I<g> by gradient; I<l> by
+laplacian
+
+I<PCNTILE> - set percentile (0-100) of top N points sorted by gradient
+
+I<LATC> - set latitude of the center point of the search; default is center of grid
+
+I<LONC> - set longitude (deg E) of the search center point; defaul is grid center
+
+I<RADINF> - radius from I<LATC>,I<LONC> to search; default is -999 or do not use I<RADINF>
+
+I<NDIGSIG> - # of significant digits to determine if extrema is 'significant'; default is 6 and can only be set from 2-8, if outside this bound then precision checking is disabled...
+
+
+=back
+
+Example + output:
+
+
+ vt=hcurl(u,v)*1e5
+
+ mfhilo vt gr b d 30 16.8 129.7
+
+output in script variable I<result>:
+
+ mfhilo GR method N: 7 maxmin: 0 pcntile: 30 latc: 16.80 lonc: 129.70
+ H 16.86 129.90 M: 20.3321 G: 100.0 L: 100.0 D: 12.22 GV: 2.2897 LV: 4.82068
+ H 17.03 127.69 M: 10.4799 G: 38.7 L: 28.8 D: 115.96 GV: 0.88574 LV: 1.38745
+ L 20.56 129.96 M: -5.2466 G: 100.0 L: 100.0 D: 226.19 GV: 1.09352 LV: 4.55874
+ L 17.94 125.36 M: -0.435871 G: 43.6 L: 23.0 D: 257.63 GV: 0.47636 LV: 1.04821
+ L 18.10 134.23 M: 0.00436844 G: 60.2 L: 25.6 D: 270.80 GV: 0.658458 LV: 1.16751
+ L 16.06 124.95 M: -0.726843 G: 26.8 L: 32.2 D: 276.80 GV: 0.293564 LV: 1.46846
+ L 14.40 134.67 M: -5.43262 G: 88.4 L: 41.8 D: 321.18 GV: 0.966466 LV: 1.90383
+
+for the first output line (in grads script: sublin(result,2)):
+
+ H -- type of extrema High or Low
+ 16.86 -- latitude
+ 129.90 -- longitude
+ M: 20.3321 -- magnitude
+ G: 100.0 -- percentile of gradient
+ L: 100.0 -- percentile of laplacian
+ D: 12.22 -- great-circle distance [nm] away from latc (16.8) and lonc (129.7)
+ GV: 2.2897 -- value of gradient in grid units (dx=i+1-i = 1)
+ LV: 4.82068 -- value of laplacian in grid units
+
+=over 4
+
+=back
+
+For method B<TM> -- Tim Marchok, GFDL barnes-analysis scheme to locate extrema between grid points -- the I<OPTIONS> are
+
+=over 4
+
+I<LATC> - first-guess latitude
+
+I<LONC> - first-guess longitude (deg E)
+
+I<RADINF> - search radiusm [nm]
+
+I<ICTYPE> - 0 -> cparm='nothing special'; 1 -> cparm='vmag' (special
+wind speed reatment); 2 -> cparm='zeta' (special vorticity treatment)
+
+=back
+
+Example + Output:
+
+ mfhilo vt tm 16.8 129.7
+
+ mfhilo TM method for expr: vt Radinf: 250 [nm] ictype: 0 (0=> cparm=''nothing special', 1=> cparm='vmag'; 2=> cparm='zeta'
+ GuessLon: 129.70 GuessLat: 16.80
+ FinalLon: 129.90 FinalLat: 16.85 FinalVal: 17.665 FinalValBesselIntrp: 20.3253
+
+
+
+=back
+
+=back
+
+=head1 FUNCTIONS PROVIDED
+
+=head2 B<smth2d>(I<EXPR>[,I<N>,I<nu1>,...,I<nuN>])
+
+=over 4
+
+This function smooths a 2D field according to the Shuman (1957, MWR 357-361)
+smoother-desmoother algorithm; defaults I<N>=1 I<nu1>=0.5 I<nu2>=-0.5 (light).
+For exampe, for a 3 passes, heavy filter enter
+
+      ga-> d smth2d(psl,3,0.5)
+
+=over 4
+
+I<EXPR> is a GrADS valid expression
+
+I<N> - number of fiter passes
+
+I<ni1>,...I<nuN> - smoothing coefficients
+
+=back
+
+
+=back
+
+=head2 B<uv2trw>(I<U,V>,[I<OPT>],[I<LON,LAT>])
+
+=over 4
+
+This function returns the tangential (I<OPT>=1, default) or radial (I<OPT>=-1)
+velocity relative to a fixed I<LON,LAT>. If no I<LON,LAT> is provided,
+then the center of the grid is assumed as the fixed point. For example,
+
+      ga-> d uv2trw(ua,va,-1)
+
+displays the I<radial> velocity, while
+
+      ga-> d uv2trw(ua,va)
+
+displays the I<tangential> velocity.
+
+I<OPT> = 2 -- return the u(x,y) component of the tangential wind (Vt(r,theta))
+I<OPT> = 3 -- return the v(x,y) component of the tangential wind (Vt(r,theta))
+
+I<OPT> = -3 -- return the v(x,y) component of the radial wind (Vr(r,theta))
+I<OPT> = -2 -- return the u(x,y) component of the radial wind (Vr(r,theta))
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<http://opengrads.org/> - OpenGrADS Home Page
+
+=item *
+
+L<http://cookbooks.opengrads.org/index.php?title=Main_Page> -
+OpenGrADS Cookbooks
+
+=item *
+
+L<http://opengrads.org/wiki/index.php?title=User_Defined_Extensions> - OpenGrADS User Defined Extensions
+
+=item *
+
+L<http://www.iges.org/grads/> - Official GrADS Home Page
+
+=back
+
+
+=head1 AUTHOR
+
+Michael Fiorino (mfiorino@gmail.com)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009 Michael Fiorino
+
+This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+
+=cut

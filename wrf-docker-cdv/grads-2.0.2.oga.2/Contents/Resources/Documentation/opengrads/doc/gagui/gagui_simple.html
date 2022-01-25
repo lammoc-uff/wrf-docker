@@ -1,0 +1,245 @@
+
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+Using GrADS with Athena Widgets 
+</font> </H1>
+</center>
+
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_run.html>Running the sample script</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_sample.html>Writing the sample script</a>
+</center>
+
+<p>
+
+<!----------------------------------------------------------------->
+<hr>
+<h1>Writing simple scripts</h1>
+
+Now that you understand the basic functionality of GAGUI you are ready
+to learn how to write your own GUI script, or at least how to customize
+the provided sample scripts for your own taste and needs. In this
+section we introduce the most basic GAGUI functions by constructing a
+much simpler version of the sample script. In the next section we will 
+walk you through the sample script described in the previous section.
+A detailed description of each GUI function and associated callbacks
+can be found in the <a href=gagui_ref.html>Reference Section</a>.
+
+<font color=#000ff>
+<h3>Example 1: Opening files, displaying variables, and quitting</h3>
+</font>
+
+The most basic GUI function is <b>MakeButton</b> which creates
+a button and associate a function (callback) with it. Here is how you
+create a button for opening a file
+<blockquote>
+<b>
+        MakeButton( open,  "Open",  Load, "open" )<br>
+</b>
+</blockquote>
+The first argument, <b>open</b>, is a name you give to the widget
+so that later you can modify some of its attributes such as color or
+font. The string <b>"Open"</b> is the text that will be drawn on 
+the button. The third argument, <b>Load</b>, is the name of an
+internally defined callback function which in this case is a function
+for open GrADS data files. The last argument, <b>"open"</b> is the
+GrADS command for opening the file (other options are <b>"sdfopen"</b>
+or <b>"xdfopen"</b>).
+<p>
+To select the default expression we use the <b>VarSel</b> callback:
+<blockquote>
+<b>
+        MakeButton( var, "Var", VarSel, NULL)
+</b>
+</blockquote>
+<p>
+To display the default expression we use the <b>Display</b> callback:
+<blockquote>
+<b>
+        MakeButton( display, "Display", Display, "display" )
+</b>
+</blockquote>
+Finally, we need a way out so we make a <i><font color=#ff0000>Quit</font></i> 
+button:
+<blockquote>
+<b>
+        MakeButton( quit, "Quit", Cmd, "quit" )
+</b>
+</blockquote>
+The callback <b>Cmd</b> executes the GrADS command <b>"quit"</b>
+specified as the last argument. The next step is to specify the
+relative position of each widget, i.e., who goes to to right of whom.
+<blockquote>
+<b>
+        SetWidgetPos(var,     NO_CARE, NULL, PLACE_RIGHT, open)<br>
+        SetWidgetPos(display, NO_CARE, NULL, PLACE_RIGHT, var)<br>
+        SetWidgetPos(quit,    NO_CARE, NULL, PLACE_RIGHT, display)
+</b>
+</blockquote>
+The second and third arguments of <b>SetWidgetPos()</b> are needed
+when we have more than one row of widgets which is not our case
+in this example.
+Finally, all GrADS GUI scripts must
+end with this function:
+<blockquote>
+<b>
+        MainLoop()
+</b>
+</blockquote>
+Click <a href=ex1.gui>here</a> for the full script. Save it to a file
+in your local disk, say <b>ex1.gui</b>, and execute it:
+<blockquote>
+<b>
+ga-> gui ex1.gui
+</b>
+</blockquote>
+You should see something like this:
+<p>
+<center>
+<IMG SRC="gui_ex1.gif" ALT="GAGUI Example 1">
+</center>
+<p>
+Play around, try to add additional buttons. Suggestion: add 
+<i><font color=#ff0000>Clear</font></i> and 
+<i><font color=#ff0000>Reinit</font></i> buttons.
+
+<font color=#000ff>
+<h3>Example 2: Creating menus</h3>
+</font>
+
+Let's get a bit fancy. Instead of a button for opening a file let's
+create a <b>File</b> menu where we could <b>open</b> or <b>sdfopen</b>
+a file. First we create the menu with the syntax:
+<blockquote>
+<b>
+     MakeMenu ( file, "File" )
+</b>
+</blockquote>
+Here <b>file</b> is the name of the menu, while file <b>"File"</b>
+is the text that will be drawn on the menu. Next we create the 2 menu
+items:
+<blockquote>
+<b>
+     MakeMenuItem(   open, file, "Open",     Load, "open")<br>
+     MakeMenuItem(sdfopen, file, "SDF Open", Load, "sdfopen")
+</b>
+</blockquote>
+The first argument is the name of widget for referring to it later if
+you want to. The second argument, <b>file</b> is the name of the menu
+this item belongs to. Arguments 3 thru 5 are menu item title, callback
+and callback argument, similar to the <b>MakeButton()</b> function
+above. 
+<p>
+Click <a href=ex2.gui>here</a> for the modified script. Try it out.
+You should see something like this:
+<p>
+<center>
+<IMG SRC="gui_ex2.gif" ALT="GAGUI Example 2">
+</center>
+<p>
+
+
+<font color=#000ff>
+<h3>Example 3: Tinkering with colors</h3>
+</font>
+All is well and good but these white widgets look ugly. Let's add some
+color to make them more interesting. First we issue this command
+to force the widgets to appear on the screen:
+<blockquote>
+<b>
+  ShowDisplay()
+</b>
+</blockquote>
+Next, we define colors:
+<blockquote>
+<b>
+        GetNamedColor(gray,"grey") <br>
+        GetNamedColor(sblue,"LightSkyBlue")
+</b>
+</blockquote>
+The first argument of <b>GetNamedColor()</b> is the name you give to
+the color for later use; the second argument is the name X windows uses
+for the color; you can view the list of available X11 color names 
+with the <b>showrgb</b>  command in a Unix shell.
+The colors <i>white, back, red, green, blue,</i>
+and <i> yellow</i> are automatically defined.
+<p>
+Finally, we reset the widget colors
+<blockquote>
+<b>
+        SetBgColor(file,sblue)<br>
+        SetBgColor(var,gray)<br>
+        SetBgColor(display,gray)<br>
+        SetBgColor(quit,red)<br>
+        SetFgColor(var,yellow)<br>
+        SetFgColor(display,yellow)<br>
+        SetFgColor(quit,yellow)
+</b>
+</blockquote>
+The function <b>SetBgColor()</b> sets the widget's background
+color; the function <b>SetFgColor()</b> sets the widget's 
+foreground color.
+
+<p>
+Click <a href=ex3.gui>here</a> for the modified script. Try it out.
+You should get something like this:
+<p>
+<center>
+<IMG SRC="gui_ex3.gif" ALT="GAGUI Example 3">
+</center>
+<p>
+
+
+<font color=#000ff>
+<h3>Example 4: Tinkering with fonts</h3>
+</font>
+
+Choosing a nice font for your widgets can greatly improve their
+appearance. The first step is to get desired font:
+<blockquote>
+<b>
+        GetFont(font,"-*-helvetica-bold-o-normal--14-*-*-*-*-*-*-*" )
+</b>
+</blockquote>
+The first argument of <b>GetFont()</b> is the name you give to
+the font for later use; the second argument is the name X windows uses
+for the font. You can find out which fonts are available with your
+X server through the command <b>xlsfonts</b> available on most Unix
+systems, and in Windows 95/NT if you have X11R6.3 installed.
+
+<p>
+Once the font has been defined you can then reset the font of
+all widgets
+<blockquote>
+<b>
+        AllWidgetFont(font)
+</b>
+</blockquote>
+The function <b>SetWidgetFont()</b> can also be used for setting the
+font of individual widgets; see the <a href=gagui_ref.html>Reference
+Section</a>. 
+
+<p>
+Click <a href=ex4.gui>here</a> for the modified script. Try it out.
+You should get something like this:
+<p>
+<center>
+<IMG SRC="gui_ex4.gif" ALT="GAGUI Example 4">
+</center>
+<p>
+
+
+
+<p>
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_run.html>Running the sample script</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_sample.html>Writing the sample script</a>
+</center>

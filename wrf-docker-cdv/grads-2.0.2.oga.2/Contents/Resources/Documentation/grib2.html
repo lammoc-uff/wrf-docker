@@ -1,0 +1,393 @@
+<!--Copyright (C) 1988-2005 by the Institute of Global Environment and Society (IGES). See file COPYRIGHT for more information.-->
+
+<h1>Doing GRIB in GrADS</h1>
+<ul>
+<a href="#intro">Introduction</a><br>
+<a href="#what">What is GRIB?</a><br>
+<a href="#problem">The Problem</a><br>
+<a href="#limit">Up-front Limitations</a><br>
+<a href="#solution1">The Solution - Part 1</a><br>
+<a href="#solution2">The Solution - Part 2</a><br>
+<a href="#conclusions">Conclusions</a><br></ul>
+<hr><br>
+<a name="intro"><h2>INTRODUCTION</h2></a>
+<ul>
+One of the most powerful features of GrADS is its ability to work
+DIRECTLY with GRIB data.  Unfortunately, "doing GRIB in GrADS" is
+not simple; it requires an understanding of GRIB and how GrADS
+works this type of data.<p>
+
+This note attempts to provide the required understanding to use
+GRIB data in GrADS.</ul><p>
+
+<a name="what"><h2>WHAT IS GRIB?</h2></a>
+<ul>
+GRIB (GRIdded Binary) is an international, public, binary format
+for the efficient storage of meteorological/oceanographic
+variables.  Typically, GRIB data consists of a sequence of 2-D
+(<code>lon,lat</code>) chunks of a (in most general sense) 4-D variable
+(e.g.,
+<code>u comp on the wind = f(lon,lat,level,time)</code>).  The sequence is
+commonly organized in files containing all variables at a
+particular time (i.e., <code>3-D (lon,lat,level) volume</code>). 
+
+</ul>
+<a name="problem"><h2>THE PROBLEM</h2></a>
+<ul>
+The problem for the user is how to "interface" or "display" GRIB
+file(s) to GrADS.  The solution has two components.  The first is
+to see what is in the GRIB file, i.e., variables, grids, times,
+etc. and the second is to "map" the 2-D GRIB fields to higher
+dimensional structures available in GrADS.<p>
+</ul>
+<a name="limit"><h2>UP-FRONT LIMITATIONS</h2></a>
+<ul>
+There are some limitations on the kinds of GRIB data that can be
+interfaced/displayed in GrADS:<p>
+
+<ul>	a)	lon,lat grids (NOT lat,lon) <br>
+	b)	simple packing<br>
+	c)	grid point data<br>
+	d)	grids must be contiguous (no blocked or octet grids)</ul><p>
+
+Thus, "thinned" grids (non rectangular) and spectral coefficients
+are not supported.  However, GRIB versions 1 AND 0 are supported
+(GRIB 0 data must be filtered to GRIB 1 for wgrib (see
+<a href="http://wesley.wwb.noaa.gov/wgrib.html">wgrib</a>) and version 1.7
+of
+GrADS
+will support such non-rectilinear grids.  Further, it IS possible
+to display "preprojected" GRIB data (e.g., polar stereo fields,
+see <a href="http://grads.iges.org/grads/eta.ctl">eta.ctl</a>).  <p>
+</ul>
+<a name="solution1"><h2>THE SOLUTION - PART 1</h2></a>
+<ul>
+The first, and relatively straightforward, part of the solution
+is to find out what is in the GRIB file.  I use two utilities:<p>
+<ol>
+<li><a href="gradutilgribscan.html">gribscan</a> (comes with GrADS);
+<li><a
+href="http://wesley.wwb.noaa.gov/wgrib.html">wgrib</a></ol><p> The big
+virtue of
+wgrib is that the code is written in ANSI C and runs on all the
+major platforms from PC's to Cray.  Although wgrib was designed
+to support the NCEP reanalysis project, it has been extended to
+handle other sources of GRIB data (e.g., ECMWF) and is my tool of
+choice.  If I can't read the data in wgrib then I change the code
+and feed the changes to Wesley Ebisuzaki, NCEP.<p>
+
+Once you have wgrib running,<p>
+
+<dd><code>wgrib ncep.reanl.mo.7901.grb</code><p>
+
+yields,<p>
+
+<ul><code>
+1:0:d=79010100:UGRD:kpds5=33:kpds6=100:kpds7=850:
+TR=113:P1=0:P2=6:TimeU=1:850 mb:anl:ave@6hr:NAve=124<br>
+
+2:15852:d=79010100:UGRD:kpds5=33:kpds6=100:kpds7=500:
+TR=113:P1=0:P2=6:TimeU=1:500 mb:anl:ave@6hr:NAve=124<br>
+
+3:33018:d=79010100:UGRD:kpds5=33:kpds6=100:kpds7=200:
+TR=113:P1=0:P2=6:TimeU=1:200 mb:anl:ave@6hr:NAve=124<br>
+
+4:51498:d=79010100:VGRD:kpds5=34:kpds6=100:kpds7=850:
+TR=113:P1=0:P2=6:TimeU=1:850 mb:anl:ave@6hr:NAve=124<br>
+
+5:66036:d=79010100:VGRD:kpds5=34:kpds6=100:kpds7=500:
+TR=113:P1=0:P2=6:TimeU=1:500 mb:anl:ave@6hr:NAve=124<br>
+
+6:81888:d=79010100:VGRD:kpds5=34:kpds6=100:kpds7=200:
+TR=113:P1=0:P2=6:TimeU=1:200 mb:anl:ave@6hr:NAve=124<br>
+
+7:99054:d=79010100:PRES:kpds5=1:kpds6=102:kpds7=0:
+TR=113:P1=0:P2=6:TimeU=1:MSL:anl:ave@6hr:NAve=124</code></ul><p>
+
+So we see 7 fields in the file valid at <code>00Z1jan1979</code> 
+(<code>d=79010100</code>).<p>
+ 
+for, <p>
+
+<dd><code>wgrib ncep.reanl.mo.7902.grb</code><p>
+
+we find,<p>
+<ul>
+<code>
+
+1:0:d=79020100:UGRD:kpds5=33:kpds6=100:kpds7=850:
+TR=113:P1=0:P2=6:TimeU=1:850 mb:anl:ave@6hr:NAve=112<br>
+2:15852:d=79020100:UGRD:kpds5=33:kpds6=100:kpds7=500:
+TR=113:P1=0:P2=6:TimeU=1:500 mb:anl:ave@6hr:NAve=112<br>
+3:33018:d=79020100:UGRD:kpds5=33:kpds6=100:kpds7=200:
+TR=113:P1=0:P2=6:TimeU=1:200 mb:anl:ave@6hr:NAve=112<br>
+4:50184:d=79020100:VGRD:kpds5=34:kpds6=100:kpds7=850:
+TR=113:P1=0:P2=6:TimeU=1:850 mb:anl:ave@6hr:NAve=112<br>
+5:64722:d=79020100:VGRD:kpds5=34:kpds6=100:kpds7=500:
+TR=113:P1=0:P2=6:TimeU=1:500 mb:anl:ave@6hr:NAve=112<br>
+6:80574:d=79020100:VGRD:kpds5=34:kpds6=100:kpds7=200:
+TR=113:P1=0:P2=6:TimeU=1:200 mb:anl:ave@6hr:NAve=112<br>
+7:96426:d=79020100:PRES:kpds5=1:kpds6=102:kpds7=0:
+TR=113:P1=0:P2=6:TimeU=1:MSL:anl:ave@6hr:NAve=112 </code></ul><p>
+
+or the same fields as before, except they are valid at
+<code>00z1feb1979</code>.<p>
+
+To find out about the data grid use,<p>
+
+<dd><code>wgrib -V ncep.reanl.mo.7901.grb</code><p>
+
+and for the first record you will find:<p>
+<ul>
+<code>
+<pre>
+rec 1:pos 0:date 79020100 UGRD kpds5=33 kpds6=100 kpds7=850
+levels=(3,82) grid=2 850 mb anl:ave@6hr:
+  timerange 113 P1 0 P2 6  nx 144 ny 73 GDS grid 0 num_in_ave 112 missing 0
+  center 7 subcenter 0 process 80
+  latlon: lat  90.000000 to -90.000000 by 2.500000
+          long 0.000000 to -2.500000 by 2.500000, (144 x 73) scan 0 bdsgrid 1
+  min/max data -12.29 16.86  num bits 12  BDS_Ref -1229  DecScale 2 BinScale 0
+</pre></code></ul>
+
+The grid is the NCEP #2 grid (see the Gospel According to John)
+which is a global 2.5 deg grid.  The grid has 144 points in x
+(<code>lon</code>) and 73 points in y (<code>lat</code>).  The (1,1) point is
+located at
+<code>90N</code> and <code>0E</code>.<p>
+</ul>
+<a name="solution2"><h2>THE SOLUTION - PART 2</h2></a>
+<ul>
+This is the hard part -- creating a relationship between the
+sequence of 2-D (<code>lon,lat</code>) GRIB fields in a file(s) and the
+GrADS,
+4-D, external-to-the-data, spatio-temporal data volume
+(<code>lon,lat,level,time</code>).  In GrADS, the GRIB-to-4-D volume
+relationship is defined by the <code>data descriptor</code> or
+<code>.ctl</code> file.
+The actual relationship is created using the GrADS utility
+<a href="gradutilgribmap.html"><code>gribmap</code></a> which generates an
+"index" or "map" between GrADS
+variables in the <code>.ctl</code> file and the GRIB data.
+
+<p>
+Before describing the details of 
+<a href="gradutilgribmap.html"><code>gribmap</code></a>, first consider
+the unix shell script, <code>grb2ctl.sh</code>, originally written by
+Wesley which I have adapted to help me out.  This script uses
+<code>wgrib</code> to first create a listing of fields in the GRIB
+data file and then parses the listing for times, variables and levels
+for the <code>.ctl</code> file.<p>
+
+See,<p>
+<dd><a 
+href="http://wesley.wwb.noaa.gov/grib2ctl.html">http://wesley.wwb.noaa.gov/grib2ctl.html</a><p>
+
+In our example,<p>
+
+<dd><code>grb2ctl.sh ncep.reanl.mo.7901.grb</code><p>
+
+yields to standard output,<p>
+
+<ul>
+<code>
+dset ^ncep.reanl.mo.7901.grb<br>
+dtype grib<br>
+options yrev<br>
+index ^ncep.reanl.mo.7901.grb.gmp<br>
+undef -9.99E+33<br>
+title ncep.reanl.mo.7901.grb<br>
+xdef   144 linear    0  2.5<br>
+ydef    73 linear  -90  2.5<br>
+zdef 3 levels<br>
+850 500 200<br>
+tdef 1 linear 00Z01jan79 1mo<br>
+vars 3<br>
+<ul>PRES     0  1  ,102,0      Pressure [Pa]<br>
+UGRD     3  33 ,100 u wind [m/s]<br>
+VGRD     3  34 ,100 v wind [m/s]</ul><br>
+endvars</code></ul><p>
+
+How did <code>grb2ctl.sh</code> do this?  First, only ONE grid was found in
+the GRIB data file (defined by <code>dset</code>) and the script had the grid
+geometry built in.  Second, variables with multiply levels (3-D
+or <code>lon,lat,level</code>) where DEFINED to have a "level indicator" of
+100 (more below).  Third, there was only ONE time in the file and
+the script SET the time increment to 1mo.<p>
+
+These conditions will often not be present.  Thus, the output
+from <code>grb2ctl.sh</code> will likely have to be "tweaked" by the good 'ol
+trial and error method.  In some cases the <code>.ctl</code> file may have to
+built "by hand" using the output from <code>wgrib</code>, so you'll probably
+have to know a lot about GRIB and how <a
+href="gradutilgribmap.html"><code>gribmap</code></a> works in many
+situations.<p>
+
+The key ingredients in the <code>.ctl</code> file are:<p>
+
+<ol>
+<code>
+<li>grid geometry (xdef,ydef)
+<li>starting time and time increment (tdef)
+<li>variables and "units" parameter
+<li>variable type - "level" or 3-D (zdef) or "surface" (2-D)
+</code></ol><p> 
+
+The units parameter specifies the GRIB parameters of the variable
+in the <code>.ctl</code> to be used by <a
+href="gradutilgribmap.html"><code>gribmap</code></a> for match GrADS variables
+to the fields in the GRIB files.  This parameter consists of up to
+four, comma-delimited numbers:<p>
+
+<dd><code>VV,LTYPE,(LEVEL),(TRI)</code><p>
+
+where,<p>
+
+<ul><code>VV</code> - (Required) The GRIB parameter number (33 = u comp of
+the
+wind, table 2 in John:section 1 page 27, i.e., GRIB Edition 1 (FM
+92))<p>
+
+<code>LTYPE</code> - (Required) The level type indicator (100 = pressure
+level, in Table 3 in John:section 1 Page 33)<p>
+
+<code>LEVEL</code> - (optional) The value of the LTYPE (LTYPE 102 is mean sea
+level so LEVEL is 0 for where level is located (1,102,0, 0 is AT
+mean sea level)<p>
+
+<code>TRI</code> - (optional) The "time range indicator" for special
+applications (Table 5 in John:section 1 Page 37).</ul><p>
+
+Coming up with the units parameter, the grid geometry and the
+times is the trick.<p>
+
+Fortunately, <a href="gradutilgribmap.html"><code>gribmap</code></a> can tell us
+how well the
+<code>.ctl</code> mapped the
+GRIB data to the higher dimensional, GrADS data view.  And, more
+importantly, the <a href="gradutilgribmap.html"><code>gribmap</code></a> process
+does NOT depend on how the data
+are actually ordered in the GRIB file, in either level or
+variable.<p>
+
+Let's redirect output from <code>grb2ctl.sh</code> to a <code>.ctl</code> 
+file, e.g.,<p>
+
+<dd><code>grb2ctl.sh on ncep.reanl.mo.7901.grb > ncep.reanl.mo.ctl</code><p>
+
+and then run <a href="gradutilgribmap.html"><code>gribmap</code></a>.  To
+reiterate, the <code>gribmap</code> utility compares
+each field in the GRIB file to each variable, at each level and
+for all times in the <code>.ctl</code> file and creates an index file telling
+GrADS WHERE the fields are (or are not) located in the GRIB data.<p>
+
+With the verbose option on,<p>
+
+<dd><code>gribmap -v -i ncep.reanl.mo.ctl</code><p>
+
+we get,<p>
+
+<code><ul>
+<pre>
+Scanning binary GRIB file(s):
+ ncep.reanl.mo.7901.grb
+!!!!!MATCH: 1  15852  2  1  0  33 100 850 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 2  33018  2  1  0  33 100 500 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 3  51498  2  1  0  33 100 200 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 4  66036  2  1  0  34 100 850 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 5  81888  2  1  0  34 100 500 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 6  99054  2  1  0  34 100 200 btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+!!!!!MATCH: 7 116220  2  1  0   1 102 0   btim: 1979010100:00 tau: 0 dtim: 1979010100:00
+Reached EOF</pre></ul></code>
+
+We have succeeded!!!  Each 2-D in the GRIB file has been mapped
+to a variable in <code>ncep.reanl.mo.ctl</code>.  In the case
+of <code>UGRD</code>, a 3-D
+(<code>lon,lat,level</code>) variable which we can be sliced in
+the vertical
+with GrADS.  However, failure to match will NOT stop GrADS from
+"working."  If the data was NOT there, GrADS will return a grid
+with "undefined" values on display and this state can actually be
+tested...<p>
+
+The "tweaking" is done by adjusting the <code>.ctl</code> file
+until we get a
+<code>!!!!! MATCH</code> for each GRIB field in the data
+file(s). I have
+added a number of options that finely control the mapping process
+in <a href="gradutilgribmap.html"><code>gribmap</code></a> for
+NCEP.
+See the GrADS document for details 
+(ftp://sprite.llnl.gov/grads/doc/gadoc151.*).<p>
+
+Finally, let's adjust the <code>ncep.reanl.mo.ctl</code> file
+to take
+advantage of the file naming convention:<p>
+
+<ul><code>
+dset ^ncep.reanl.mo.%y2%m2.grb<br>
+dtype grib<br>
+options yrev template<br>
+index ^ncep.reanl.mo.gmp<br>
+undef -9.99E+33<br>
+title ncep.reanl.mo.7901.grb<br>
+xdef   144 linear    0  2.5<br>
+ydef    73 linear  -90  2.5<br>
+zdef 3 levels 850 500 200<br>
+tdef 2 linear 00Z01jan79 1mo<br>
+vars 3<br>
+<ul>
+PRES     0  1  ,102,0      Pressure [Pa]<br>
+UGRD     3  33 ,100 u wind [m/s]<br>
+VGRD     3  34 ,100 v wind [m/s]<br></ul>
+endvars</code></ul>
+
+I have changed the number of times to two and have used the
+template option.  This tells GrADS to locate data in TIME by the
+file name (<code>dset ^ncep.reanl.mo.%y2%m2.grb</code>).  Thus,
+I have two (or
+more) data files, but only ONE <code>.ctl</code> file and I can
+now work with
+the 2-D GRIB data as if they were 4-D
+(<code>lon,lat,lev,time</code>) in
+GrADS.  I also changed the name of the index file to be
+reflective of the now 4-D data structure.<p>
+
+To summarize the process:<br>
+<ol>
+<li>use <code>wgrib</code> (or <a
+href="gradutilgribscan.html"><code>gribscan</code></a>) to see
+if
+the data can be worked in GrADS;
+<li>use <code>grb2ctl.sh</code> or the output
+from <code>wgrib</code> to construct a <code>.ctl</code> file;
+<li>run <a href="gradutilgribmap.html"><code>gribmap</code></a> in
+verbose
+mode (<code>-v</code>) to relate the GRIB data to the 4-D
+structure in the
+<code>.ctl</code> file, and to see how well the map worked; and
+<li>repeat
+steps 2) and 3) until you get <code>!!!! MATCH</code> from
+<a href="gradutilgribmap.html"><code>gribmap</code></a>.</ol><p>
+</ul>
+<a name="conclusions"><h2>CONCLUSIONS</h2></a>
+<ul>
+There's no doubt about it, "Doing GRIB in GrADS" is not very
+straightforward, but the benefits are, in my opinion, immense for
+two reasons.  First, we have avoided conversion of the GRIB to a
+form which supports higher dimensional data (e.g.,
+<code>netCDF</code>).
+We've saved disk space and have minimized potential technical
+errors (every time you touch the data you have an opportunity to
+screw it up).  Second, from a GrADS performance standpoint, GRIB
+is nearly as fast as other binary formats -- the cost in
+decompression on the fly is compensated by reduced I/O.<p>
+
+In the end, GRIB-to-GrADS interface gives us the advantages of
+GRIB (efficient storage, self description and an open,
+international format) while overcoming the disadvantages of GRIB
+(2-D data and no means to organize to a higher dimension) via the
+GrADS 4-D data model.  We get the best of both worlds, but only
+if we can make the <code>.ctl</code> file.  Hopefully this
+document will help
+you do this.</ul>

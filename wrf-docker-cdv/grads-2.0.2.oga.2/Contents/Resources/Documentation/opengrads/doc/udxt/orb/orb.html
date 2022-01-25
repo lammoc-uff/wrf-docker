@@ -1,0 +1,333 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>orb.gex - GrADS Extension Library for Satellite Orbit Masking</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_locationd@tennine-slave.macports.org" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;orb.gex - GrADS Extension Library for Satellite Orbit Masking</span></strong></big>
+</td></tr>
+</table>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_commands_">GrADS Commands:</a></li>
+			<li><a href="#grads_function_">GrADS Function:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#plotting_orbits">Plotting orbits</a></li>
+		<li><a href="#masking_variables_according_to_satelite_orbits">Masking variables according to satelite orbits</a></li>
+	</ul>
+
+	<li><a href="#comands_provided">COMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#set_orb_param_value"><strong>set_orb</strong> <em>PARAM</em> VALUE</a></li>
+		<li><a href="#orb_track_satellite"><strong>orb_track</strong> <em>SATELLITE</em></a></li>
+	</ul>
+
+	<li><a href="#functions_provided">FUNCTIONS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#orb_mask_expr_sat__swath_width_swath_left_swath_right__ds___"><strong>orb_mask</strong>(<em>EXPR,SAT[,SWATH_WIDTH|SWATH_LEFT,SWATH_RIGHT[,dS]]</em>)</a></li>
+	</ul>
+
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>orb.gex - GrADS Extension Library for Satellite Orbit Masking</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_commands_">GrADS Commands:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>run <strong>set_orb</strong> <em>PARAM</em> <em>VALUE</em> - Set internal parameters</p>
+</dd>
+<dt>
+<dd>
+<p>run <strong>orb_track</strong> <em>SATELLITE</em> - Plot satellite orbits</p>
+</dd>
+</dl>
+<p>
+</p>
+<h3><a name="grads_function_">GrADS Function:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>display <strong>orb_mask</strong>(<em>EXPR,SAT[,SWATH_WIDTH|SWATH_LEFT,SWATH_RIGHT[,dS]]</em>) - Mask <em>EXPR</em> according to orbit</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library provides GrADS extensions (<em>gex</em>) for simulating
+satellite orbits and masking gridded variables according to these
+orbits. The calculation in this extension is meant to be a
+simulation of the satellite orbit and should not be used for
+forecasting real satellite overpasses. This calculation is not based
+on realtime Two-line Element (TLE) data.</p>
+<p>GrADS datasets are given on a constant time interval. For a given
+GrADS time index <em>t</em>, satellite orbits can be simulated for the
+interval from <em>t-0.5</em> to <em>t+0.5</em>. During this period the satellite
+describe a ground track which can be plotted with the command
+<strong>orb_track</strong>. With function <strong>orb_mask()</strong> one can mask gridded variables
+by setting to undefined those gridpoints which were not visited by the
+satellite, with the possibility of specifying the swath width and halo
+gridpoints.</p>
+<p>When combined with a compression algorithm (such as in GRIB),
+satellite masked variables can use considerabily less storage space.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h2><a name="plotting_orbits">Plotting orbits</a></h2>
+<p>One can plot lines depicting the satellite ground track with the <strong>orb_track</strong> command:</p>
+<pre>
+ ga-&gt; open model
+ ga-&gt; d ts
+ ga-&gt; orb_track aqua</pre>
+<p>Instead of lines, one can also use marks to plot the ground track,</p>
+<pre>
+ ga-&gt; set_orb mark 6
+ ga-&gt; orb_track aqua</pre>
+<p>
+</p>
+<h2><a name="masking_variables_according_to_satelite_orbits">Masking variables according to satelite orbits</a></h2>
+<p>This example shows how to set to undefined all grid points which have not
+been visited by the satellite. For a given GrADS time index <em>t</em>, the
+satellite ground track is computed from <em>t-0.5</em> to <em>t+0.5</em> and this
+simulated ground track is used to mask a variable:</p>
+<pre>
+ ga-&gt; open model
+ ga-&gt; define xts = re(ts,0.5) # higher resolution version
+ ga-&gt; set gxout grfill</pre>
+<pre>
+ ga-&gt; d orb_mask(xts,aqua)</pre>
+<p>By default, the variable is masked according to the satellite ground track. However, it is
+also possible to specify the swath width (in km),</p>
+<pre>
+ ga-&gt; d orb_mask(xts,aqua,300)</pre>
+<p>You can also specify a halo, that is, additional gridpoints around the mask:</p>
+<pre>
+ ga-&gt; set_orb halo 2
+ ga-&gt; d orb_mask(xts,aqua)</pre>
+<p>Halos are useful for interpolating gridded values to observation locations.</p>
+<p>
+</p>
+<hr />
+<h1><a name="comands_provided">COMANDS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="set_orb_param_value"><strong>set_orb</strong> <em>PARAM</em> VALUE</a></h2>
+<p>This command can be use to set several internal paramers, namely</p>
+<dl>
+<dt><strong><a name="set_orb_dt_timestep_in_secs" class="item"><strong>set_orb</strong> <em>DT</em> TIMESTEP_IN_SECS</a></strong></dt>
+
+<dd>
+<p>Specify the timestep in seconds used to simulate the ground track. For
+example, a timestep of 60 seconds will cause of the
+(longitude,latitude) of the ground track to be computed every minute.</p>
+</dd>
+<dt><strong><a name="set_orb_mark_mark_type" class="item"><strong>set_orb</strong> <em>MARK</em> MARK_TYPE</a></strong></dt>
+
+<dd>
+<p>Specify the the type of mark used to plot the ground track. By
+default, MARK_TYPE=-1, and straight lines are used to plot the ground
+track. Other possibles values for <em>MARK_TYPE</em> are:</p>
+<pre>
+  1 - plus sign
+  2 - open circle (default)
+  3 - closed circle
+  4 - open square
+  5 - closed square
+  6 - multiplication sign
+  7 - open diamond
+  8 - open triangle
+  9 - closed triangle
+ 10 - open circle with vertical bar
+ 11 - closed circle with vertical bar</pre>
+</dd>
+<dt><strong><a name="set_orb_ihalo_left_right" class="item"><strong>set_orb</strong> <em>IHALO</em> LEFT[,RIGHT]</a></strong></dt>
+
+<dd>
+<p>Specify the number of <em>zonal</em> gridpoints to extend an orbital mask
+with. The parameter <em>LEFT</em> is the number of gridpoints west of the
+mask, while <em>RIGHT</em> is the number of gridpoints east of the
+mask. When <em>RIGHT</em> is missing it is set the same as <em>LEFT</em>.</p>
+</dd>
+<dt><strong><a name="set_orb_jhalo_below_above" class="item"><strong>set_orb</strong> <em>JHALO</em> BELOW[,ABOVE]</a></strong></dt>
+
+<dd>
+<p>Specify the number of <em>meridional</em> gridpoints to extend an orbital
+mask with. The parameter <em>BELOW</em> is the number of gridpoints south of
+the mask, while <em>ABOVE</em> is the number of gridpoints to the north of
+the mask. When <em>ABOVE</em> is missing it is set the same as <em>BELOW</em>.</p>
+</dd>
+<dt><strong><a name="set_orb_halo_left_right" class="item"><strong>set_orb</strong> <em>HALO</em> LEFT[,RIGHT]</a></strong></dt>
+
+<dd>
+<p>Specify the number of <em>meridional</em> and <em>zonal</em> gridpoints to extend
+an orbital mask with. The parameter <em>LEFT</em> is the number of
+gridpoints to the west/south of the mask, while <em>RIGHT</em> is the number of
+gridpoints to the east/north of the mask. When <em>RIGHT</em> is missing it is
+set the same as <em>LEFT</em>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="orb_track_satellite"><strong>orb_track</strong> <em>SATELLITE</em></a></h2>
+<p>This command plots the ground track for a given satellite. For a
+given GrADS time index <em>t</em>, the satellite ground track is computed
+from <em>t-0.5</em> to <em>t+0.5</em>. This ground track is meant to be a
+simulation of the satellite orbit and should not be used for
+forecasting real satellite overpasses. This calculation is not based
+on realtime Two-line Element (TLE) data.</p>
+<dl>
+<dt><strong><a name="satellite" class="item"><em>SATELLITE</em></a></strong></dt>
+
+<dd>
+<p>Currently the following NASA EOS satellites are supported</p>
+<ul>
+<li><strong><a name="aqua" class="item">Aqua</a></strong>
+
+</li>
+<li><strong><a name="terra" class="item">Terra</a></strong>
+
+</li>
+<li><strong><a name="aura" class="item">Aura</a></strong>
+
+</li>
+<li><strong><a name="calipso" class="item">Calipso</a></strong>
+
+</li>
+<li><strong><a name="cloudsat" class="item">CloudSat</a></strong>
+
+</li>
+</ul>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="functions_provided">FUNCTIONS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="orb_mask_expr_sat__swath_width_swath_left_swath_right__ds___"><strong>orb_mask</strong>(<em>EXPR,SAT[,SWATH_WIDTH|SWATH_LEFT,SWATH_RIGHT[,dS]]</em>)</a></h2>
+<p>This function masks out those grind points which have not been visited
+by the satellite from grads time index <em>t-0.5</em> to time index
+<em>t+0.5</em>. On can optionally specify a swath width.</p>
+<dl>
+<dt><strong><a name="expr" class="item"><em>EXPR</em></a></strong></dt>
+
+<dd>
+<p>GrADS expressions to be masked</p>
+</dd>
+<dt><strong><a name="sat" class="item"><em>SAT</em></a></strong></dt>
+
+<dd>
+<p>Satellite name (Aqua, Terra, Aura, Calipso, CloudSat)</p>
+</dd>
+<dt><strong><a name="swath_width" class="item"><em>SWATH_WIDTH</em></a></strong></dt>
+
+<dd>
+<p>Width of the swath in kilometers, centered around the ground
+track. This gives SWATH_WIDTH/2 kilometers to the left/right of the ground
+track. Default is 0 (no swath).</p>
+</dd>
+<dt><strong><a name="swath_left_swath_right" class="item"><em>SWATH_LEFT,SWATH_RIGHT</em></a></strong></dt>
+
+<dd>
+<p>Width of the swath in kilometers to the left and right of the satellite ground track.
+Default is 0 (no swath).</p>
+</dd>
+<dt><strong><a name="ds" class="item"><em>dS</em></a></strong></dt>
+
+<dd>
+<p>Swath resolution, in kilometers. Default is 10 km.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p>See OpenGrADS extension <em>TLE</em> which provides similar functionality based on Two-Line
+Element (TLE) files.</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://cookbooks.opengrads.org/index.php?title=Main_Page">http://cookbooks.opengrads.org/index.php</a> -
+OpenGrADS Cookbooks</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>) and Arif Albayrak.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>This extension has been placed in the public domain.</p>
+<p>This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;orb.gex - GrADS Extension Library for Satellite Orbit Masking</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

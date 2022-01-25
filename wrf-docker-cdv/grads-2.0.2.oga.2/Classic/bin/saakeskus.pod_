@@ -1,0 +1,348 @@
+=pod
+
+=head1 NAME
+
+Saakeskus - Collection of Thunderstorm Related Functions
+
+=head1 SYNOPSIS
+
+=over 4
+
+=item
+
+display B<dewpt>(I<T,RH>) - Dew-point Temperature
+
+=item
+
+display B<ept>(I<T,RH,P>) - Equivalent potential temperature
+
+=item
+
+display B<epi>(I<T850,RH850,T500,RH500>) - Potential Instability              
+
+=item
+
+display B<plcl>(I<T2M,RH2M,PS>) - Pressure at LCL                    
+
+=item
+
+display B<shear>(I<U1,V1,U2,V2>) - Wind Shear 
+
+=item
+
+display B<srh1km>(I<uVAR,vVAR>) - Storm-relative Helicity 0-1km
+
+=item
+
+display B<srh3km>(I<uVAR,vVAR>) - Storm-relative Helicity 0-3km
+
+=item
+
+display B<tlcl>(I<T2M,RH2M>) - Temperature at LCL
+
+=item
+
+display B<tsindex>(I<CAPE180_0mb,CIN180_0mb>) - Likelihood of T-storm Initiation       
+
+=item
+
+display B<ttindex>(I<T500,T850,RH850>) - Total Totals Index                 
+
+
+=item
+
+display B<wchill>(I<T2M,U10M,V10M>) - Wind Chill Index (New)             
+
+=back
+
+=head1 DESCRIPTION 
+
+This library implements the Suomen Saakeskus (Finnish Weathercenter)
+collection of Thunderstorm related functions originally developed by 
+Stefan Gofferje as described in the following website:
+
+=over 8
+
+L<http://www.saakeskus.fi/index.php?function=oth>
+
+=back
+
+The majority of this expressions are from internet sources like the
+Wikipedia.  Special thanks go to Oliver Schlenczek and Eerik
+Saarikalle invaluable help.
+
+Here we implemented these functions by means of of I<gsUDF>'s, User
+Defined Functions written in the GrADS scripting language. This device
+requires the OpenGrADS extension b<gsUDF> documented at
+
+=over 8
+
+L<http://opengrads.org/doc/udxt/gsudf>
+
+=back
+
+=head1 COMMAND LINE HELP
+
+Usage notice for most of these functions can be obtained at the GrADS
+command line. For example,
+
+ ga-> display tlcl
+
+produces
+
+ Purpose: Temperature at Lifiting Condensation Level (LCL) [K]
+ Usage:   display tlcl(t2m,in_rh2m)
+          t2m = temperature at 2m [K]
+          rh2m = relative humidity at 2m [%]
+
+
+=head1 PROVIDED FUNCTIONS
+
+=head2 B<dewpt>(I<T,RH>)
+
+=over 4
+
+This function computes the B<dew-point temperature> given the Temperature
+I<T> in Kelvin and the relative humidity I<RH> in percent.
+
+=back 
+
+=head2 B<ept>(I<T,RH.P>) 
+
+=over 4
+
+This function computes the B<equivalent potential temperature> in
+Kelvin given the Temperature I<T> in Kelvin, the relative humidity
+I<RH> in percent, and the pressure I<P> in hPa.
+
+=back
+
+=head2 B<epi>(I<T850,RH850,T500,RH500>) 
+
+=over 4
+
+This function computes the B<Potential Instability> (in Kelvin) given
+the temperature I<T> (Kelvin) and relative humidity I<RH> (percent) at
+850 and 500 hPa. Low values of this index correspond to unstable areas.
+
+=back
+
+
+=head2 B<plcl>(I<T2M,RH2M,PS>)
+
+
+=over 4
+
+This function computes the B<pressure at the Lifiting Condensation
+Level> (in hPa or Pa) given the temperature I<T> (Kelvin) and relative
+humidity I<RH> (percent) at 2m above the ground, and the surface
+pressure I<PS> (hPa or Pa).
+
+=back
+
+
+=head2 B<shear>(I<U1,V1,U2,V2>)
+
+=over 4
+
+This function computes the magnitude of B<wind shear> vector given the
+zonal (I<U>) and meridional (I<V>) wind components at 2 different
+vertical levels. The shear will be returned at the same units as the wind
+components, typically m/s.
+
+=back
+
+=head2 B<srh1km>(I<uVAR,vVAR>) 
+
+=over 4
+
+This function returns the B<Storm-relative Helicity> at the lowest 1km
+of the atmosphere. On input, the name of the GrADS variable corresponding 
+to the zonal (I<uVAR>) and (I<vVAR>). These variables must be defined at the following vertical levels: 1000, 950, 900, 850, 800, 750, 700, 650, 600,
+550, 500, 450 and 400 hPa.
+
+=back
+
+=head2 B<srh3km>(I<uVAR,vVAR>)
+
+=over 4
+
+This function returns the B<Storm-relative Helicity> at the lowest 3km
+of the atmosphere. On input, the name of the GrADS variable
+corresponding to the zonal (I<uVAR>) and (I<vVAR>). These variables
+must be defined at the following vertical levels: 1000, 950, 900, 850,
+800, 750, 700, 650, 600, 550, 500, 450 and 400 hPa.
+
+=back
+
+
+=head2 B<tlcl>(I<T2M,RH2M>) - Temperature at LCL
+
+=over 4
+
+This function computes the B<temperature at the Lifiting Condensation
+Level> (Kelvin) given the temperature I<T> (Kelvin) and relative
+humidity I<RH> (percent) at 2m above the ground.
+
+=back
+
+
+=head2 B<tsindex>(I<CAPE180_0mb,CIN180_0mb>)
+
+=over 4
+
+This function computes the B<thunderstorm initiation index> given the
+convective available potential energy I<CAPE> and the convective
+inhibition parameter I<CIN> at 180 hPa above ground, both in J/Kg.
+The thunderstorm likelihood can be determined from the value of this index:
+
+    < -1     thunderstorm unlikely
+   [-1,0)    thunderstorm possible
+   (0,1]     thunderstorm likely
+     > 1     thunderstorm very likely
+
+
+=back
+
+=head2 B<ttindex>(I<T500,T850,RH850>) 
+
+=over 4
+
+This function computes the B<Total Totals Index> given the 
+temperature I<T> at 500 and 850 hPa, and the relative humidity
+ I<RH> at 850 hPa. The TT (Total Totals) is an index used to 
+assess storm strength:
+
+  <44	  Convection not likely
+  44-50	  Likely thunderstorms
+  51-52	  Isolated severe storms
+  53-56	  Widely scattered severe
+  >56	  Scattered severe storms
+
+=back
+
+=head2 B<wchill>(I<T2M,U10M,V10M>)  
+
+=over 4
+
+This function computes the B<Wind Chill Temperature> given the
+temperature at 2m and the zonal (I<U>) and meridional (I<V>) wind
+components at 10m above ground. This function uses the new 
+formula adopted by the U.S. NWS in 2001. 
+
+=back
+
+=head1 EXAMPLES
+
+The following examples are based on forecasts from NCEP's Global
+Forecast System (GFS) available through the NOMAD OpenDAP
+server. Typically one would open such a dataset with a command like
+
+ ga-> sdfopen http://nomads.ncep.noaa.gov:9090/dods/gfs_hd/gfs_hd20090331/gfs_hd_18z
+ ga-> set gxout shaded
+
+For comparison with the Suomen Saakeskus (Finnish Weathercenter) charts,
+select the following region/map parameters:
+
+ ga-> set mproj nps
+ ga-> set mpvals -10 51 48 80
+ ga-> set lon -60 100
+ ga-> set lat 43 90
+ ga-> set mpdset hires
+
+=head2 Computing dew-point temperature
+
+ ga-> d dewpt(tmp2m,rh2m)-273.16
+ ga-> draw title Dew Point Temperature at 2m [C]
+ ga-> cbarn
+
+=head2 Wind chill
+
+ ga-> d wchill(tmp2m,ugrd10m,vgrd10m)-273.16
+ ga-> draw title Wind Chill [C]
+
+=head2 Equivalent potential temperature at 850 hPa
+
+ ga-> d ept(tmpprs(lev=850),rhprs(lev=850),850)-273.16
+ ga-> draw title Equivalent Potential Temperature at 850 hPa [K]
+
+=head2 Potential Instability
+
+ ga-> d epi(tmpprs(lev=850),rhprs(lev=850),tmpprs(lev=500),rhprs(lev=500))
+ ga-> draw title Potential Instability [K]
+
+=head2 Pressure at LCL
+
+ ga-> d plcl(tmp2m,rh2m,pressfc/100)
+ ga-> draw title Lifiting Condensation Level [hPa]
+
+=head2 Total Totals Index
+
+ ga-> d ttindex(tmpprs(lev=850),rhprs(lev=850),tmpprs(lev=500))
+ ga-> draw title Total Totals Index
+
+=head2 Storm Relative Helicity
+
+ ga-> d srh3km(ugrdprs,vgrdprs)
+ ga-> draw title Storm Relative Helicity 3km
+
+=head2 Low Level Shear
+
+ ga-> d shear(ugrdprs(lev=900),vgrdprs(lev=900),ugrd10m,vgrd10m)
+ ga-> draw title Low Level Wind Shear: 900 hPa - 10m
+
+=head2 Schlenczek's Thunderstorm Index
+
+ ga-> d tsindex(cape180_0mb,cin180_0mb)
+ ga-> draw title Likihood of T-Storm Initiation
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<http://www.saakeskus.fi/index.php?function=index> - Suomen S‰‰keskus (Finnish Weathercenter)
+
+=item *
+
+L<http://cookbooks.opengrads.org/index.php?title=Recipe-025:_Computing_Total_Totals%2C_Storm-relative_Helicity%2C_Wind-chill_Temperature_and_other_Indices>  - A recipe demonstrating the use of these functions.
+
+=item *
+
+L<http://opengrads.org/> - OpenGrADS Home Page
+
+=item *
+
+L<http://opengrads.org/wiki/index.php?title=User_Defined_Extensions> - OpenGrADS User Defined Extensions
+
+=item *
+
+L<http://www.iges.org/grads/> - Official GrADS Home Page
+
+=back
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Stefan Gofferje <stefan@saakeskus.fi> - original scripts
+
+=item *
+
+Arlindo da Silva <dasilva@opengrads.org> - implementation as gsUDFs
+
+=back
+
+=head1 COPYRIGHT
+
+These scripts have been placed in the Public Domain. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+
+=cut
+
+
+

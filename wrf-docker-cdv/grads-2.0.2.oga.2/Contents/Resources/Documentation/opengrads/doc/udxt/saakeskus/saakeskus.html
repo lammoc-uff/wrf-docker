@@ -1,0 +1,367 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Saakeskus - Collection of Thunderstorm Related Functions</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_www@b70.apple.com" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;Saakeskus - Collection of Thunderstorm Related Functions</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#command_line_help">COMMAND LINE HELP</a></li>
+	<li><a href="#provided_functions">PROVIDED FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#dewpt_t_rh_"><strong>dewpt</strong>(<em>T,RH</em>)</a></li>
+		<li><a href="#ept_t_rh_p_"><strong>ept</strong>(<em>T,RH.P</em>)</a></li>
+		<li><a href="#epi_t850_rh850_t500_rh500_"><strong>epi</strong>(<em>T850,RH850,T500,RH500</em>)</a></li>
+		<li><a href="#plcl_t2m_rh2m_ps_"><strong>plcl</strong>(<em>T2M,RH2M,PS</em>)</a></li>
+		<li><a href="#shear_u1_v1_u2_v2_"><strong>shear</strong>(<em>U1,V1,U2,V2</em>)</a></li>
+		<li><a href="#srh1km_uvar_vvar_"><strong>srh1km</strong>(<em>uVAR,vVAR</em>)</a></li>
+		<li><a href="#srh3km_uvar_vvar_"><strong>srh3km</strong>(<em>uVAR,vVAR</em>)</a></li>
+		<li><a href="#tlcl_t2m_rh2m___temperature_at_lcl"><strong>tlcl</strong>(<em>T2M,RH2M</em>) - Temperature at LCL</a></li>
+		<li><a href="#tsindex_cape180_0mb_cin180_0mb_"><strong>tsindex</strong>(<em>CAPE180_0mb,CIN180_0mb</em>)</a></li>
+		<li><a href="#ttindex_t500_t850_rh850_"><strong>ttindex</strong>(<em>T500,T850,RH850</em>)</a></li>
+		<li><a href="#wchill_t2m_u10m_v10m_"><strong>wchill</strong>(<em>T2M,U10M,V10M</em>)</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#computing_dewpoint_temperature">Computing dew-point temperature</a></li>
+		<li><a href="#wind_chill">Wind chill</a></li>
+		<li><a href="#equivalent_potential_temperature_at_850_hpa">Equivalent potential temperature at 850 hPa</a></li>
+		<li><a href="#potential_instability">Potential Instability</a></li>
+		<li><a href="#pressure_at_lcl">Pressure at LCL</a></li>
+		<li><a href="#total_totals_index">Total Totals Index</a></li>
+		<li><a href="#storm_relative_helicity">Storm Relative Helicity</a></li>
+		<li><a href="#low_level_shear">Low Level Shear</a></li>
+		<li><a href="#schlenczek_s_thunderstorm_index">Schlenczek's Thunderstorm Index</a></li>
+	</ul>
+
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Saakeskus - Collection of Thunderstorm Related Functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<dl>
+<dt>
+<dd>
+<p>display <strong>dewpt</strong>(<em>T,RH</em>) - Dew-point Temperature</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>ept</strong>(<em>T,RH,P</em>) - Equivalent potential temperature</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>epi</strong>(<em>T850,RH850,T500,RH500</em>) - Potential Instability</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>plcl</strong>(<em>T2M,RH2M,PS</em>) - Pressure at LCL</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>shear</strong>(<em>U1,V1,U2,V2</em>) - Wind Shear</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>srh1km</strong>(<em>uVAR,vVAR</em>) - Storm-relative Helicity 0-1km</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>srh3km</strong>(<em>uVAR,vVAR</em>) - Storm-relative Helicity 0-3km</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tlcl</strong>(<em>T2M,RH2M</em>) - Temperature at LCL</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tsindex</strong>(<em>CAPE180_0mb,CIN180_0mb</em>) - Likelihood of T-storm Initiation</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>ttindex</strong>(<em>T500,T850,RH850</em>) - Total Totals Index</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>wchill</strong>(<em>T2M,U10M,V10M</em>) - Wind Chill Index (New)</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library implements the Suomen Saakeskus (Finnish Weathercenter)
+collection of Thunderstorm related functions originally developed by 
+Stefan Gofferje as described in the following website:</p>
+<p><a href="http://www.saakeskus.fi/index.php?function=oth">http://www.saakeskus.fi/index.php</a></p>
+<p>The majority of this expressions are from internet sources like the
+Wikipedia.  Special thanks go to Oliver Schlenczek and Eerik
+Saarikalle invaluable help.</p>
+<p>Here we implemented these functions by means of of <em>gsUDF</em>'s, User
+Defined Functions written in the GrADS scripting language. This device
+requires the OpenGrADS extension b&lt;gsUDF&gt; documented at</p>
+<p><a href="http://opengrads.org/doc/udxt/gsudf">http://opengrads.org/doc/udxt/gsudf</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="command_line_help">COMMAND LINE HELP</a></h1>
+<p>Usage notice for most of these functions can be obtained at the GrADS
+command line. For example,</p>
+<pre>
+ ga-&gt; display tlcl</pre>
+<p>produces</p>
+<pre>
+ Purpose: Temperature at Lifiting Condensation Level (LCL) [K]
+ Usage:   display tlcl(t2m,in_rh2m)
+          t2m = temperature at 2m [K]
+          rh2m = relative humidity at 2m [%]</pre>
+<p>
+</p>
+<hr />
+<h1><a name="provided_functions">PROVIDED FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="dewpt_t_rh_"><strong>dewpt</strong>(<em>T,RH</em>)</a></h2>
+<p>This function computes the <strong>dew-point temperature</strong> given the Temperature
+<em>T</em> in Kelvin and the relative humidity <em>RH</em> in percent.</p>
+<p>
+</p>
+<h2><a name="ept_t_rh_p_"><strong>ept</strong>(<em>T,RH.P</em>)</a></h2>
+<p>This function computes the <strong>equivalent potential temperature</strong> in
+Kelvin given the Temperature <em>T</em> in Kelvin, the relative humidity
+<em>RH</em> in percent, and the pressure <em>P</em> in hPa.</p>
+<p>
+</p>
+<h2><a name="epi_t850_rh850_t500_rh500_"><strong>epi</strong>(<em>T850,RH850,T500,RH500</em>)</a></h2>
+<p>This function computes the <strong>Potential Instability</strong> (in Kelvin) given
+the temperature <em>T</em> (Kelvin) and relative humidity <em>RH</em> (percent) at
+850 and 500 hPa. Low values of this index correspond to unstable areas.</p>
+<p>
+</p>
+<h2><a name="plcl_t2m_rh2m_ps_"><strong>plcl</strong>(<em>T2M,RH2M,PS</em>)</a></h2>
+<p>This function computes the <strong>pressure at the Lifiting Condensation
+Level</strong> (in hPa or Pa) given the temperature <em>T</em> (Kelvin) and relative
+humidity <em>RH</em> (percent) at 2m above the ground, and the surface
+pressure <em>PS</em> (hPa or Pa).</p>
+<p>
+</p>
+<h2><a name="shear_u1_v1_u2_v2_"><strong>shear</strong>(<em>U1,V1,U2,V2</em>)</a></h2>
+<p>This function computes the magnitude of <strong>wind shear</strong> vector given the
+zonal (<em>U</em>) and meridional (<em>V</em>) wind components at 2 different
+vertical levels. The shear will be returned at the same units as the wind
+components, typically m/s.</p>
+<p>
+</p>
+<h2><a name="srh1km_uvar_vvar_"><strong>srh1km</strong>(<em>uVAR,vVAR</em>)</a></h2>
+<p>This function returns the <strong>Storm-relative Helicity</strong> at the lowest 1km
+of the atmosphere. On input, the name of the GrADS variable corresponding 
+to the zonal (<em>uVAR</em>) and (<em>vVAR</em>). These variables must be defined at the following vertical levels: 1000, 950, 900, 850, 800, 750, 700, 650, 600,
+550, 500, 450 and 400 hPa.</p>
+<p>
+</p>
+<h2><a name="srh3km_uvar_vvar_"><strong>srh3km</strong>(<em>uVAR,vVAR</em>)</a></h2>
+<p>This function returns the <strong>Storm-relative Helicity</strong> at the lowest 3km
+of the atmosphere. On input, the name of the GrADS variable
+corresponding to the zonal (<em>uVAR</em>) and (<em>vVAR</em>). These variables
+must be defined at the following vertical levels: 1000, 950, 900, 850,
+800, 750, 700, 650, 600, 550, 500, 450 and 400 hPa.</p>
+<p>
+</p>
+<h2><a name="tlcl_t2m_rh2m___temperature_at_lcl"><strong>tlcl</strong>(<em>T2M,RH2M</em>) - Temperature at LCL</a></h2>
+<p>This function computes the <strong>temperature at the Lifiting Condensation
+Level</strong> (Kelvin) given the temperature <em>T</em> (Kelvin) and relative
+humidity <em>RH</em> (percent) at 2m above the ground.</p>
+<p>
+</p>
+<h2><a name="tsindex_cape180_0mb_cin180_0mb_"><strong>tsindex</strong>(<em>CAPE180_0mb,CIN180_0mb</em>)</a></h2>
+<p>This function computes the <strong>thunderstorm initiation index</strong> given the
+convective available potential energy <em>CAPE</em> and the convective
+inhibition parameter <em>CIN</em> at 180 hPa above ground, both in J/Kg.
+The thunderstorm likelihood can be determined from the value of this index:</p>
+<pre>
+    &lt; -1     thunderstorm unlikely
+   [-1,0)    thunderstorm possible
+   (0,1]     thunderstorm likely
+     &gt; 1     thunderstorm very likely</pre>
+<p>
+</p>
+<h2><a name="ttindex_t500_t850_rh850_"><strong>ttindex</strong>(<em>T500,T850,RH850</em>)</a></h2>
+<p>This function computes the <strong>Total Totals Index</strong> given the 
+temperature <em>T</em> at 500 and 850 hPa, and the relative humidity
+ <em>RH</em> at 850 hPa. The TT (Total Totals) is an index used to 
+assess storm strength:</p>
+<pre>
+  &lt;44     Convection not likely
+  44-50   Likely thunderstorms
+  51-52   Isolated severe storms
+  53-56   Widely scattered severe
+  &gt;56     Scattered severe storms</pre>
+<p>
+</p>
+<h2><a name="wchill_t2m_u10m_v10m_"><strong>wchill</strong>(<em>T2M,U10M,V10M</em>)</a></h2>
+<p>This function computes the <strong>Wind Chill Temperature</strong> given the
+temperature at 2m and the zonal (<em>U</em>) and meridional (<em>V</em>) wind
+components at 10m above ground. This function uses the new 
+formula adopted by the U.S. NWS in 2001.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>The following examples are based on forecasts from NCEP's Global
+Forecast System (GFS) available through the NOMAD OpenDAP
+server. Typically one would open such a dataset with a command like</p>
+<pre>
+ ga-&gt; sdfopen <a href="http://nomads.ncep.noaa.gov:9090/dods/gfs_hd/gfs_hd20090331/gfs_hd_18z">http://nomads.ncep.noaa.gov:9090/dods/gfs_hd/gfs_hd20090331/gfs_hd_18z</a>
+ ga-&gt; set gxout shaded</pre>
+<p>For comparison with the Suomen Saakeskus (Finnish Weathercenter) charts,
+select the following region/map parameters:</p>
+<pre>
+ ga-&gt; set mproj nps
+ ga-&gt; set mpvals -10 51 48 80
+ ga-&gt; set lon -60 100
+ ga-&gt; set lat 43 90
+ ga-&gt; set mpdset hires</pre>
+<p>
+</p>
+<h2><a name="computing_dewpoint_temperature">Computing dew-point temperature</a></h2>
+<pre>
+ ga-&gt; d dewpt(tmp2m,rh2m)-273.16
+ ga-&gt; draw title Dew Point Temperature at 2m [C]
+ ga-&gt; cbarn</pre>
+<p>
+</p>
+<h2><a name="wind_chill">Wind chill</a></h2>
+<pre>
+ ga-&gt; d wchill(tmp2m,ugrd10m,vgrd10m)-273.16
+ ga-&gt; draw title Wind Chill [C]</pre>
+<p>
+</p>
+<h2><a name="equivalent_potential_temperature_at_850_hpa">Equivalent potential temperature at 850 hPa</a></h2>
+<pre>
+ ga-&gt; d ept(tmpprs(lev=850),rhprs(lev=850),850)-273.16
+ ga-&gt; draw title Equivalent Potential Temperature at 850 hPa [K]</pre>
+<p>
+</p>
+<h2><a name="potential_instability">Potential Instability</a></h2>
+<pre>
+ ga-&gt; d epi(tmpprs(lev=850),rhprs(lev=850),tmpprs(lev=500),rhprs(lev=500))
+ ga-&gt; draw title Potential Instability [K]</pre>
+<p>
+</p>
+<h2><a name="pressure_at_lcl">Pressure at LCL</a></h2>
+<pre>
+ ga-&gt; d plcl(tmp2m,rh2m,pressfc/100)
+ ga-&gt; draw title Lifiting Condensation Level [hPa]</pre>
+<p>
+</p>
+<h2><a name="total_totals_index">Total Totals Index</a></h2>
+<pre>
+ ga-&gt; d ttindex(tmpprs(lev=850),rhprs(lev=850),tmpprs(lev=500))
+ ga-&gt; draw title Total Totals Index</pre>
+<p>
+</p>
+<h2><a name="storm_relative_helicity">Storm Relative Helicity</a></h2>
+<pre>
+ ga-&gt; d srh3km(ugrdprs,vgrdprs)
+ ga-&gt; draw title Storm Relative Helicity 3km</pre>
+<p>
+</p>
+<h2><a name="low_level_shear">Low Level Shear</a></h2>
+<pre>
+ ga-&gt; d shear(ugrdprs(lev=900),vgrdprs(lev=900),ugrd10m,vgrd10m)
+ ga-&gt; draw title Low Level Wind Shear: 900 hPa - 10m</pre>
+<p>
+</p>
+<h2><a name="schlenczek_s_thunderstorm_index">Schlenczek's Thunderstorm Index</a></h2>
+<pre>
+ ga-&gt; d tsindex(cape180_0mb,cin180_0mb)
+ ga-&gt; draw title Likihood of T-Storm Initiation</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://www.saakeskus.fi/index.php?function=index">http://www.saakeskus.fi/index.php</a> - Suomen S‰‰keskus (Finnish Weathercenter)</p>
+</li>
+<li>
+<p><a href="http://cookbooks.opengrads.org/index.php?title=Recipe-025:_Computing_Total_Totals%2C_Storm-relative_Helicity%2C_Wind-chill_Temperature_and_other_Indices">http://cookbooks.opengrads.org/index.php</a>  - A recipe demonstrating the use of these functions.</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<ul>
+<li>
+<p>Stefan Gofferje &lt;<a href="mailto:stefan@saakeskus.fi">stefan@saakeskus.fi</a>&gt; - original scripts</p>
+</li>
+<li>
+<p>Arlindo da Silva &lt;<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>&gt; - implementation as gsUDFs</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>These scripts have been placed in the Public Domain. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;Saakeskus - Collection of Thunderstorm Related Functions</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

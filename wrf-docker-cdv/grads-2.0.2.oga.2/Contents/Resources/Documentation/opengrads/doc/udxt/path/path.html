@@ -1,0 +1,606 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>path.gex - GrADS Extensions for Pathname Manipulation and Regular Expressions</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_locationd@tennine-slave.macports.org" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;path.gex - GrADS Extensions for Pathname Manipulation and Regular Expressions</span></strong></big>
+</td></tr>
+</table>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_commands_">GrADS Commands:</a></li>
+			<li><a href="#grads_scripting_language_functions_">GrADS Scripting Language Functions:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#using_abspath_to_get_full_path_name_of_current_directory">Using <strong>abspath</strong> to get full path name of current directory</a></li>
+			<li><a href="#parsing_file_and_directory_names_">Parsing file and directory names,</a></li>
+			<li><a href="#changing_directories">Changing directories</a></li>
+			<li><a href="#checking_whether_a_file_directory_exists">Checking whether a file/directory exists</a></li>
+			<li><a href="#checking_whether_a_pathname_is_a_file_or_directory">Checking whether a pathname is a file or directory</a></li>
+			<li><a href="#getting_the_modification_time_of_a_file_directory">Getting the modification time of a file/directory</a></li>
+			<li><a href="#getting_a_list_of_path_names_matching_a_pattern_">Getting a list of path names matching a pattern,</a></li>
+			<li><a href="#performing_word_expansion__files_and_directories">Performing word expansion: files and directories</a></li>
+			<li><a href="#performing_word_expansion__environment_variables">Performing word expansion: environment variables</a></li>
+			<li><a href="#performing_word_expansion__back_tick_operator">Performing word expansion: back-tick operator</a></li>
+			<li><a href="#regular_expressions__matching">Regular expressions: matching</a></li>
+			<li><a href="#regular_expressions__search_and_replace">Regular expressions: search and replace</a></li>
+			<li><a href="#grads_scripting_functions">GrADS Scripting Functions</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#regular_expressions">REGULAR EXPRESSIONS</a></li>
+	<li><a href="#commands_provided">COMMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#abspath_pathname"><strong>abspath</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#basename_pathname"><strong>basename</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#cd_pathname"><strong>cd</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#chdir_pathname"><strong>chdir</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#dirname_pathname"><strong>dirname</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#exists_pathname"><strong>exists</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#getatime_pathname"><strong>getatime</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#getctime_pathname"><strong>getctime</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#getmtime_pathname"><strong>getmtime</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#glob_pattern"><strong>glob</strong> <em>PATTERN</em></a></li>
+		<li><a href="#isfile_pathname"><strong>isfile</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#isdir_pathname"><strong>isdir</strong> <em>PATHNAME</em></a></li>
+		<li><a href="#match_pattern_string"><strong>match</strong> <em>PATTERN</em> <em>STRING</em></a></li>
+		<li><a href="#sed_pattern_string"><strong>sed</strong> <em>PATTERN</em> <em>STRING</em></a></li>
+		<li><a href="#wordexp_string"><strong>wordexp</strong> <em>STRING</em></a></li>
+	</ul>
+
+	<li><a href="#grads_script_functions_provided">GrADS SCRIPT FUNCTIONS PROVIDED</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>path.gex - GrADS Extensions for Pathname Manipulation and Regular Expressions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_commands_">GrADS Commands:</a></h3>
+<dl>
+<dt>
+<dd>
+<p><strong>abspath</strong> <em>PATHNAME</em> - Return the absolute pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>basename</strong> <em>PATHNAME</em> - Return filename part of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>cd</strong> <em>PATHNAME</em> - Change current directory, same as <strong>chdir</strong></p>
+</dd>
+<dt>
+<dd>
+<p><strong>chdir</strong> <em>PATHNAME</em> - Change current directory, same as <strong>cd</strong></p>
+</dd>
+<dt>
+<dd>
+<p><strong>dirname</strong> <em>PATHNAME</em> - Return directory name part of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>exists</strong> <em>PATHNAME</em> - Check whether a pathname exists</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getatime</strong> <em>PATHNAME</em> - Get last access time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getctime</strong> <em>PATHNAME</em> - Get metadata change time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getmtime</strong> <em>PATHNAME</em> - Get modification time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>glob</strong> <em>PATTERN</em> - Return a list of paths matching a pathname pattern</p>
+</dd>
+<dt>
+<dd>
+<p><strong>isfile</strong> <em>PATHNAME</em> - Test whether a path is a regular file</p>
+</dd>
+<dt>
+<dd>
+<p><strong>isdir</strong> <em>PATHNAME</em> - Test whether a path is a directory</p>
+</dd>
+<dt>
+<dd>
+<p><strong>match</strong> <em>PATTERN</em> <em>STRING</em> - Regular expression matching of string</p>
+</dd>
+<dt>
+<dd>
+<p><strong>sed</strong> <em>PATTERN</em> <em>STRING</em> - SED-like search and replace</p>
+</dd>
+<dt>
+<dd>
+<p><strong>wordexp</strong> <em>STRING</em> - Perform word expansion like a POSIX shell</p>
+</dd>
+</dl>
+<p>
+</p>
+<h3><a name="grads_scripting_language_functions_">GrADS Scripting Language Functions:</a></h3>
+<dl>
+<dt>
+<dd>
+<p><strong>abspath</strong>(<em>PATHNAME</em>) - Return the absolute pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>basename</strong>(<em>PATHNAME</em>) - Return filename part of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>chdir</strong>(<em>PATHNAME</em>) - Change current directory, same as <strong>cd</strong></p>
+</dd>
+<dt>
+<dd>
+<p><strong>dirname</strong>(<em>PATHNAME</em>) - Return directory name part of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>exists</strong>(<em>PATHNAME</em>) - Return 1 if pathname exists, 0 otherwise</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getatime</strong>(<em>PATHNAME</em>) - Get last access time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getctime</strong>(<em>PATHNAME</em>) - Get metadata change time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>getmtime</strong>(<em>PATHNAME</em>) - Get modification time of a pathname</p>
+</dd>
+<dt>
+<dd>
+<p><strong>glob</strong>(<em>PATTERN</em>) - Return a list of paths matching a pathname pattern</p>
+</dd>
+<dt>
+<dd>
+<p><strong>isfile</strong>(<em>PATHNAME</em>) - Return 1 path is a regular file, 0 otherwise</p>
+</dd>
+<dt>
+<dd>
+<p><strong>isdir</strong>(<em>PATHNAME</em>) - Return 1 path is a directory, 0 otherwise</p>
+</dd>
+<dt>
+<dd>
+<p><strong>match</strong>(<em>PATTERN</em>,<em>STRING</em>) - Return 1 if <em>PATTERN</em> matches <em>STRING</em></p>
+</dd>
+<dt>
+<dd>
+<p><strong>sed</strong>(<em>PATTERN</em>,<em>STRING</em>) - Return result of SED-like search and replace</p>
+</dd>
+<dt>
+<dd>
+<p><strong>wordexp</strong>(<em>STRING</em>) - Return string with word expansion like a POSIX shell</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library implements GrADS extensions (<em>gex</em>) with commands for
+pathname manipulation and perl-compatible regular expression matching,
+search and replace of strings. In addition, it also provides
+<strong>glob</strong> and <strong>wordexp</strong> commands for shell-like file name and
+variable expansions; <strong>wordexp</strong> also provides the back-tick operator for
+executing shell commands and capture its output. These features
+are available at the GrADS prompt or as GrADS Scription Language functions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h3><a name="using_abspath_to_get_full_path_name_of_current_directory">Using <strong>abspath</strong> to get full path name of current directory</a></h3>
+<pre>
+   ga-&gt; abspath .
+   /Users/adasilva</pre>
+<p>Notice that <strong>abspath</strong> also expands symlinks, e.g.,</p>
+<pre>
+   ga-&gt; ! ln -s /opt xxx
+   ga-&gt; abspath xxx
+   /opt</pre>
+<p>
+</p>
+<h3><a name="parsing_file_and_directory_names_">Parsing file and directory names,</a></h3>
+<pre>
+   ga-&gt; basename /path/to/somefile.nc4
+   somefile.nc4</pre>
+<pre>
+   ga-&gt; dirname /path/to/somefile.nc4
+   /path/to</pre>
+<p>
+</p>
+<h3><a name="changing_directories">Changing directories</a></h3>
+<p>If you ever tried to use <em>!cd</em> to change directories you realized that it does not work,</p>
+<pre>
+   ga-&gt; !pwd
+   /Users/adasilva
+   ga-&gt; !cd /opt
+   ga-&gt; !pwd
+   /Users/adasilva</pre>
+<p>This is because the directory is only changed in the subprocess
+spawned by the &quot;!&quot; operation; it does not propagate to the environment
+of of the parent process. The newly introduced <em>chdir</em> command
+allows you to change the current directory,</p>
+<pre>
+   ga-&gt; chdir /opt
+   New directory: /opt
+   ga-&gt; !pwd
+   /opt</pre>
+<p>
+</p>
+<h3><a name="checking_whether_a_file_directory_exists">Checking whether a file/directory exists</a></h3>
+<pre>
+   ga-&gt; exists /usr/bin/tar
+   yes</pre>
+<pre>
+   ga-&gt; exists /usr/bin/!@#$%^^&amp;
+   no</pre>
+<p>
+</p>
+<h3><a name="checking_whether_a_pathname_is_a_file_or_directory">Checking whether a pathname is a file or directory</a></h3>
+<pre>
+   ga-&gt; isfile /usr/bin
+   no
+   ga-&gt; isfile /usr/bin/tar
+   yes</pre>
+<pre>
+   ga-&gt; isdir /usr/bin
+   yes
+   ga-&gt; isdir /usr/bin/tar
+   no</pre>
+<p>Notice these commands can only be used with existing files
+or directories,</p>
+<pre>
+   ga-&gt; isfile /usr/bin/!@#%^&amp;
+   *** ERROR *** cannot stat file /usr/bin/!@#%^&amp;</pre>
+<p>
+</p>
+<h3><a name="getting_the_modification_time_of_a_file_directory">Getting the modification time of a file/directory</a></h3>
+<pre>
+   ga-&gt; getmtime /usr/bin/sed
+   Fri Oct 25 17:05:00 2013</pre>
+<p>Likewise, you can query the last accesss and metadata change times:</p>
+<pre>
+   ga-&gt; getatime /usr/bin/sed
+   Mon May 26 15:12:53 2014</pre>
+<pre>
+   ga-&gt; getctime /usr/bin/sed
+   Fri Oct 25 17:05:00 2013</pre>
+<p>
+</p>
+<h3><a name="getting_a_list_of_path_names_matching_a_pattern_">Getting a list of path names matching a pattern,</a></h3>
+<pre>
+   ga-&gt; glob '/opt/X11/*'
+   Found 6 matches
+   /opt/X11/bin
+   /opt/X11/etc
+   /opt/X11/include
+   /opt/X11/lib
+   /opt/X11/share
+   /opt/X11/var</pre>
+<p>Use the <strong>isfile</strong>, <strong>isdir</strong> to find out if these are files or directories, e.g.,</p>
+<pre>
+   ga-&gt; isdir /opt/X11/include
+   yes</pre>
+<p>Notice that <strong>glob</strong> does not perform expansion of the shell home
+diretory character <code>~</code>,</p>
+<pre>
+   ga-&gt; glob ~
+   *** ERROR *** cannot find matches for ~</pre>
+<p>Use <strong>wordexp</strong> if you would like expansion of this character.</p>
+<p>
+</p>
+<h3><a name="performing_word_expansion__files_and_directories">Performing word expansion: files and directories</a></h3>
+<pre>
+   ga-&gt; wordexp '/opt/X11/include/*.h'
+   Found 5 words
+   /opt/X11/include/Xplugin.h
+   /opt/X11/include/png.h
+   /opt/X11/include/pngconf.h
+   /opt/X11/include/pnglibconf.h
+   /opt/X11/include/xpyb.h</pre>
+<p>Unlike <strong>glob</strong>, <strong>wordexp</strong> expands <code>~</code>:</p>
+<pre>
+   ga-&gt; wordexp ~
+   Found 1 words
+   /Users/adasilva</pre>
+<p>When a match cannot be found, <strong>wordexp</strong> returns the original pattern,</p>
+<pre>
+   ga-&gt; glob ~/!@#$%
+   *** ERROR *** cannot find matches for ~/!@#$%</pre>
+<pre>
+   ga-&gt; wordexp ~/!@#$%
+   Found 1 words
+   /Users/adasilva/!@#$%</pre>
+<p>
+</p>
+<h3><a name="performing_word_expansion__environment_variables">Performing word expansion: environment variables</a></h3>
+<pre>
+   ga-&gt; wordexp 'I am $USER and I reside at $HOME'
+   Found 8 words
+   I
+   am
+   adasilva
+   and
+   I
+   reside
+   at
+   /Users/adasilva</pre>
+<p>
+</p>
+<h3><a name="performing_word_expansion__back_tick_operator">Performing word expansion: back-tick operator</a></h3>
+<pre>
+   ga-&gt; wordexp &quot;I am `whoami` and I reside at ~&quot;
+   Found 8 words
+   I
+   am
+   adasilva
+   and
+   I
+   reside
+   at
+   /Users/adasilva</pre>
+<pre>
+   ga-&gt; wordexp &quot;Today is `date`&quot;
+   Found 8 words
+   Today
+   is
+   Mon
+   May
+   26
+   21:25:12
+   EDT
+   2014</pre>
+<p>
+</p>
+<h3><a name="regular_expressions__matching">Regular expressions: matching</a></h3>
+<pre>
+   ga-&gt; match /open/ OpenGrADS
+   no
+   ga-&gt; match /open/i OpenGrADS
+   yes</pre>
+<pre>
+   ga-&gt; match /^grads/i OpenGrADS
+   no
+   ga-&gt; match /grads$/i OpenGrADS
+   yes</pre>
+<p>
+</p>
+<h3><a name="regular_expressions__search_and_replace">Regular expressions: search and replace</a></h3>
+<pre>
+   ga-&gt;sed s/^open/Open/ opengrads
+   Replaced 1 matches
+   Opengrads</pre>
+<pre>
+   ga-&gt; sed s/GRADS/GrADS/i opengrads
+   Replaced 1 matches
+   openGrADS</pre>
+<p>
+</p>
+<h3><a name="grads_scripting_functions">GrADS Scripting Functions</a></h3>
+<p>The following script shows an example</p>
+<pre>
+    function main()</pre>
+<pre>
+   * Enable library functions
+   * ------------------------
+      rc = gsfallow('on')</pre>
+<pre>
+   * Check if a file
+   * ---------------
+      if ( isfile('/usr/bin') )
+            say '/usr/bin is a file'
+      else
+            say '/usr/bin is NOT a file'
+      endif</pre>
+<pre>
+   * Check if a directory
+   * --------------------
+      if ( isdir('/usr/bin') )
+            say '/usr/bin is a directory'
+      else
+            say '/usr/bin a NOT file'
+      endif</pre>
+<pre>
+   * Get list of header files
+   * ------------------------
+      headers = wordexp('/opt/X11/include/png*.h')
+      say 'PNG header files are: ' headers</pre>
+<pre>
+   * Search and replace
+   * ------------------
+      new = sed('s/grads/GrADS/ig', 'Opengrads provides GRADS extensions')
+      say new</pre>
+<p>Running this script produces the following output:</p>
+<pre>
+   /usr/bin is NOT a file
+   /usr/bin is a directory
+   PNG header files are: /opt/X11/include/png.h /opt/X11/include/pngconf.h /opt/X11/include/pnglibconf.h
+   OpenGrADS provides GrADS extensions</pre>
+<p>
+</p>
+<hr />
+<h1><a name="regular_expressions">REGULAR EXPRESSIONS</a></h1>
+<p>A regular expression (or <em>regex</em> for short) is a sequence of
+characters that forms a search pattern, primarily used in pattern
+matching with strings, or in <em>find and replace</em> type of
+operations. The <strong>match</strong> and <strong>sed</strong> functions provided here rely
+extensively on regular expressions, in particular Perl Compatible
+Regular Expressions as implmented in the PCRE Library
+(<a href="http://www.pcre.org">http://www.pcre.org</a>). If you are not familiar with regular
+expressions you may want to start with this Quick
+Tutorial (<a href="http://www.regular-expressions.info/quickstart.html">http://www.regular-expressions.info/quickstart.html</a>), or
+consult the references under SEE ALSO below for additional
+information.</p>
+<p>
+</p>
+<hr />
+<h1><a name="commands_provided">COMMANDS PROVIDED</a></h1>
+<p>The following commands are loosely based on the C-Shell syntax:</p>
+<p>
+</p>
+<h2><a name="abspath_pathname"><strong>abspath</strong> <em>PATHNAME</em></a></h2>
+<p>Return the absolute pathname associated with <em>PATHNAME</em>. It will
+expand the <code>.</code> and <code>..</code> directories as well as follow
+symlinks. However, it will not expand the shell character <code>~</code>.</p>
+<p>
+</p>
+<h2><a name="basename_pathname"><strong>basename</strong> <em>PATHNAME</em></a></h2>
+<p>Return file name part of <em>PATHNAME</em>. This is a simple string manipulation,
+there is no need for the pathname involved to exist.</p>
+<p>
+</p>
+<h2><a name="cd_pathname"><strong>cd</strong> <em>PATHNAME</em></a></h2>
+<p>Change current directory, same as <strong>chdir</strong>. An error is returned if
+<em>PATHNAME</em> does not exists.</p>
+<p>
+</p>
+<h2><a name="chdir_pathname"><strong>chdir</strong> <em>PATHNAME</em></a></h2>
+<p>Change current directory, same as <strong>cd</strong>.</p>
+<p>
+</p>
+<h2><a name="dirname_pathname"><strong>dirname</strong> <em>PATHNAME</em></a></h2>
+<p>Return directory name part of <em>PATHNAME</em>. This is a simple string manipulation,
+there is no need for the pathname involved to exist.</p>
+<p>
+</p>
+<h2><a name="exists_pathname"><strong>exists</strong> <em>PATHNAME</em></a></h2>
+<p>Check whether <em>PATHNAME</em> exists. The pathname can be a file or a directory.</p>
+<p>
+</p>
+<h2><a name="getatime_pathname"><strong>getatime</strong> <em>PATHNAME</em></a></h2>
+<p>Return last access time of <em>PATHNAME</em>.</p>
+<p>
+</p>
+<h2><a name="getctime_pathname"><strong>getctime</strong> <em>PATHNAME</em></a></h2>
+<p>Return metadata change time of <em>PATHNAME</em>.</p>
+<p>
+</p>
+<h2><a name="getmtime_pathname"><strong>getmtime</strong> <em>PATHNAME</em></a></h2>
+<p>Return modification time of <em>PATHNAME</em>.</p>
+<p>
+</p>
+<h2><a name="glob_pattern"><strong>glob</strong> <em>PATTERN</em></a></h2>
+<p>Return a list of files or directories matching a pathname pattern. The <em>PATTERN</em> is a shell-like
+pattern involving wildcards, etc., not a regular expression.</p>
+<p>
+</p>
+<h2><a name="isfile_pathname"><strong>isfile</strong> <em>PATHNAME</em></a></h2>
+<p>Test whether <em>PATHNAME</em> is a regular file. An error is returned if the pathname
+does not exists.</p>
+<p>
+</p>
+<h2><a name="isdir_pathname"><strong>isdir</strong> <em>PATHNAME</em></a></h2>
+<p>Test whether <em>PATHNAME</em> is a directory. An error is returned if the pathname
+does not exists.</p>
+<p>
+</p>
+<h2><a name="match_pattern_string"><strong>match</strong> <em>PATTERN</em> <em>STRING</em></a></h2>
+<p>Check whether the (perl-compatible) regular expression <em>PATTERN</em> matches <em>STRING</em>.</p>
+<p>
+</p>
+<h2><a name="sed_pattern_string"><strong>sed</strong> <em>PATTERN</em> <em>STRING</em></a></h2>
+<p>Return string with the result of a search and replace operation on <em>STRING</em> expressed in the
+(perl-compatible) regular expression <em>PATTERN</em>. See EXAMPLES above.</p>
+<p>
+</p>
+<h2><a name="wordexp_string"><strong>wordexp</strong> <em>STRING</em></a></h2>
+<p>Perform word expansion like a POSIX shell. Word expansion means the
+process of splitting a string into words and substituting for
+variables, commands, and wildcards just as the shell does. See EXAMPLES above.</p>
+<p>
+</p>
+<hr />
+<h1><a name="grads_script_functions_provided">GrADS SCRIPT FUNCTIONS PROVIDED</a></h1>
+<p>As shown in the SYNOPSIS above, each of the command above are provided as
+a GrADS script function. To enable these Library Functions be sure to add
+this to the top of your own script:</p>
+<pre>
+          gsfallow('on')</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org">http://opengrads.org</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2014 Arlindo da Silva; All Rights Reserved.</p>
+<p>This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;path.gex - GrADS Extensions for Pathname Manipulation and Regular Expressions</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

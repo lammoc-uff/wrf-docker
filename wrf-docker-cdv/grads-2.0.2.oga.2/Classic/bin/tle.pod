@@ -1,0 +1,309 @@
+# 1 "tle.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "tle.c"
+# 782 "tle.c"
+=pod
+
+=head1 NAME
+
+tle.gex - GrADS Extension Library for TLE-based Satellite Orbit Masking
+
+=head1 SYNOPSIS
+
+=head3 GrADS Commands:
+
+=over 4
+
+=item
+
+run B<set_tle> I<PARAM> I<VALUE> - Set internal parameters
+
+=item
+
+run B<tle_track> I<TLEFILE> - Plot satellite orbits
+
+=back
+
+=head3 GrADS Function:
+
+=over 4
+
+=item
+
+display B<tle_mask>(I<EXPR,TLEFILE[,SWATH_WIDTH|SWATH_LEFT,SWATH_RIGHT[,dS]]>) - Mask I<EXPR> according to orbit
+
+=back
+
+=head1 DESCRIPTION
+
+This library provides GrADS extensions (I<gex>) for simulating
+satellite orbits and masking gridded variables according to these
+orbits. The calculation in this extension is meant to be a
+simulation of the satellite orbit for research purposes and should
+not be used for forecasting real satellite overpasses. This calculation is based
+on Two-line Element (TLE) data using the SGP4 algorithm.
+
+This GrADS extension is based on SGP4 procedures for analytical propagation
+of a satellite trajectory. The code was originally released in the 1980 and 1986
+spacetrack papers. A detailed discussion of the theory and history
+may be found in the 2006 AIAA paper by Vallado, Crawford, Hujsak,
+and Kelso. Consult also the book "Fundamentals of Astrodynamics and
+Applications" (2007) by David Vallado.
+
+GrADS datasets are given on a constant time interval. For a given
+GrADS time index I<t>, satellite orbits can be simulated for the
+interval from I<t-0.5> to I<t+0.5>. During this period the satellite
+describe a ground track which can be plotted with the command
+B<tle_track>. With function B<tle_mask()> one can mask gridded variables
+by setting to undefined those gridpoints which were not visited by the
+satellite, with the possibility of specifying the swath width and halo
+gridpoints.
+
+When combined with a compression algorithm (such as in GRIB),
+satellite masked variables can use considerabily less storage space.
+
+=head1 TLE FILES
+
+A NORAD two-line element set consists of two 69-character lines of
+data which can be used together with NORAD's SGP4/SDP4 orbital model 
+to determine the position and velocity of
+the associated satellite. More detailed information about TLE files,
+including description of the format, can be obtained from:
+
+=over 4
+
+=item
+
+L<http://celestrak.com/columns/v04n03/>
+
+=back
+
+Sample TLE files are shipped with the OpenGrADS Bundle under the GrADS Data
+directory (GADDIR). Additional TLE files can be found at these sites:
+
+=over 4
+
+=item
+
+L<http://celestrak.com>
+
+=item
+
+L<http://www.space-track.org>
+
+=back
+
+
+=head1 EXAMPLES
+
+=head2 Plotting orbits
+
+=over 4
+
+One can plot lines depicting the satellite ground track with
+the B<tle_track> command:
+
+ ga-> open model
+ ga-> d ts
+ ga-> tle_track aqua.tle
+
+Instead of lines, one can also use marks to plot the ground track,
+
+ ga-> set_tle mark 6
+ ga-> tle_track aqua.tle
+
+=back
+
+=head2 Masking variables according to satelite orbits
+
+=over 4
+
+This example shows how to set to undefined all grid points which have not
+been visited by the satellite. For a given GrADS time index I<t>, the
+satellite ground track is computed from I<t-0.5> to I<t+0.5> and this
+simulated ground track is used to mask a variable:
+
+ ga-> open model
+ ga-> define xts = re(ts,0.5) # higher resolution version
+ ga-> set gxout grfill
+
+ ga-> d tle_mask(xts,aqua.tle)
+
+By default, the variable is masked according to the satellite ground track. However, it is
+also possible to specify the swath width (in km),
+
+ ga-> d tle_mask(xts,aqua.tle,300)
+
+You can also specify a halo, that is, additional gridpoints around the mask:
+
+ ga-> set_tle halo 2
+ ga-> d tle_mask(xts,aqua.tle)
+
+Halos are useful for interpolating gridded values to observation locations.
+
+=back
+
+=head1 COMANDS PROVIDED
+
+=head2 B<set_tle> I<PARAM> VALUE
+
+=over 4
+
+This command can be use to set several internal paramers, namely
+
+=over 8
+
+=item B<set_tle> I<DT> TIMESTEP_IN_SECS
+
+Specify the timestep in seconds used to simulate the ground track. For
+example, a timestep of 60 seconds will cause of the
+(longitude,latitude) of the ground track to be computed every minute.
+
+=item B<set_tle> I<MARK> MARK_TYPE
+
+Specify the the type of mark used to plot the ground track. By
+default, MARK_TYPE=-1, and straight lines are used to plot the ground
+track. Other possibles values for I<MARK_TYPE> are:
+
+  1 - plus sign
+  2 - open circle (default)
+  3 - closed circle
+  4 - open square
+  5 - closed square
+  6 - multiplication sign
+  7 - open diamond
+  8 - open triangle
+  9 - closed triangle
+ 10 - open circle with vertical bar
+ 11 - closed circle with vertical bar
+
+=item B<set_tle> I<IHALO> LEFT[,RIGHT]
+
+Specify the number of I<zonal> gridpoints to extend an orbital mask
+with. The parameter I<LEFT> is the number of gridpoints west of the
+mask, while I<RIGHT> is the number of gridpoints east of the
+mask. When I<RIGHT> is missing it is set the same as I<LEFT>.
+
+=item B<set_tle> I<JHALO> BELOW[,ABOVE]
+
+Specify the number of I<meridional> gridpoints to extend an orbital
+mask with. The parameter I<BELOW> is the number of gridpoints south of
+the mask, while I<ABOVE> is the number of gridpoints to the north of
+the mask. When I<ABOVE> is missing it is set the same as I<BELOW>.
+
+=item B<set_tle> I<HALO> LEFT[,RIGHT]
+
+Specify the number of I<meridional> and I<zonal> gridpoints to extend
+an orbital mask with. The parameter I<LEFT> is the number of
+gridpoints to the west/south of the mask, while I<RIGHT> is the number of
+gridpoints to the east/north of the mask. When I<RIGHT> is missing it is
+set the same as I<LEFT>.
+
+=back
+
+=back
+
+
+=head2 B<tle_track> I<TLEFILE>
+
+=over 4
+
+This command plots the ground track for a satellite given a TLE file. For a
+given GrADS time index I<t>, the satellite ground track is computed
+from I<t-0.5> to I<t+0.5>. This ground track is meant to be a
+simulation of the satellite orbit and should not be used
+for forecasting real satellite overpasses.
+
+=over 8
+
+=item I<TLEFILE>
+
+Two-line element file name.
+
+=back
+
+=back
+
+
+=head1 FUNCTIONS PROVIDED
+
+=head2 B<tle_mask>(I<EXPR,TLEFILE[,SWATH_WIDTH|SWATH_LEFT,SWATH_RIGHT[,dS]]>)
+
+=over 4
+
+This function masks out those grind points which have not been visited
+by the satellite from grads time index I<t-0.5> to time index
+I<t+0.5>. On can optionally specify a swath width.
+
+=over 8
+
+=item I<EXPR>
+
+GrADS expressions to be masked
+
+=item I<TLEFILE>
+
+Two-line element (TLE) file name.
+
+=item I<SWATH_WIDTH>
+
+Width of the swath in kilometers, centered around the ground
+track. This gives SWATH_WIDTH/2 kilometers to the left/right of the ground
+track. Default is 0 (no swath).
+
+=item I<SWATH_LEFT,SWATH_RIGHT>
+
+Width of the swath in kilometers to the left and right of the satellite ground track.
+Default is 0 (no swath).
+
+=item I<dS>
+
+Swath resolution, in kilometers. Default is 10 km.
+
+=back
+
+=back
+
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<http://opengrads.org/> - OpenGrADS Home Page
+
+=item *
+
+L<http://cookbooks.opengrads.org/index.php?title=Main_Page> -
+OpenGrADS Cookbooks
+
+=item *
+
+L<http://opengrads.org/wiki/index.php?title=User_Defined_Extensions> - OpenGrADS User Defined Extensions
+
+=item *
+
+L<http://www.iges.org/grads/> - Official GrADS Home Page
+
+=item *
+
+OpenGrADS extension I<ORB> which implements similar functionality for
+select NASA EOS satellites.
+
+=back
+
+=head1 AUTHORS
+
+Arlindo da Silva (dasilva@opengrads.org) and Arif Albayrak.
+
+=head1 COPYRIGHT
+
+This extension has been placed in the public domain.
+
+This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+
+=cut

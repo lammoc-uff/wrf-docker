@@ -1,0 +1,110 @@
+
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+Using GrADS with Athena Widgets 
+</font> </H1>
+</center>
+
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_sample.html>Writing the sample script</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_ref.html>Reference section </a>
+</center>
+
+<p>
+
+<!----------------------------------------------------------------->
+<hr>
+<h1>Going further...</h1>
+
+The <a href=sample.gui>sample script</a> introduced in the 
+<a href=gagui_sample.html>previous section</a> 
+has covered most of the
+GAGUI functions and callbacks. However, there are just a few things
+that were left out that you may find handy sometimes. 
+Please consult the following sample scripts:
+
+<ul>
+
+<li> <a href=sample.gui>sample.gui</a> - this is the script that
+     we covered in the <a href=gagui_sample.html>previous
+     section</a>
+
+<p>
+
+<li> <a href=sample2.gui>sample2.gui</a> - a slight variation 
+     of <b>sample.gui</b> with a different layout (single row).
+
+<p>
+<li> <a href=melrose.gui>melrose.gui</a> - similar to
+     <b>sample.gui</b> but customized for DAO's visualization server
+     (melrose.gsfc.nasa.gov). Here is an example of how to associate
+     <font color=#ff0000>Help</font> menu items with documents on the Web.
+     It also contains buttons to open files from the GEOS-1 Reanalysis 
+     residing on a local disk. DAO users on melrose can run this script
+     with the following GrADS command:
+<blockquote><b>
+     ga-> gui /ford1/local/lib/grads/gui/melrose.gui
+</b></blockquote>
+     or they can set
+<blockquote><b>
+     setenv GAGUI /ford1/local/lib/grads/gui/melrose.gui
+</b></blockquote>
+     for starting it automatically.
+
+<p>
+<li> <a href=ncep.gui>ncep.gui</a> - similar to
+     <b>sample.gui</b> but has one additional row which allows
+     the user to open files from the NCEP/NCAR Re-analysis CDROM,
+     the disc that came with the <i>Bulletin of the American Meteorological 
+     Society</i> (Kalnay et al. 1996).    
+     This script illustrates the <b>chdir()</b> function which allows 
+     the changing current directory to the CDROM mounting point. It also
+     includes a <i><font color=#ff0000>Help</font></i> button
+     which displays ASCII documentation files in the CDROM.<br>
+     <b>Note:</b> This is script will not work with the
+     <i>Annual Re-analysis CDROMs</i> being distributed by NCEP.<br>
+     <b>Exercise: </b> adapt this script for the <i>Annual Cdroms</i>
+     and contribute your script <b>:-)</b>
+
+<p>
+<li> <a href=window.gui>window.gui</a> - this script illustrates 
+     how to create
+     a secondary GUI window which can be dismissed when no longer
+     needed. For trying it, start one of the main GUI scripts such as
+     <a href=sample.gui>sample.gui</a>, and from the 
+     <i><font color=#ff0000>File</font></i> menu, click on
+     <i><font color=#ff0000>GUI</font></i>, entering the name of
+     this script (which, of course, should be copied to your
+     local disk). A secondary window will pop up with buttons
+     for opening files in the NCEP/NCAR Re-analysis CDROM,
+     similar to the middle row in 
+     <a href=ncep.gui>ncep.gui</a>.
+
+</ul>
+
+Of course, for getting all the glory details you will need to read the
+<a href=gagui_ref.html>Reference section</a>. 
+
+
+<!----------------------------------------------------------------->
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_sample.html>Writing the sample script</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_ref.html>Reference section </a>
+</center>
+
+
+
+
+
+
+

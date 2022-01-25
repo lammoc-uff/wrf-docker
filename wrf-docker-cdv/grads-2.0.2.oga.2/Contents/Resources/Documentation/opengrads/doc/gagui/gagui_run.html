@@ -1,0 +1,273 @@
+
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+Using GrADS with Athena Widgets 
+</font> </H1>
+</center>
+
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_intro.html>Introduction</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_simple.html>Writing simple scripts</a>
+</center>
+
+<p>
+
+<!----------------------------------------------------------------->
+<hr>
+<h1>Running the sample script</h1>
+
+Before we discuss the particulars of writing a GAGUI script, let's start
+by test driving one of the sample scripts. Once we understand how it
+works, then we can see how it is written. In what follows it is assumed
+that the user has a basic understanding of GrADS concepts and commands. 
+<p>
+Save the script <a href=sample.gui>sample.gui</a> to somewhere
+in your local disk.  Then, at the GrADS prompt <b>ga-></b> type
+<blockquote>
+<b>
+ga-> gui sample.gui
+</b>
+</blockquote>
+Alternatively, you can set the environment variable <b>GAGUI</b>
+before starting GrADS. On Unix under the C-Shell (csh) the syntax is:
+<blockquote>
+<b>
+% setenv GAGUI sample.gui  
+</b>
+</blockquote>
+while on Windows 95/NT under the DOS prompt you will would typically enter 
+<blockquote>
+<b>
+C:/USR/PEOPLE/DASILVA> SET GAGUI=sample.gui 
+</b>
+</blockquote>
+
+
+The following window should appear on your screen
+<p>
+<center>
+<IMG SRC="gui_main.gif" ALT="GAGUI Window">
+</center>
+<p>
+In this window, we have adopted the arbitrary convention that
+<i>Menus</i> are light sky blue, <i> Buttons</I> are grey, and the
+special <i>Display Buttons</i> yellow. All the screenshots in this document
+were created under SunOS using the OpenLook windows manager; the window 
+dressings (borders and title bar) may look slightly different on your machine.
+
+<h3> File Menu</h3>
+
+If you click on the 
+<b>File</b> menu you get the following choices:
+<p>
+<center>
+<IMG SRC="gui_filem.gif" ALT="GAGUI File Menu">
+</center>
+<p>
+
+The <i><font color=#ff0000>Open, SDF Open</font></i> and 
+<font color=#ff0000><i>XDF Open</i></font> items will start a
+<i>File Requestor</i> widget which looks like this:
+<p>
+<center>
+<IMG SRC="gui_filew.gif" ALT="GAGUI File Widget">
+</center>
+<p>
+After the user type in or click on a file name, the corresponding 
+GrADS 
+command (open, sdfopen or xdfopen) is executed on the file.
+After the data file is open, a <i>Variable Selection</i> 
+widget pops up: 
+<p>
+<center>
+<IMG SRC="gui_varw.gif" ALT="GAGUI Var Widget">
+</center>
+<p>
+From this widget the user selects one of the variables in the file to
+become the default variable, or type in a valid GrADS <b>default
+expression</b>. This default expression is used in conjunction with
+yellow <i><font color=#ff0000> <<, Display</font></i> and 
+<i><font color=#ff0000>>></font></i> buttons. You can change this
+default expression at any time by clicking on the <i><font color=#ff0000>VAR</font></i> 
+button. These buttons are further discussed below.
+
+<p>
+Similarly, the <i><font color=#ff0000>
+Exec, Run</font></I> and 
+<font color=#ff0000><i>GUI</i></font> items pop up a File Requestor
+and execute the corresponding GrADS command on the user selected file.
+Of course, no <i>Variable Selection</i> widget is launched in such cases.
+<p>
+The <font color=#ff0000><i>File Selection</i></font>
+ item pops up a scrollable list (not shown) 
+with all the opened files.
+The user then click on a given file to make it the default file for subsequent 
+GrADS operations.
+<p>
+The <font color=#ff0000><i>View Text File</i></font>
+ item pops up a File Requestor widget, and 
+the selected file is then opened with the Text Viewer widget: 
+<p>
+<center>
+<IMG SRC="gui_textw.gif" ALT="GAGUI Text File Widget">
+</center>
+<p>
+The menu item <font color=#ff0000><i>Reinit</i></font>
+issues the GrADS command of same name, while 
+the menu item <font color=#ff0000><i>Exit</i></font>
+ executes the GrADS <b>quit</b> command.
+The menu item <font color=#ff0000><i>Refresh</I></font>
+ refreshes the screen on some systems
+(that is, it does not always work).
+
+<h3>Print Menu</h3>
+
+This menu contains 3 items:
+<p>
+<center>
+<IMG SRC="gui_printm.gif" ALT="GAGUI Print Menu">
+</center>
+<p>
+
+The <font color=#ff0000><i>Enable Print</I></font> 
+item pops up a File Requestor widget and execute
+the GrADS command <b>enable print</b> on the user selected file.
+The <font color=#ff0000><i> Print</i></font>
+ and <font color=#ff0000><i>Disable Print</i></font> items simply issues 
+the GrADS commands of same name.
+
+
+
+<h3>Options Menu</h3>
+
+This menu contains shortcuts for frequently used GrADS commands such as
+<p>
+<center>
+<IMG SRC="gui_optm.gif" ALT="GAGUI Options Menu">
+</center>
+<p>
+The menu item <font color=#ff0000><i>Shaded</i></font>
+ issues the GrADS command 
+<b>set gxout shaded</b>; all other items above the 
+horizontal line set the corresponding <b>gxout</b> attribute.
+<p>
+The menu item <font color=#ff0000><i>Contour Interval</i></font>
+pops up a dialog box on which
+the user types in a value for the contour interval. This value
+is then used to issue a GrADS <b>set cint</b> command. 
+<p>
+Similarly, the 
+<font color=#ff0000><i>Draw Title</i></font>
+ item  allows the user to specify a title for the plot.
+<p>
+The menu item <font color=#ff0000><i>Color Bar</i></font>
+ executes Mike Fiorino's <b>cbarn.gs</b>
+script.
+
+<h3> Dim Menu</h3>
+
+This menu allows the user to change the GrADS dimension environment:
+<p>
+<center>
+<IMG SRC="gui_dimm.gif" ALT="GAGUI Dim Menu">
+</center>
+<p>
+For example, clicking on <font color=#ff0000><i>Latitude</i></font> you
+get the following dialog box:
+<p>
+<center>
+<IMG SRC="gui_strw.gif" ALT="GAGUI Dialog Box">
+</center>
+<p>
+The user would type in the latitude range, say <b>-20 30</b>, causing
+the GrADS command <br>
+<b>set lat -20 30</b> to be issued. Future versions of
+GAGUI will include a more elaborate dimension setting widget with rubber 
+bands, sliding bars, etc. 
+
+<h3>Grads Command Window Button </h3>
+
+The red button <font color=#ff0000><i>ga></i></font> activates the
+<i>GrADS Command Window</i> widget:
+<p>
+<center>
+<IMG SRC="gui_cmdw.gif" ALT="GAGUI Cmd Win">
+</center>
+<p>
+Each command the user types in is sent to GrADS when the ENTER key is
+pressed or when the user clicks the <font color=#ff0000><i>OK</i></font>
+button. Each new command is added to the scrollable history list below
+the command entering box.  By single-clicking on a item from this
+scrollable history list, the command is copied to the command entering
+area; double-clicking on an item causes the command to be executed and
+added to the top of scrollable history list. 
+<p>
+
+The <font color=#ff0000><i>Classic Cmd Line</i></font> button activates
+the classic command line interface with the familiar <b>ga-></b>
+prompt, and readline command line editing features if GrADS has been
+built with this option. Notice that when the classic command line
+interface is active the Athena widgets are inactive. You must enter
+a period "<b>.</b>" to leave the command line interface and return
+to the GUI.
+<p>
+
+The <font color=#ff0000><i>Clear</i></font> button clears the command
+entering box, while the <font color=#ff0000><i>Quit</i></font> button 
+quits GrADS.
+
+<h3>Hold, Var, and Display Buttons</h3>
+
+The <font color=#ff0000><i>Var</i></font> button starts the <i>Variable
+Selection </i> widget which allows the user select one of the
+variables in the default file to
+become the default variable, or type in a valid GrADS <b>default
+expression</b>. This default expression is used in conjunction with
+yellow <i><font color=#ff0000> <<, Display</font></i> and 
+<i><font color=#ff0000>>></font></i> buttons. 
+<p>
+
+The <i><font color=#ff0000>Display</font></i> button displays the
+default expression set with the <i>Variable Selection </i> widget.  By
+default, a <b>clear</b> command is issued to clear the screen before
+plotting.  If the toggle button <i><font color=#ff0000>Hold</font></i>
+is selected no such clear screen is performed before display; use this
+feature to overlay plots. 
+<p>
+
+The <i><font color=#ff0000>>></font></i> button behaves like the
+<i><font color=#ff0000>Display</font></i> button except that it advances
+one time step before displaying. Conversely, the <i><font
+color=#ff0000><<</font></i> button decrements time by one time step before
+displaying. Use these buttons to what your expression evolve in time,
+one frame at a time.  
+<p>
+
+<b>Bug:</b> When time is a looping dimension clicking on 
+<i><font color=#ff0000>Display</font></i> will start an animation
+sequence. However, when the animation is done the following
+message will be written to the console:
+<blockquote><b>
+    Press enter to continue::::: 
+</b></blockquote>
+You must press ENTER before the GUI widgets can become active again.
+
+<h3>Reinit, Clear and Quit Buttons</h3>
+
+These buttons simply issue the GrADS commands of same name.
+
+<p>
+
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_intro.html>Introduction</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_simple.html>Writing simple scripts</a>
+</center>

@@ -1,0 +1,47 @@
+#
+# Sample GrADS table for Dynamic User Defined Commands/Functions.
+# There are 2 types of extensions: 
+#
+#    udc   user defined commands
+#    udf   user defined functions
+#
+# This feature requires OpenGrADS v2.0.a4.oga.3 or later.
+#.................................................................
+
+#      A
+#      P   GrADS     Library      Library                 Short
+# Type I  Function   Function      Path                Description
+# ---- - ---------- ---------- -------------- -------------------------------  
+  udf  0  " "        " "        " "    "Ben-Jei Tsuang's Extensions"
+  udf  0  lt         f_bjt      ^libbjt.gex   "Local time"
+  udf  0  jd         f_bjt      ^libbjt.gex   "Julian day"
+  udf  0  cosz       f_bjt      ^libbjt.gex   "Cosine solar zenith angle"
+  udf  0  dayratio   f_bjt      ^libbjt.gex   "Daylight ratio"
+  udf  0  if         f_bjt      ^libbjt.gex   "Conditional function"
+  udf  0  maxv       f_bjt      ^libbjt.gex   "Maximum value"
+  udf  0  minv       f_bjt      ^libbjt.gex   "Minimum value"
+  udf  0  which      f_bjt      ^libbjt.gex   "Label gridpoints"
+  udf  0  ftest      f_bjt      ^libbjt.gex   "F-test"
+  udf  0  ttest      f_bjt      ^libbjt.gex   "T-test"
+  udf  0  tfit       f_bjt      ^libbjt.gex   "Point  linear regression"
+  udf  0  fit        f_bjt      ^libbjt.gex   "Global linear regression"
+  udf  0  tcorr2     f_bjt      ^libbjt.gex   "Time correlation"
+  udf  0  tregr2     f_bjt      ^libbjt.gex   "Point linear regression"
+  udf  0  tmave2     f_bjt      ^libbjt.gex   "Time averaging w/masking"
+  udf  0  madvu      f_bjt      ^libbjt.gex   "Calculates -d(u*EXPR)/dx"
+  udf  0  madvv      f_bjt      ^libbjt.gex   "Calculates -d(V*EXPR)/dy"
+  udf  0  madvw      f_bjt      ^libbjt.gex   "Calculates -d(W*EXPR)/dp"
+  udf  0  muadv      f_bjt      ^libbjt.gex   "Zonal advection"
+  udf  0  mvadv      f_bjt      ^libbjt.gex   "Meridional advection"
+  udf  0  mwadv      f_bjt      ^libbjt.gex   "Vertical advection"
+  udf  0  satvap     f_bjt      ^libbjt.gex   "Saturated vapor pressure"
+  udf  0  dew        f_bjt      ^libbjt.gex   "Dew point temperature"
+  udf  0  lw         f_bjt      ^libbjt.gex   "Thermal infrared fluxes"
+  udf  0  lw2        f_bjt      ^libbjt.gex   "Thermal infrared fluxes v2"
+  udf  0  pinterp    f_bjt      ^libbjt.gex   "Pressure interpolation"
+  udf  0  zinterp    f_bjt      ^libbjt.gex   "Height interpolation"
+  udf  0  line       f_bjt      ^libbjt.gex   "Draws a line"
+  udf  0  vint2      f_bjt      ^libbjt.gex   "Mass-weighted vertical integral"
+#..........................................................................
+
+

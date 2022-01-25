@@ -1,0 +1,280 @@
+	       GrADS - Grid Analysis and Display System
+			     Version 2.0
+
+                    The OpenGrADS Bundle Distribution
+                    ---------------------------------
+
+                           http://opengrads.org
+   
+
+GrADS is distributed freely and is copyrighted under the GNU Public License. 
+Please read the COPYRIGHT file for more complete information. 
+
+This is the "OpenGrADS Bundle" distribution of GrADS containing all
+the executables, fonts, map datasets, scripts and sample datasets that
+you need to run GrADS on your computer. Additionally, it contains the
+OpenGrADS User Defined Extensions that complement GrADS with a number
+of useful commands and functions.
+
+GrADS is primarily developd by the Center for Ocean-Land-Atmosphere
+Studies (COLA), http://grads.iges.org/grads. The OpenGrADS Project
+(http://opengrads.org) seeks to develop advanced interfaces and
+extensions based on the main GrADS engine.
+
+
+       Installing the OpenGrADS Bundle on Linux/Mac OS X/Unix
+       ------------------------------------------------------
+
+(See below for Windows specific instructions).
+
+Move the Contents/ subdirectory to a directory of your choice. Put
+this directory in your path and you are done. You can even put it on a
+USB memory stick and take it on the road. You can run it directly from
+the memory stick without having to set any environment variable. Read
+on if you need more information. See the next section if you prefer
+the classic installation method used by COLA.
+
+If you have admin privileges it suggested that you install the
+OpenGrADS Bundle under /opt:
+
+  % mv Contents /opt/opengrads
+
+but you could equally install it under your home directory
+
+  % mv Contents $HOME/opengrads
+
+Next put this installation directory in your path. Assuming you
+installed it under /opt/opengrads. 
+
+  % export PATH=/opt/opengrads:$PATH
+
+C-shell
+
+  % set path = ( /opt/opengrads $path )
+
+That is! Unless you take this directory tree apart there is no need to
+set any other environment variable. 
+
+Alternatively, you can make a symlink of each executable under
+/opt/opengrads into somewhere in your path, e.g.,
+
+   cd /usr/local/bin
+   ln -s /opt/opengrads/opengrads .
+
+The following executables are provided:
+
+     grads            GrADS package, including the OpenGrADS Extensions
+     opengrads        same as "grads -CH 1"
+     gribmap          Creates an index file that "maps" a GRIB data set 
+                      for a GrADS descriptor file
+     gribscan         Extracts grid info from a GRIB data set
+     grib2scan        Extracts grid info from a GRIB2 data set
+     bufrscan         Reads BUFR messages and prints out ascii values 
+     gxps             Converts GrADS metafiles to Postscript
+     gxeps            Converts GrADS metafiles to Encapsulated Postscript
+     gxtran           Displays metafiles
+     gxyat            yet another metafile translator; produces PNG with
+                      anti-aliased fonts as well as SVG, PDF and PS.
+     merra            starts grads with a graphical user interface
+                      customized to access the MERRA datasets, see
+                           http://gmao.gsfc.nasa.gov/merra
+     stnmap           Maps station data
+     wgrib            GRIB-1 utility, see 
+                        http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html
+
+Notice that *gradsdap* is now obsolete since the OpenGrADS build of
+*grads* includes OPeNDAP support.
+
+Troubleshooting
+---------------
+If you receive an error such as:
+
+% grads
+grads: error while loading shared libraries: libXaw.so.7: cannot open shared object file: No such file or directory
+
+for libXaw (or any other library) is because your system lacks this
+standard shared library. We have include many of these shared
+libraries used by GrADS under
+
+   Contents/Linux/Versions/2.0.a5.oga.3/x86_64/libs
+
+If it complains about some missing shared, copy each missing shared
+library (and only these) from this directory to
+
+   Contents/Linux/Versions/2.0.a5.oga.3/x86_64/gex
+
+and try again from Contents/.
+
+IMPORTANT: 
+
+1) The wrappers under Contents/ will take care of setting the necessary
+   environment variables. When using the Classic installation below
+   be sure to set LD_LBRARY_PATH (or DYLD_LBRARY_PATH on Mac OS X) such
+   that your system can find these shared libraries.
+
+2) Do *not* copy all the libraries under libs/ to gex/, but only those
+   that your system does not already have. This will minimize the
+   chance for conflicts.
+
+3) Do *not* replace libraries under /usr/lib or /usr/lib64 unless you
+   know exactly what you are doing. You can really mess up your system
+   this way.
+
+
+                     Installation on Windows
+                     -----------------------
+
+Using the Automatic Installer
+-----------------------------
+Installing the Windows version of GrADS is very easy. If you downloaded
+a file called
+
+         grads-2.0.x-win32_superpack.exe
+
+simply run it, answer a few simple questions, and you are good to go
+(the installer will also automatically set your PATH so that you can run
+GrADS from the command line window).  
+
+Using the ZIP File
+------------------
+If your distribution came in the form of a zip file, simply unzip the
+distribution file
+
+         grads-2.0.x.win32_superpack.zip
+
+to a place of your choice (e.g., under C:\ or C:\OpenGrADS\) and you are
+ready to go. Then open Windows Explorer and click on any of the wrapper
+scripts under OpenGrADS (say, opengrads) and start using it.  
+
+Setting your PATH 
+-----------------
+This step is only necessary if your distribution came in the form of a
+ZIP file (or if you chose not to do so during the automatic
+installation.)  You may find convenient adding the GrADS binary
+directory, e.g.,
+
+         C:\OpenGraDS\Cygwin\Versions\$version\i686
+
+to your PATH. In this example, $version stands for the particular
+version of the software being installed, say, 2.0.a5.oga.2. The top
+directory C:\OpenGrADS has also simple VBScript wrapper scripts that can
+be used to start the main applications. However, there are a large
+number of utilities that would not be accessible if you do not add the
+full path above. 
+
+Changing your PATH under Windows
+--------------------------------
+For changing your PATH click on
+
+         [Start]/[Control Panel]/[System]
+
+Then select the [Advanced] tab and click on the [Environment Variables]
+button on the lower left. Select Path under -System Variables- and click
+on the [Edit] button. Do not delete the current contents of your path;
+simply append a ";" followed by the name of the directory where your
+GrADS binaries reside. 
+
+See the "GettingStarted.html" Document for additional information.
+ 
+Windows Notes:
+-------------
+1) The wrappers under Contents/ are not functional in Windows unless you
+   have perl installed. These should work fine if you ahve a standard
+   Cygwin installations that includes Perl.
+
+2) There are a few VBScript wrappers at the very top directory, above
+   Contents/. Just click on them. 
+
+3) However, to keep it fom being too busy wrapper for the many utilities
+   have been omittied; setting your PATH (either automatically with the
+   ".exe" package or by hand with the ".zip" package) is the recommended 
+   way to get to these utilities from the command line. 
+
+
+         Installation on Linux/Mac OS X/Unix: Classic Method
+         ---------------------------------------------------
+
+For downloading regular GrADS releases without the OpenGrAS extensions 
+consult the COLA download page:
+
+     http://grads.iges.org/grads/downloads.html
+
+The subdirectory Classic/ has 2 main subdirectories:
+
+* bin/     GrADS binaries (including extensions)
+* data/    map and font datasets
+
+The contents of these directories are usually available as two
+separate downloads from COLA. The other subdirectories
+
+* scripts/     sample GrADS scripts, including Athena GUI scripts
+* test_data/   the classic "model" dataset used in many examples
+
+are optional, but very handy otherwise.
+
+Binaries
+--------
+The executables contained in Classic/bin are typically placed in the
+directory /usr/local/bin. If you do not have write permission for your
+/usr/local/bin directory, you can put them in the ~/bin subdirectory
+of your home directory.
+
+     mv Classic/bin/* /usr/local/bin
+
+Extensions
+----------
+For enabling the OpenGrADS Extensions you will need to set two
+environment variables (using "/usr/local/bin" as an example, replace
+it with your actual directory name if you install the binaries
+elsewhere):
+
+* Bourne shell and variants (sh, bash, ksh, etc.)
+
+  % export GA2UDXT=/usr/local/bin/gex/udxt
+  % export LD_LIBRARY_PATH=/usr/local/bin/gex:$LD_LIBRARY_PATH
+
+* C-shell (csh, tcsh):
+
+  % setenv GA2UDXT /usr/local/bin/gex/udxt
+  % setenv LD_LIBRARY_PATH /usr/local/bin/gex:$LD_LIBRARY_PATH
+
+Omit the last $LD_LIBRARY_PATH if you do not have this variable
+already defined. Also, for Mac OS X the environment variable name is
+"DYLD_LIBRARY_PATH". On Windows, the gex/ directory should be added to
+your PATH.
+
+The subdirectory Classic/data contains the GrADS fonts and maps data
+sets needed to run GrADS. It can be downloaded from
+
+          http://grads.iges.org/grads/downloads.html.
+
+Map, font datasets
+------------------
+The contents of Classic/Data are typically placed in the directory
+/usr/local/lib/grads, the default location for these files. If you do
+not have write permission for /usr/local/lib/grads, you can place the
+files elsewhere, but you must also change the environment variable
+GADDIR so the GrADS executables will know where to find these files.
+
+     mv Classic/data/* dirname
+     setenv GADDIR dirname (If dirname is not /usr/local/lib/grads)
+
+If in trouble...
+----------------
+See the Troubleshooting section above if you get an error message such as
+
+% grads
+grads: error while loading shared libraries: libXaw.so.7: cannot open shared object file: No such file or directory
+
+
+          Documentation and Additional Information
+          ----------------------------------------
+
+Detailed HTML documentation is now included in this distribution:
+
+           Contents/Documentation.html
+
+You can also consult the on-line documentation available from:
+ 
+           OpenGrADS Website: http://opengrads.org
+               GrADS Website: http://grads.iges.org/grads

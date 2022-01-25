@@ -1,0 +1,712 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>liblats.gex - GrADS Extension Library for File Subsetting and Reformatting</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_www@b02.apple.com" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;liblats.gex - GrADS Extension Library for File Subsetting and Reformatting</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_commands_">GrADS Commands:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#overview_of_the_lats_library">Overview of the LATS Library</a></li>
+	</ul>
+
+	<li><a href="#anatomy_of_a_lats_based_grads_script">ANATOMY OF A LATS BASED GRADS SCRIPT</a></li>
+	<ul>
+
+		<li><a href="#quality_control">QUALITY CONTROL</a></li>
+	</ul>
+
+	<li><a href="#commands_provided">COMMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#set_lats_basetime_year_month_day_hour"><strong>set_lats</strong> <em>basetime YEAR MONTH DAY HOUR</em></a></li>
+		<li><a href="#set_lats_close"><strong>set_lats</strong> <em>close</em></a></li>
+		<li><a href="#set_lats_create_filename"><strong>set_lats</strong> <em>create FILENAME</em></a></li>
+		<li><a href="#set_lats_convention_convention"><strong>set_lats</strong> <em>convention CONVENTION</em></a></li>
+		<li><a href="#set_lats_format_format"><strong>set_lats</strong> <em>format FORMAT</em></a></li>
+		<li><a href="#set_lats_calendar_calendar"><strong>set_lats</strong> <em>calendar CALENDAR</em></a></li>
+		<li><a href="#set_lats_center_center"><strong>set_lats</strong> <em>center CENTER</em></a></li>
+		<li><a href="#set_lats_deltat_deltat"><strong>set_lats</strong> <em>deltat DeltaT</em></a></li>
+		<li><a href="#set_lats_frequency_frequency"><strong>set_lats</strong> <em>frequency FREQUENCY</em></a></li>
+		<li><a href="#set_lats_gridtype_gridtype"><strong>set_lats</strong> <em>gridtype GRIDTYPE</em></a></li>
+		<li><a href="#set_lats_gzip_compression_level"><strong>set_lats</strong> <em>gzip COMPRESSION_LEVEL</em></a></li>
+		<li><a href="#set_lats_model_model"><strong>set_lats</strong> <em>model MODEL</em></a></li>
+		<li><a href="#set_lats_parmtab_table_filename"><strong>set_lats</strong> <em>parmtab TABLE_FILENAME</em></a></li>
+		<li><a href="#set_lats_shave_nbits"><strong>set_lats</strong> <em>shave NBITS</em></a></li>
+		<li><a href="#set_lats_var_varname_timestat_level_id"><strong>set_lats</strong> <em>var VARNAME TIMESTAT LEVEL_ID</em></a></li>
+		<li><a href="#set_lats_vertdim_dim_name_lev_type_lev_1_____lev_n"><strong>set_lats</strong> <em>vertdim DIM_NAME LEV_TYPE LEV_1 ... LEV_N</em></a></li>
+		<li><a href="#set_lats_write_var_id__level_"><strong>set_lats</strong> <em>write VAR_ID [LEVEL]</em></a></li>
+		<li><a href="#lats_grid_expr"><strong>lats_grid</strong> <em>EXPR</em></a></li>
+		<li><a href="#lats_data_expr"><strong>lats_data</strong> <em>EXPR</em></a></li>
+		<li><a href="#query_lats"><strong>query_lats</strong></a></li>
+	</ul>
+
+	<li><a href="#environment_variables">ENVIRONMENT VARIABLES</a></li>
+	<li><a href="#historical_notes">HISTORICAL NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>liblats.gex - GrADS Extension Library for File Subsetting and Reformatting</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_commands_">GrADS Commands:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>run <strong>set_lats</strong> <em>PARAMETER</em> <em>VALUE</em> - Set internal parameters</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>run <strong>query_lats</strong> - Print internal paramaters</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>run <strong>lats_grid</strong> <em>EXPR</em> - Set horizontal grid</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>run <strong>lats_data</strong> <em>EXPR</em> - Write data to file</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library provides GrADS extensions (<em>gex</em>) for interfacing to
+LATS (Library of AMIP II Transmission Standards), a collection of I/O
+functions for creating lon/lat gridded datasets in the GRIB, NetCDF-3,
+NetCDF-4/HDF-5 and HDF-4 formats. This is the low level LATS interface
+in GrADS. Usually, one uses the wrapper <strong>lats4d.gs</strong> script
+(<a href="http://opengrads.org/doc/scripts/lats4d/">http://opengrads.org/doc/scripts/lats4d/</a>) for a more user friendly
+interface which has reasonable defaults for most internal parameters.</p>
+<p>The GrADS interface to LATS is implemented by means of 4 <em>User
+Defined Commands</em> (UDCs). Most parameters defining the output file are
+set by means of the <strong>set_lats</strong> command; the current LATS state can
+queried with command <strong>query_lats</strong>. Command <strong>lats_grid</strong> is used to
+define the horizontal longitude/lattude grid (vertical levels are set
+with the <strong>set_lats</strong> command.) Command <strong>lats_data</strong> is used to write a
+2-dimensional (longitude x latitude) slice of a variable, for a given time
+and level.</p>
+<p>The following sub-section describes the main attributes of the LATS
+library which this extension interfaces to. It has been adapted from the
+original LATS manual page.</p>
+<p>
+</p>
+<h2><a name="overview_of_the_lats_library">Overview of the LATS Library</a></h2>
+<p>LATS is a subroutine library developed by the Program for Climate
+Model Diagnosis and Intercomparison (PCMDI) to output lon/lat gridded
+data for the AMIP II (Atmospheric Model Intercomparison Project II)
+and other intercomparison projects.  In addition to outputting data,
+LATS optionally performs basic quality control on the data
+written. LATS outputs data in the GRIB and/or netCDF formats and
+provides an interface to GrADS and VCS.  The LATS library is no longer
+supported by the original developers at PCMDI but remains as a viable
+mechanism for producing GRID-1, NetCDF and HDF output from GrADS.</p>
+<p>The main features of LATS are:</p>
+<ol>
+<li>
+<p>LATS is designed to output rectilinear, generally global, gridded,
+spatio-temporal data.  The amount of data written with a single
+function call is a horizontal longitude-latitude slice of a variable.</p>
+</li>
+<li>
+<p>Data may be output in the machine-independent formats GRIB and/or
+netCDF and are directly readable by GrADS.</p>
+</li>
+<li>
+<p>Acceptable variable names are prescribed.  The units, datatype, and
+basic structure (e.g., single-level or multi-level) are inferred from
+the variable name. This information is tabled in an external, ASCII
+<em>parameter table</em>. If no parameter table is specified, a default list of
+AMIP II parameters is used.</p>
+</li>
+<li>
+<p>More than one LATS file may be open simultaneously  for
+output. In GrADS, one usually write one file at a time.</p>
+</li>
+<li>
+<p>Data must be written in increasing time sequence.  All variables in a
+file share a common time frequency (e.g., hourly, monthly,
+etc.). Originally LATS did not support minutes, but a patch has ben
+developed in version used by GrADS to allow minutes are a valid time
+sequence.</p>
+</li>
+<li>
+<p>For a given timepoint, variables, and  multiple	levels for a variable, may be written in any order.</p>
+</li>
+<li>
+<p>Although GrADS Version 2 uses doubles (64 bits) to store variable
+data, all data written to file by this interface are floating-point or
+integer.  INTEGER*8), and C int data can be written.</p>
+</li>
+<li>
+<p>Data written to GRIB files are packed to a predefined bit width or
+numerical precision depending on the variable. The precision and bit
+width is specified in the <em>parameter table</em> file.  Floating-point data written
+to netCDF files are saved as 32-bit IEEE floating-point values;
+integer data are written as 32-bit 2's complement integers.</p>
+</li>
+</ol>
+<p>
+</p>
+<hr />
+<h1><a name="anatomy_of_a_lats_based_grads_script">ANATOMY OF A LATS BASED GRADS SCRIPT</a></h1>
+<p>The skeleton of a GrADS script using the LATS interface is as follows:</p>
+<ol>
+<li>
+<p>Optionally, specify an external parameter file, with
+<strong>set_lats</strong> <em>parmtab</em>.</p>
+</li>
+<li>
+<p>Define the horizontal grid with <strong>lats_grid</strong>.  Define all vertical
+dimensions (e.g., pressure level) with <strong>set_lats</strong> <em>vertdim</em>. If a default
+surface dimension is defined for a variable, it does not
+have to be redefined with <strong>set_lats</strong> <em>vertdim</em>.  Grids and vertical
+dimensions are shared across variables.  NOTE: At
+present, only one grid may be defined for a GrADS/GRIB file.</p>
+</li>
+<li>
+<p>Create a LATS file, with <strong>set_lats</strong> <em>create</em>.</p>
+</li>
+<li>
+<p>Optionally, set the basetime, with <strong>set_lats</strong> <em>basetime</em>.</p>
+</li>
+<li>
+<p>For EACH AND EVERY variable to be written, declare the
+variable with <strong>set_lats</strong> <em>var</em>. The LATS requirement that ALL variables
+be declared up front (before writing) is necessitated by the netCDF
+interface.</p>
+</li>
+<li>
+<p>For each time-point, in increasing time order and, for each
+horizontal level of each variable, write the data for this level,
+time-point, with <strong>set_lats</strong> <em>write</em> and <strong>lats_data</strong>.</p>
+</li>
+<li>
+<p>Close the file, with <strong>set_lats</strong> <em>close</em>.</p>
+</li>
+</ol>
+<p>By default, all errors are reported.</p>
+<p>
+</p>
+<h2><a name="quality_control">QUALITY CONTROL</a></h2>
+<p>LATS performs some basic quality control on the data written. The
+intention is to provide a quick check of data validity. For each level
+written the following statistics are calculated: range
+(maximum-minimum) and area-weighted average. If a missing data flag is
+defined for the variable, any missing data are ignored in calculating
+the statistics.  Quality control is not performed on integer-valued
+variables.</p>
+<p>A QC exception is generated if abs(average - observed_average) &gt;
+(tolerance * observed_standard_deviation).  Similarly, an exception is
+generated if range &gt; (range_tolerance * observed_range). In either
+case, a warning is issued, and an entry is written to the QC log
+file. The values of observed_average, tolerance,
+observed_standard_deviation, range_tolerance, and observed_range are
+tabled in the QC section of the <em>Parameter Table</em> file. If no entry in this
+section is found for the given (variable,level_type,level), then no
+quality control is performed for that level.</p>
+<p>Data are always written, regardless of whether a QC exception is
+generated.</p>
+<p>The default name of the log file is <em>lats.log</em>. This name is
+superseded by the value of the environment variable LATS_LOG, if
+defined.</p>
+<p>
+</p>
+<hr />
+<h1><a name="commands_provided">COMMANDS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="set_lats_basetime_year_month_day_hour"><strong>set_lats</strong> <em>basetime YEAR MONTH DAY HOUR</em></a></h2>
+<p>Set the basetime for file with ID fileid.  The basetime is the initial
+time in which the file can be referenced.  The function
+returns 1 if successful, 0 if an error oc- curs.</p>
+<p>
+</p>
+<h2><a name="set_lats_close"><strong>set_lats</strong> <em>close</em></a></h2>
+<p>Close the file. The function returns 1 if successful, 0 if an error
+occurs.</p>
+<dl>
+<dt><strong><a name="item_note_3a_it_is_important_to_call_b_3cset_lats_close"><strong>NOTE:</strong> 
+It is important to call <strong>set_lats close</strong>, to ensure that any
+buffered output is written to the file.</a></strong>
+
+</dl>
+<p>
+</p>
+<h2><a name="set_lats_create_filename"><strong>set_lats</strong> <em>create FILENAME</em></a></h2>
+<p>Create a LATS file with the given <em>FILENAME</em>, a string of length &lt;=
+256. If <em>FILENME</em> does not end in the proper extension ('.nc' for
+netCDF, '.grb' for GRIB), the extension will be appended to the path.</p>
+<p>
+</p>
+<h2><a name="set_lats_convention_convention"><strong>set_lats</strong> <em>convention CONVENTION</em></a></h2>
+<p>Deprecated. Same as <strong>set_lats</strong> <em>format</em>.</p>
+<p>
+</p>
+<h2><a name="set_lats_format_format"><strong>set_lats</strong> <em>format FORMAT</em></a></h2>
+<p>The parameter <em>FORMAT</em> defines the data format to be written, and the
+metadata convention to be followed when writing the format. The
+options are:</p>
+<dl>
+<dt><strong><a name="item_grads_grib"><em>grads_grib</em></a></strong>
+
+<dd>
+<p>WMO GRIB format, plus a GrADS control file and the ancillary GRIB map
+file.  If this format is used the time step (see <strong>set_lats deltat</strong>)
+must be non-zero, implying that timepoints are evenly-spaced.  All
+variables in a file must share the same horizontal grid.  This
+convention is readable with GrADS.  The GRIB data may be processed by
+the utility <strong>wgrib</strong> shipped with most GrADS distributions.</p>
+</dd>
+</li>
+<dt><strong><a name="item_grib"><em>grib</em></a></strong>
+
+<dd>
+<p>Similar to <em>grads_grib</em> but without a GrADS control file and the
+ancillary GRIB map file.</p>
+</dd>
+</li>
+<dt><strong><a name="item_netcdf"><em>netcdf</em></a></strong>
+
+<dd>
+<p>NetCDF-3 format, observing the COARDS metadata standard. When this
+format is specified, the calendar must be <em>STANDARD</em>.  Climatologies
+are indicated by specifying <em>year = 2</em> in <strong>set_lats write</strong>.  For the
+<em>clim</em> and <em>climleap</em> calendars, the year is automatically set to
+2. Files wiritten with this format are readable with GrADS.</p>
+</dd>
+</li>
+<dt><strong><a name="item_netcdf4"><em>netcdf4</em></a></strong>
+
+<dd>
+<p>Like the <em>netcdf</em> format, except that the files are in the new
+NetCDF-4 (actually HDF-5) format.</p>
+</dd>
+</li>
+<dt><strong><a name="item_hdf4"><em>hdf4</em></a></strong>
+
+<dd>
+<p>Like the <em>netcdf</em> format, except that the files are in the new HDF-4
+format. Notice that in GrADS v2, NetCDF and HDF-4 files are produced
+with the same GrADS executables.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="set_lats_calendar_calendar"><strong>set_lats</strong> <em>calendar CALENDAR</em></a></h2>
+<p><em>CALENDAR</em> is the calendar type, one of the following values:</p>
+<dl>
+<dt><strong><a name="item_standard"><em>STANDARD</em></a></strong>
+
+<dd>
+<p>Standard Gregorian calendar. This is the default.</p>
+</dd>
+</li>
+<dt><strong><a name="item_noleap"><em>NOLEAP</em></a></strong>
+
+<dd>
+<p>365days/year, no leap years</p>
+</dd>
+</li>
+<dt><strong><a name="item_clim"><em>CLIM</em></a></strong>
+
+<dd>
+<p>Climatological time (no associated year), 365 days</p>
+</dd>
+</li>
+<dt><strong><a name="item_climleap"><em>CLIMLEAP</em></a></strong>
+
+<dd>
+<p>Climatological time, 366 days</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="set_lats_center_center"><strong>set_lats</strong> <em>center CENTER</em></a></h2>
+<p><em>CENTER</em> is the name of the modeling center or group creating the
+file, a string of &lt;= 128 characters. For GRIB output, center must
+match one of the centers listed in the parameter file.</p>
+<p>
+</p>
+<h2><a name="set_lats_deltat_deltat"><strong>set_lats</strong> <em>deltat DeltaT</em></a></h2>
+<p><em>DeltaT</em> is the number of time units in the time increment, where the
+units are specified by frequency.  For example, data which are defined
+at multiples of 6 hours would be specified with</p>
+<pre>
+   ga-&gt; set_lats frequency hourly
+   ga-&gt; set_lats deltat 6</pre>
+<p>Similarly, monthly average data would be indicated by</p>
+<pre>
+   ga-&gt; set_lats frequency monthly
+   ga-&gt; set_lats deltat 1</pre>
+<p>Note that times may be skipped for formats other than <em>GRADS_GRIB</em>;
+the only requirement imposed by the LATS interface is that timepoints,
+as specified via <strong>set_lats write</strong>, be at a multiple of the time
+increment, relative to the base time (the first time written).</p>
+<p>
+</p>
+<h2><a name="set_lats_frequency_frequency"><strong>set_lats</strong> <em>frequency FREQUENCY</em></a></h2>
+<p><em>FREQUENCY</em> is the time frequency of variables to be written to the
+file, and has one of the values:</p>
+<dl>
+<dt><strong><a name="item_yearly"><em>YEARLY</em></a></strong>
+
+<dd>
+<p>Only the year component of time is significant. <em>DeltaT</em> (see
+<strong>set_lats</strong>) is expressed in years.</p>
+</dd>
+</li>
+<dt><strong><a name="item_monthly"><em>MONTHLY</em></a></strong>
+
+<dd>
+<p>The year and month components of time are significant. <em>DeltaT</em> (see
+<strong>set_lats</strong>) is expressed in months. Floating-point data in the
+<em>GRADS_GRIB</em> format are compressed to 16-bits.</p>
+</dd>
+</li>
+<dt><strong><a name="item_monthly_table_comp"><em>MONTHLY_TABLE_COMP</em></a></strong>
+
+<dd>
+<p>The year and month components of time are significant.  <em>DeltaT</em> (see
+<strong>set_lats</strong>) is expressed in months. Floating-point data in the
+<em>GRADS_GRIB</em> format are compressed according to the specification in
+the parameter table.</p>
+</dd>
+</li>
+<dt><strong><a name="item_weekly"><em>WEEKLY</em></a></strong>
+
+<dd>
+<p>The year, month, and day component of time are significant. <em>DeltaT</em> is
+expressed in weeks.</p>
+</dd>
+</li>
+<dt><strong><a name="item_daily"><em>DAILY</em></a></strong>
+
+<dd>
+<p>The year, month, and day component of time are significant. delta is
+expressed in days.</p>
+</dd>
+</li>
+<dt><strong><a name="item_hourly"><em>HOURLY</em></a></strong>
+
+<dd>
+<p>The year, month, day, and hour component of time are significant.
+<em>DeltaT</em> is expressed in hours.</p>
+</dd>
+</li>
+<dt><strong><a name="item_minutes"><em>MINUTES</em></a></strong>
+
+<dd>
+<p>The year, month, day, hour, and minute component of time are significant.
+<em>DeltaT</em> is expressed in minutes.</p>
+</dd>
+</li>
+<dt><strong><a name="item_forecast_hourly"><em>FORECAST_HOURLY</em></a></strong>
+
+<dd>
+<p>The year, month, day, and hour component of time are significant.
+<em>DeltaT</em> is expressed in hours.</p>
+</dd>
+</li>
+<dt><strong><a name="item_forecast_minutes"><em>FORECAST_MINUTES</em></a></strong>
+
+<dd>
+<p>The year, month, day, hour, and minute component of time are significant.
+<em>DeltaT</em> is expressed in minutes.</p>
+</dd>
+</li>
+<dt><strong><a name="item_fixed"><em>FIXED</em></a></strong>
+
+<dd>
+<p>Data are not time-dependent, e.g., for surface type, orography, etc.
+<em>DeltaT</em> is ignored and year is set to 1 by convention.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="set_lats_gridtype_gridtype"><strong>set_lats</strong> <em>gridtype GRIDTYPE</em></a></h2>
+<p>Define the type of horizontal grid. <em>GRIDTYPE</em> is GAUSSIAN for
+Gaussian grids, LINEAR for evenly spaced grids, or GENERIC
+otherwise. The actual horizontal grid definition is performed with
+command <strong>lats_grid</strong>.</p>
+<p>
+</p>
+<h2><a name="set_lats_gzip_compression_level"><strong>set_lats</strong> <em>gzip COMPRESSION_LEVEL</em></a></h2>
+<p>When writing NetCDF-4 files, specifes the level of GZIP compression to
+be employed. The higher the level, the harder the library works doing
+compression, usually (but not always) producing smaller files. The
+default is -1, meaning no compression. Notice that only NetCDF-4 files
+can be compressed. When <em>COMPRESION_LEVEL</em> &gt; 0 is specified with
+NetCDF-3 files, the format is automatically changed to NetCDF-4. For
+improving the compression effectiveness see <strong>set_lats</strong> <em>shave</em>.</p>
+<p>
+</p>
+<h2><a name="set_lats_model_model"><strong>set_lats</strong> <em>model MODEL</em></a></h2>
+<p><em>MODEL</em> is the name of the model version which created this data.
+comments is a string of length 256 or less , including any null-
+terminator.  The command returns an integer file ID, or 0 if the file
+cannot be created.</p>
+<p>
+</p>
+<h2><a name="set_lats_parmtab_table_filename"><strong>set_lats</strong> <em>parmtab TABLE_FILENAME</em></a></h2>
+<p>Specify an external parameter table file.  <em>TABLE_FILENAME</em> is the
+pathname of a file containing a list of variable descriptions, and is
+a string of length &lt;= 256 characters. Use of an external parameter
+table is optional. The location of the parameter table is determined
+as follows: (1) if the command <strong>set_lats</strong> <em>parmtab</em> is issued, the
+value of <em>TABLE_FILENAME</em> is used, otherwise (2) if the environment
+variable LATS_PARMS is defined, its value is used, else (3) an
+internally-defined table of AMIP parameters is used. The command
+returns 1 on success, 0 on failure.</p>
+<p>
+</p>
+<h2><a name="set_lats_shave_nbits"><strong>set_lats</strong> <em>shave NBITS</em></a></h2>
+<p>Shave <em>NBITS</em> off the mantissa of float-point numbers. By definition,
+IEEE float numbers have 24 bits dedicated for the mantissa. This
+command set to zero the last <em>NBITS</em> of the mantissa, this way
+reducing entropy and improving the effectiveness of GZIP compression
+(see <strong>set_lats</strong> <em>gzip</em>). <em>NBITS</em> must be in the range [1,23]. When
+<em>NBITS</em> &gt; 0 is specified, it automatically sets GZIP compression on
+at level 2, unless the compression level has already been
+set. (Currently compression is implemented only for NetCDF04 output.)</p>
+<p>NOTE: The actual shaving algorithm, first scales the variable being written
+for each horizontal layer, and then shaves bits off the mantissa. See
+      <a href="http://en.wikipedia.org/wiki/Ieee_float">http://en.wikipedia.org/wiki/Ieee_float</a>
+for additional information on IEEE float-point numbers.</p>
+<p>
+</p>
+<h2><a name="set_lats_var_varname_timestat_level_id"><strong>set_lats</strong> <em>var VARNAME TIMESTAT LEVEL_ID</em></a></h2>
+<p>Declare a variable to be written to a LATS file. fileid is the integer
+file ID returned from lats_create.  The variable name <em>VARNAME</em> must
+match a name in the parameter table, and is a string of length &lt;= 128
+characters.</p>
+<p><em>TIMESTAT</em> is a time statistic identifier, one of:</p>
+<dl>
+<dt><strong><a name="item_average"><em>AVERAGE</em></a></strong>
+
+<dd>
+<p>An average over the delta time interval frequency
+defined by lats_create.</p>
+</dd>
+</li>
+<dt><strong><a name="item_instant"><em>INSTANT</em></a></strong>
+
+<dd>
+<p>The field is valid at the instan- taneous time set by the year, month,
+day, hour.</p>
+</dd>
+</li>
+<dt><strong><a name="item_accum"><em>ACCUM</em></a></strong>
+
+<dd>
+<p>Accumulation during delta time interval <em>DeltatT</em> (see <strong>set_lats deltat</strong>).</p>
+</dd>
+</li>
+</dl>
+<p><em>LEVID</em> is the ID of the vertical dimension of the variable, as
+returned from <strong>set_lats</strong> <em>vertdim</em>. If the variable has a default surface
+defined in the parameter table, or has no associated
+vertical dimension, <em>LEVID</em> should be 0. (Note: if levid is 0 and the
+variable has a default surface defined, the netCDF representation
+of the variable will not have an explicit vertical dimension, but
+will have a <em>level_description</em> attribute).</p>
+<p><strong>set_lats var</strong> should be called exactly once for each variable to be
+written to a LATS file and must be called BEFORE <strong>set_lats</strong> <em>write</em>.
+The function returns the integer variable ID on success, or 0 on
+failure.</p>
+<p>
+</p>
+<h2><a name="set_lats_vertdim_dim_name_lev_type_lev_1_____lev_n"><strong>set_lats</strong> <em>vertdim DIM_NAME LEV_TYPE LEV_1 ... LEV_N</em></a></h2>
+<p><em>DIM_NAME</em> is the name of the vertical dimension (e.g., ``height'',
+``depth'', ``level''), and it should not contain any whitespace
+characters.</p>
+<p><em>LEV_TYPE</em> is the vertical dimension type. It must match one of the level
+types defined in the vertical dimension types section of the
+parameterfile, e.g., <em>plev, hybrid</em>, etc.</p>
+<p><em>LEV_1</em>, ..., <em>LEV_N</em> is a strictly monotonic list of level
+values.</p>
+<p>Multi-level variables must have a vertical dimension defined.  If a
+single-level (e.g., surface) variable has a default level type
+specified in the parameter table, it is not necessary to call
+<strong>set_lats</strong> <em>vertdim</em>, since the level type will be associated with
+the variable by default. Note that the level units are determined from
+the vertical dimension type table entry for name.</p>
+<p>This command returns an integer level ID on success, or 0 on
+failure.</p>
+<p>
+</p>
+<h2><a name="set_lats_write_var_id__level_"><strong>set_lats</strong> <em>write VAR_ID [LEVEL]</em></a></h2>
+<p>Specifies which variable in the file will be written next.</p>
+<p><em>VAR_ID</em> is the integer variable ID returned from <strong>set_lats</strong>
+<em>var</em>.</p>
+<p><em>LEVEL</em> is the level value, and must match one of the levels
+declared via lats_vert_dim. (Exception: if the variable was declared
+with levid=0, the value of <em>LEVEL</em> is ignored.)  year is the four-digit
+integer year, month is the month number (1-12), day is the day in
+month (1-31), and hour is the integer hour (0-23).</p>
+<p>
+</p>
+<h2><a name="lats_grid_expr"><strong>lats_grid</strong> <em>EXPR</em></a></h2>
+<p>Define a horizontal, longitude-latitude grid, based on the dimension
+environment associated with the GrADS expression <em>EXPR</em>. The grid
+type is specified with command <strong>set_lats</strong> <em>gridtype</em>.</p>
+<p>
+</p>
+<h2><a name="lats_data_expr"><strong>lats_data</strong> <em>EXPR</em></a></h2>
+<p>Write a horizontal longitude-latitude cross-section of a variable
+contained in the GrADS expression <em>EXPR</em>. The actual variable on file
+being written to is specified with he <strong>set_lats</strong> <em>write</em> command.</p>
+<p>For monthly data, as specified by lats_create, day and hour are
+ignored. For daily and weekly data, the hour is ignored.  For fixed
+data, the year, month, day, and hour are ignored. For surface
+variables, lev is ignored.</p>
+<p>This command returns 1 if successful, 0 on failure.</p>
+<p>
+</p>
+<h2><a name="query_lats"><strong>query_lats</strong></a></h2>
+<p>Prints out the value of all internal parameters.</p>
+<p>
+</p>
+<hr />
+<h1><a name="environment_variables">ENVIRONMENT VARIABLES</a></h1>
+<dl>
+<dt><strong><a name="item_lats_parms">LATS_PARMS</a></strong>
+
+<dd>
+<p>Parameter table file (supersedes internal table if
+defined)</p>
+</dd>
+</li>
+<dt><strong><a name="item_lats_log">LATS_LOG</a></strong>
+
+<dd>
+<p>Log file (default: lats.log)</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="historical_notes">HISTORICAL NOTES</a></h1>
+<p>LATS was first introduced in GrADS v1.7 in the late 1990's by Mike
+Fiorino as means of producing GRIB-1/NetCDF output from GrADS. With
+the introduction of GrADS v2.0 in 2008, COLA removed LATS from the
+GrADS code base. In 2009, the OpenGrADS Project reintroduced LATS in
+GrADS v2.0 as a User Defiend Extension, adding support for
+NetCDF-3, NetCDF-4/HDF-5 and HDF-4 all from the same executable.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://cookbooks.opengrads.org/index.php?title=Main_Page">http://cookbooks.opengrads.org/index.php</a> -
+OpenGrADS Cookbooks</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://www-pcmdi.llnl.gov">http://www-pcmdi.llnl.gov</a>  - PCMDI</p>
+</li>
+<li>
+<p><a href="http://www-pcmdi.llnl.gov/software/lats">http://www-pcmdi.llnl.gov/software/lats</a> - LATS</p>
+</li>
+<li>
+<p><a href="http://www.unidata.ucar.edu/packages/netcdf">http://www.unidata.ucar.edu/packages/netcdf</a> - NetCDF</p>
+</li>
+<li>
+<p><a href="ftp://ncardata.ucar.edu/docs/grib/guide.txt">ftp://ncardata.ucar.edu/docs/grib/guide.txt</a> - GRIB</p>
+</li>
+<li>
+<p><a href="http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html">http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html</a> - COARDS</p>
+</li>
+<li>
+<p><a href="http://wesley.wwb.noaa.gov/wgrib.html">http://wesley.wwb.noaa.gov/wgrib.html</a> - wgrib</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/doc/scripts/lats4d/">http://opengrads.org/doc/scripts/lats4d/</a> - LATS4D</p>
+</li>
+<li>
+<p><a href="http://en.wikipedia.org/wiki/Ieee_float">http://en.wikipedia.org/wiki/Ieee_float</a> - IEEE Float numbers</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>) wrote the GrADS UDXT
+interface and created this dcumentation from the LATS manual page.
+Mike Fiorino (mfiorino@gmail) wrote the actual LATS interface to
+GrADS. Robert Drach, Mike Fiorino and Peter Gleckler (PCMDI/LLNL)
+wrote the original LATS library.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>The code implementing the GrADS extension has been placed in the public domain.
+Portions (C) 1996, Regents of the University of California.</p>
+<p>See the source for copying conditions.  There is NO warranty; not even
+for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;liblats.gex - GrADS Extension Library for File Subsetting and Reformatting</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>
