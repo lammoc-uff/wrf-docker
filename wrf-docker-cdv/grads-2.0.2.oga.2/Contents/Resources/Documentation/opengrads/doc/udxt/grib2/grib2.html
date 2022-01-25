@@ -1,0 +1,332 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>grib2.gex - GrADS v1.9 Extensions for Reading Grib-2 Files</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:dasilva@mcjuba.home" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;grib2.gex - GrADS v1.9 Extensions for Reading Grib-2 Files</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_commands_">GrADS Commands:</a></li>
+			<li><a href="#grads_function_">GrADS Function:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#gfs_example">GFS Example</a></li>
+		<li><a href="#using_lats4d_to_convert_grib2_to_netcdf__hdf__grib1_and_binary">Using Lats4d to Convert Grib-2 to NetCDF, HDF, Grib-1 and Binary</a></li>
+	</ul>
+
+	<li><a href="#commands_provided">COMMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#__cmd"><strong>%</strong> <em>CMD</em></a></li>
+		<li><a href="#g2_exec_cmd"><strong>g2_exec</strong> <em>CMD</em></a></li>
+		<li><a href="#g2_open_filename"><strong>g2_open</strong> <em>FILENAME</em></a></li>
+		<li><a href="#g2_repl_string"><strong>g2_repl</strong> <em>STRING</em></a></li>
+		<li><a href="#g2_verb__on_off_"><strong>g2_verb</strong> [<em>ON|OFF</em>]</a></li>
+	</ul>
+
+	<li><a href="#function_provided">FUNCTION PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#display_g2___var__">display <strong>g2</strong> ( <em>VAR</em> )</a></li>
+	</ul>
+
+	<li><a href="#requirements">REQUIREMENTS</a></li>
+	<li><a href="#usage_under_microsoft_windows">USAGE UNDER MICROSOFT WINDOWS</a></li>
+	<li><a href="#implementation">IMPLEMENTATION</a></li>
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>grib2.gex - GrADS v1.9 Extensions for Reading Grib-2 Files</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_commands_">GrADS Commands:</a></h3>
+<dl>
+<dt>
+<dd>
+<p><strong>g2_exec</strong> <em>CMD</em> - Replaces var with <code>g2(var)</code> and runs <em>CMD</em></p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>g2_open</strong> <em>FILENAME</em> - Opens a Grib-2 file</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>g2_repl</strong> <em>STRING</em> - Replaces var with <code>g2(var)</code></p>
+</dd>
+</li>
+<dt>
+<dd>
+<p><strong>g2_verb</strong> [<em>ON|OFF</em>] - Toggles verbose</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h3><a name="grads_function_">GrADS Function:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>display <strong>g2</strong>(<em>var</em>) - Returns a Grib-2 variable</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>define <code>var</code> = <strong>g2</strong>(<em>var</em>)</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library of GrADS extensions implements functions to enable GrADS
+v1.9.0-rc1 and later to read Grib-2 files. This is not a native
+implementation of Grib-2 in GrADS v1.9 but rather an extension
+function that allows you to read in Grib-2.</p>
+<p>Because this is not a native implementation of Grib-2 in GrADS v1.9,
+you need to use function <code>g2</code> to access variables. However, the user
+defined command <code>g2_exec</code> (by default aliased to simply <code>%</code>)
+automatically replaces <code>var</code> with <code>g2(var)</code> before executing the
+command.</p>
+<p>
+</p>
+<h2><a name="gfs_example">GFS Example</a></h2>
+<p>Let's say you download a Grib-2 file called <code>gfs.t00z.pgrb2bf00</code> which
+has been produced by NCEP's Global Forecasting System (GFS). Your first step is to create a Grib-2 Descriptor File, similar to the usual GrADS <em>ctl</em> file. This
+is accomplished with utility <code>g2gdf.pl</code> which is provided with this extension:</p>
+<pre>
+   % g2gdf.pl -v gfs.t00z.pgrb2bf00</pre>
+<p>This command will create 2 new files:</p>
+<ul>
+<li><strong><a name="item_descriptor_file_3a">Descriptor file:</a></strong>
+
+<p>gfs.t00z.pgrb2bf00.gdf</p>
+</li>
+<li><strong><a name="item_inventory_file_3a">Inventory file:</a></strong>
+
+<p>gfs.t00z.pgrb2bf00.inv</p>
+</li>
+</ul>
+<p>These are the only ancillary files that you need; the usual index file
+produced by utility <code>gribmap</code> is not necessary. (You can also use templates
+in <code>g2gdf</code>.) So, you just fire up GrADS and do some plotting:</p>
+<pre>
+ % gradsc -l
+ ga-&gt; g2_open gfs.t00z.pgrb2bf00.gdf
+ ga-&gt; set lev 525
+ ga-&gt; d g2(HGTprs)
+ Contouring: 4500 to 5500 interval 100</pre>
+<p>Notice the use of command <code>g2_open</code> and function <code>g2()</code>. This is
+essential, if you try to display the variable directly you will get
+all undefined values:</p>
+<pre>
+ ga-&gt; d HGTprs
+ Cannot contour grid - all undefined values</pre>
+<p>As a short hand, you can use the user defined command <code>g2_exec</code> (or
+its short-hand <code>%</code>) to replace <code>var</code> with <code>g2(var)</code> begore executing the</p>
+<pre>
+ ga-&gt; % d HGTprs
+ d g2(HGTprs)</pre>
+<p>Notice that you can use the regular <code>query</code> command to list the
+contents of a file opened with <code>g2_open</code>:</p>
+<pre>
+ ga-&gt; q file
+ File 1 : gfs.t00z.pgrb2bf00
+  Descriptor: gfs.t00z.pgrb2bf00.gdf
+  Binary: gfs.t00z.pgrb2bf00___
+  Type = Gridded
+  Xsize = 720  Ysize = 361  Zsize = 37  Tsize = 1
+  Number of Variables = 95
+    cnwatsfc 0 2 ** surface none Plant Canopy Surface Water [kg/m^2]
+    duvbsfc 0 0 ** surface ave UV-B downward solar flux [W/m^2]
+    hgt0pv 0 0 ** PV=5e-07 (Km^2/kg/s) surface none Geopotential Height [gpm]
+    hgt1pv 0 0 ** PV=1e-06 (Km^2/kg/s) surface none Geopotential Height [gpm]
+    hgt2pv 0 0 ** PV=1.5e-06 (Km^2/kg/s) surface none Geopotential Height [gpm]
+    ...</pre>
+<p>You can also use the regular <code>close</code> command when you no longer need this file.</p>
+<p>
+</p>
+<h2><a name="using_lats4d_to_convert_grib2_to_netcdf__hdf__grib1_and_binary">Using Lats4d to Convert Grib-2 to NetCDF, HDF, Grib-1 and Binary</a></h2>
+<p>This extention can be used together with <code>lats4d.gs</code> to slice, dice
+and convert your Grib-2 file to any of the support output formats in
+GrADS v1.9. For example, a NetCDF file with just a few variables on 
+selected levels can be produced with the following command:</p>
+<pre>
+ % lats4d.sh -nc -i gfs.t00z.pgrb2bf00.gdf -o gfs.t00z.pgrb2bf00    -vars ugrdprs vgrdprs tmpprs hgtprs    -levs 875 825 775 725 675 625 575 525 475 425 375 325 275 225 175 125    -func &quot;g2(@)&quot; -v</pre>
+<p>See the <em>Lats4d</em> documentation for additional details.</p>
+<p>
+</p>
+<hr />
+<h1><a name="commands_provided">COMMANDS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="__cmd"><strong>%</strong> <em>CMD</em></a></h2>
+<p>Same as <strong>g2_exec</strong>.</p>
+<p>
+</p>
+<h2><a name="g2_exec_cmd"><strong>g2_exec</strong> <em>CMD</em></a></h2>
+<p>This command replaces each occurence of any <code>variable</code> (from the
+DEFAULT file) in <em>CMD</em> with <code>g2(variable)</code> and then executes the command.
+Example:</p>
+<pre>
+   ga-&gt; g2_exec display sqrt(ugrdprs*ugrdprs+vgrdprs*vgridprs)
+   display sqrt(g2(ugrdprs)*g2(ugrdprs)+g2(vgrdprs)*g2(vgrdprs))</pre>
+<p>
+</p>
+<h2><a name="g2_open_filename"><strong>g2_open</strong> <em>FILENAME</em></a></h2>
+<p>This command opens a Grib-2 Descriptor File created with the
+<code>g2gdf.pl</code> utility.</p>
+<p>
+</p>
+<h2><a name="g2_repl_string"><strong>g2_repl</strong> <em>STRING</em></a></h2>
+<p>This command replaces each occurence of any <code>variable</code> (from the
+DEFAULT file) in <em>STRING</em> with <code>g2(variable)</code> and prints the result
+to the screen. Example:</p>
+<pre>
+   ga-&gt; g2_repl sqrt(ugrdprs*ugrdprs+vgrdprs*vgridprs)
+   sqrt(g2(ugrdprs)*g2(ugrdprs)+g2(vgrdprs)*g2(vgrdprs))</pre>
+<p>
+</p>
+<h2><a name="g2_verb__on_off_"><strong>g2_verb</strong> [<em>ON|OFF</em>]</a></h2>
+<p>This command toggles verbose ON/OFF.If no argument is provided 
+it will toggle the verbose mode ON or OFF.</p>
+<p>
+</p>
+<hr />
+<h1><a name="function_provided">FUNCTION PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="display_g2___var__">display <strong>g2</strong> ( <em>VAR</em> )</a></h2>
+<p>This function returns the variable <em>VAR</em> from the Grib-2 file,
+according to the current dimension environment. As of this writing,
+you cannot specify dimension information as part of the file name. For
+example,</p>
+<pre>
+ ga-&gt; display g2(HGTprs(z=4))</pre>
+<p>will NOT work.</p>
+<p>
+</p>
+<hr />
+<h1><a name="requirements">REQUIREMENTS</a></h1>
+<p>You must have GrADS v1.9.0-rc1 or later, and the <code>g2ctl.pl</code> and <code>wgrib2</code> 
+installed and available on your PATH.</p>
+<p>
+</p>
+<hr />
+<h1><a name="usage_under_microsoft_windows">USAGE UNDER MICROSOFT WINDOWS</a></h1>
+<p>This extension requires two Perl scripts: <code>g2gdf.pl</code> and <code>g2ctl.pl</code>.
+The <em>Win32 Superpack</em> ships with <em>compiled</em> versions of these scripts
+(<code>g2gdf.exe</code> and <code>g2ctl.exe</code>), so you do not need to have <code>perl</code>
+installed on your system. (These executables were prepared with module
+<code>PAR::Packer</code> build on Cygwin from modules on CPAN).  If you would like
+to work with the Perl version of the scripts (say you need to modify
+them), then you are strongly advised to use <code>perl</code> that comes with
+Cygwin.  Using native Win32 builds such as <em>Active State Perl</em> can be
+made to work, but the resulting <code>.gdf</code> and <code>.inv</code> text files may need
+to be converted with utility <code>dos2unix</code>.</p>
+<p>There are two versions of <code>wgrib2</code> for MS Windows on the OpenGrADS
+download area at SourceForge: a <em>win32</em> and a <em>cygwin</em> version. You
+want to use the Cygwin version with this extension. The <em>Win32
+Superpack</em> ships with the correct version of <code>wgrib2</code>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="implementation">IMPLEMENTATION</a></h1>
+<p>This is a relatively simple minded implementation. All the heavy
+lifting is done by Wes Ebisuzaki's <code>wgrib2</code> utility through a regular
+pipe (using the <code>popen()</code> function in C). If you would like to see the
+actual <code>wgrib2</code> command being executed just turn on verbosity</p>
+<pre>
+ ga-&gt; g2_verb on</pre>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>It would be nice to override the dimension with additional arguments
+to function <code>g2()</code>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/doc/udxt/grib2/g2gdf.html">http://opengrads.org/doc/udxt/grib2/g2gdf.html</a> - The Grib-2 Descriptor File utility</p>
+</li>
+<li>
+<p><a href="http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/">http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/</a> - Wes
+Ebisuzaki's (and many co-authors) excellent <code>wgrib2</code> utility</p>
+</li>
+<li>
+<p><a href="http://www.cpc.ncep.noaa.gov/products/wesley/g2ctl.html">http://www.cpc.ncep.noaa.gov/products/wesley/g2ctl.html</a> - Wes
+Ebisuzaki's (and many co-authors) excellent <code>g2ctl</code> utility for
+creating GrADS descriptor files for Grib-2 files.</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2008 Arlindo da Silva; All Rights Reserved.</p>
+<p>This is free software; see the source for copying conditions.  There is
+NO  warranty;  not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;grib2.gex - GrADS v1.9 Extensions for Reading Grib-2 Files</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

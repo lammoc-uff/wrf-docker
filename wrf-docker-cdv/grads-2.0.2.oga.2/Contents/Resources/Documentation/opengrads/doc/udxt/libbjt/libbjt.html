@@ -1,0 +1,1677 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>libbjt.gex - Ben-Jei Tsuang's Collection of GrADS v1.9 Extensions</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:dasilva@mcjuba.home" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;libbjt.gex - Ben-Jei Tsuang's Collection of GrADS v1.9 Extensions</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<li><a href="#time_related_functions">Time Related Functions</a></li>
+		<li><a href="#statistical_functions">Statistical Functions</a></li>
+		<li><a href="#advection_functions">Advection Functions</a></li>
+		<li><a href="#thermodynamic_functions">Thermodynamic Functions</a></li>
+		<li><a href="#radiative_transfer_functions">Radiative Transfer Functions</a></li>
+		<li><a href="#vertical_interpolation_integration_functions">Vertical Interpolation/Integration Functions</a></li>
+		<li><a href="#miscelaneous_functions">Miscelaneous Functions</a></li>
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#command_line_help">COMMAND LINE HELP</a></li>
+	<li><a href="#time_related_functions">TIME RELATED FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#lt_expr_"><strong>lt</strong>(<em>EXPR</em>)</a></li>
+		<li><a href="#jd_expr_"><strong>jd</strong>(<em>EXPR</em>)</a></li>
+		<li><a href="#cosz_expr__h_d_m_"><strong>cosz</strong>(<em>EXPR</em>, <em>h|d|m</em>)</a></li>
+		<li><a href="#dayratio_expr_"><strong>dayratio</strong>(<em>EXPR</em>)</a></li>
+	</ul>
+
+	<li><a href="#statistical_functions">STATISTICAL FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#ftest_ratio_df1_df2_"><strong>ftest</strong>(<em>RATIO</em>,<em>DF1</em>,<em>DF2</em>)</a></li>
+		<li><a href="#ttest_diff_df_"><strong>ttest</strong>(<em>DIFF</em>,<em>DF</em>)</a></li>
+		<li><a href="#tfit_y1_x1_x2_x3____xn_time_tbeg_time_tend__dt_filename__"><strong>tfit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>)</a></li>
+		<li><a href="#fit_y1_x1_x2_x3____xn_time_tbeg_time_tend__dt_filename__"><strong>fit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>)</a></li>
+		<li><a href="#tregr2_x_y_time_tbeg_time_tend__dt__"><strong>tregr2</strong>(<em>X,Y,time=TBEG,time=TEND[,DT]</em>)</a></li>
+		<li><a href="#tmave2_maskexpr_expr_time_tbeg_time_tend__dt__"><strong>tmave2</strong>(<em>MASKEXPR,EXPR,time=TBEG,time=TEND[,DT]</em>)</a></li>
+	</ul>
+
+	<li><a href="#advection_functions">ADVECTION FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#madvu_u_expr_"><strong>madvu</strong>(<em>U</em>,<em>EXPR</em>)</a></li>
+		<li><a href="#madvv_v_expr_"><strong>madvv</strong>(<em>V</em>,<em>EXPR</em>)</a></li>
+		<li><a href="#madvw_w_expr_"><strong>madvw</strong>(<em>W</em>,<em>EXPR</em>)</a></li>
+		<li><a href="#muadv_u_expr_"><strong>muadv</strong>(<em>U</em>,<em>EXPR</em>)</a></li>
+		<li><a href="#mvadv_v_expr_"><strong>mvadv</strong>(<em>V</em>,<em>EXPR</em>)</a></li>
+		<li><a href="#mwadv_w_expr_"><strong>mwadv</strong>(<em>W</em>,<em>EXPR</em>)</a></li>
+	</ul>
+
+	<li><a href="#thermodynamical_functions">THERMODYNAMICAL FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#satvap_t_"><strong>satvap</strong>(<em>T</em>)</a></li>
+		<li><a href="#dew_pvap_"><strong>dew</strong>(<em>PVAP</em>)</a></li>
+	</ul>
+
+	<li><a href="#radiative_transfer_functions">RADIATIVE TRANSFER FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#lw_pl_ta_wa_taucl_fcld_ps_tg_eg_tb_wb_tauclb_fcldb__binfile_ctlfile_r_c_h_l__"><strong>lw</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,TAUCLB,FCLDB[,BINFILE,CTLFILE,-r|-c|-h|-l]</em>)</a></li>
+		<li><a href="#lw2_pl_ta_wa_taucl_fcld_ps_tg_eg_tb_wb_pm_tm_wm_tauclm_fcldm___binfile_ctlfile_r_c_h_l__"><strong>lw2</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,PM,TM,WM,TAUCLM,FCLDM [,BINFILE,CTLFILE,-r|-c|-h|-l]</em>)</a></li>
+	</ul>
+
+	<li><a href="#vertical_interpolation_integration_functions">VERTICAL INTERPOLATION/INTEGRATION FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#pinterp_field_pgrid_plev__l_s_p__"><strong>pinterp</strong>(<em>FIELD,PGRID,PLEV,[-l|-s|-p]</em>)</a></li>
+		<li><a href="#zinterp_field_zgrid_zlev__l_s_p__"><strong>zinterp</strong>(<em>FIELD,ZGRID,ZLEV,[-l|-s|-p]</em>)</a></li>
+		<li><a href="#vint2_psexpr_expr_top_"><strong>vint2</strong>(<em>PSEXPR,EXPR,TOP</em>)</a></li>
+	</ul>
+
+	<li><a href="#miscelaneous_functions">MISCELANEOUS FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#if_expr1_op_expr2_true_expr_false_expr_"><strong>if</strong>(<em>EXPR1,OP,EXPR2,TRUE_EXPR,FALSE_EXPR</em>)</a></li>
+		<li><a href="#which_expr_cond1_expr1_cond2_expr2_____else_expr_"><strong>which</strong>(<em>EXPR,COND1,EXPR1,COND2,EXPR2,...,ELSE_EXPR</em>)</a></li>
+		<li><a href="#maxv_expr1_expr2_"><strong>maxv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)</a></li>
+		<li><a href="#minv_expr1_expr2_"><strong>minv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)</a></li>
+		<li><a href="#line_expr_lon1_lat1_lon2_lat2__l_m_r__"><strong>line</strong>(<em>EXPR,LON1,LAT1,LON2,LAT2[,-l|-m|-r]</em>)</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#minv__displaying_the_minimum_value_between_exp1_and_exp2"><code>Minv</code>: displaying the minimum value between <em>EXP1</em> and <em>EXP2</em></a></li>
+		<li><a href="#maxv__displaying_the_maximum_value_between_exp1_and_exp2"><code>Maxv</code>: displaying the maximum value between <em>EXP1</em> and <em>EXP2</em></a></li>
+		<li><a href="#if__selectively_displaying_values_according_to_the_relationship_between_two_expressions_"><code>If</code>: selectively displaying values according to the relationship between two expressions.</a></li>
+		<li><a href="#which__label_gridpoints_according_to_specific_conditions"><code>Which</code>: label gridpoints according to specific conditions</a></li>
+		<li><a href="#tfit__performing_multiple_linear_regression_on_individual_gridpoints"><code>tfit</code>: performing multiple linear regression on individual gridpoints</a></li>
+		<li><a href="#fit__performing_global_multiple_linear_regression"><code>fit</code>: performing global multiple linear regression</a></li>
+		<li><a href="#muadv__computing_zonal_advecion"><code>muadv</code>: computing zonal advecion</a></li>
+		<li><a href="#mvadv__computing_meridional_advecion"><code>mvadv</code>: computing meridional advecion</a></li>
+		<li><a href="#mwadv__computing_vertical_advecion_using_an_upwind_scheme"><code>mwadv</code>: computing vertical advecion using an upwind scheme</a></li>
+		<li><a href="#cosz__computing_the_cosine_of_the_solar_zenith_angle"><code>cosz</code>: computing the cosine of the solar zenith angle</a></li>
+		<li><a href="#lt__computing_the_local_time"><code>lt</code>: computing the local time</a></li>
+		<li><a href="#dayratio__computing_the_daytime_ratio"><code>dayratio</code>: computing the daytime ratio</a></li>
+		<li><a href="#jd__computing_the_julian_day_sice_january_0001"><code>jd</code>: computing the Julian day sice January 0001</a></li>
+		<li><a href="#dew__computing_the_dew_point_temperature"><code>dew</code>: computing the dew point temperature</a></li>
+		<li><a href="#satvap__computing_the_saturated_temperature"><code>satvap</code>: computing the saturated temperature</a></li>
+		<li><a href="#line__drawing_lines"><code>line</code>: drawing lines</a></li>
+		<li><a href="#vint2__modified_vertical_integration"><code>vint2</code>: modified vertical integration</a></li>
+		<li><a href="#zinterp__vertical_interpolation_to_a_specified_p_level_"><code>zinterp</code>: Vertical interpolation to a specified p level.</a></li>
+		<li><a href="#zinterp__vertical_interpolation_to_a_specified_z_level_"><code>zinterp</code>: Vertical interpolation to a specified z level.</a></li>
+	</ul>
+
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>libbjt.gex - Ben-Jei Tsuang's Collection of GrADS v1.9 Extensions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h2><a name="time_related_functions">Time Related Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>lt</strong>(<em>EXPR</em>) -  Local time</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>jd</strong>(<em>EXPR</em>) -  Julian day</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>cosz</strong>(<em>EXPR</em>, <em>H|D|M</em>) -  Cosine of solar zenith angle</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>dayratio</strong>(<em>EXPR</em>) -  Daylight ratio</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="statistical_functions">Statistical Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>ftest</strong>(<em>RATIO</em>,<em>DF1</em>,<em>DF2</em>) - F-Test</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>ttest</strong>(<em>DIFF</em>,<em>DF</em>) - T-Test</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tfit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>) - Local multiple linear regression</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>fit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>) -  Global multiple linear regression</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tcorr2</strong>(<em>X1,X2,time=TBEG,time=TEND [,DT]</em>) -  Time correlation (r)</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tregr2</strong>(<em>X,Y,time=TBEG,time=TEND [,DT]</em>)  -   Gives the expected value of y departure given a 1 unit departure in x. (Same as tregr with less contrained)</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>tmave2</strong>(<em>MASKEXPR,EXPR,time=TBEG,time=TEND [,DT]</em>)  -  Time averaging with masking</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="advection_functions">Advection Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>muadv</strong>(<em>U</em>,<em>EXPR</em>) -  Changing rate [EXPR/s] due to zonal advection</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>mvadv</strong>(<em>V</em>,<em>EXPR</em>) -  Changing rate [EXPR/s] due to meridional advection</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>mwadv</strong>(<em>W</em>,<em>EXPR</em>) -  Changing rate [EXPR/s] due to vertical advection</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>madvu</strong>(<em>U,EXPR</em>) -  Zonal flux gradient: -d(U*EXPR)/dx</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>madvv</strong>(<em>V,EXPR</em>) - Meridional flux gradient: -d(V*EXPR)/dy</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>madvw</strong>(<em>W,EXPR</em>) - Vertical flux gradient: -d(W*EXPR)/dz</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="thermodynamic_functions">Thermodynamic Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>satvap</strong>(<em>T</em>) -  Saturated vapor pressure</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>dew</strong>(<em>PVAP</em>) -  Dew-point Temperature</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="radiative_transfer_functions">Radiative Transfer Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>lw</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,TAUCLB,FCLDB [,BINFILE,CTLFILE,-r|-c|-h|-l]</em>) -  Longwave radiative coolimg rate (K/d)</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>lw2</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,PM,TM,WM,TAUCLM,FCLDM [,BINFILE,CTLFILE,-r|-c|-h|-l]</em>) -  Longwave radiative coolimg rate (K/d) (same as lw but requires data at the top of mixed layer)</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="vertical_interpolation_integration_functions">Vertical Interpolation/Integration Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>pinterp</strong>(<em>EXPR,PGRID,PLEV,[-l|-s|-p]</em>) -  Vertical interpolation within a 3-D grid to a specified p level.</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>zinterp</strong>(<em>field,zgrid,zlev,[-l|-s|-p]</em>) -  Vertical interpolation within a 3-D grid to a specified z level.</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>vint2</strong>(<em>PSEXPR,EXPR,TOP</em>) - Modified vertical integration</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="miscelaneous_functions">Miscelaneous Functions</a></h2>
+<dl>
+<dt>
+<dd>
+<p>display <strong>if</strong>(<em>EXPR1,OP,EXPR2,TRUE_EXP,FALSE_EXP</em>) - Compare expressions</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>which</strong>(<em>EXPR1,COND1,EXP1,COND2,EXPR2,...,ELSE_EXP</em>) -  Label gridpoints according to expressions</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>maxv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)  -  Maximum value</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>minv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)  -  Minimum value</p>
+</dd>
+</li>
+<dt>
+<dd>
+<p>display <strong>line</strong>(<em>EXPR,LON1,LAT1,LON2,LAT2[,-l|-m|-r]</em>)  - Draw a Line</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library implements Ben-Jei Tsuang's collection GrADS extensions,
+including a variety of statistical, mathematical and otherwise utility
+functions.</p>
+<p>These functions were initially built in an experimental version of
+GrADS v1.8 contributed by Ben-Jei Tsuang ca. 2003. With the
+introduction of dynamic linked extensions by the OpenGrADS project in
+2006 these functions were among the first set of user defined functions
+to be implemented as such.</p>
+<p>
+</p>
+<hr />
+<h1><a name="command_line_help">COMMAND LINE HELP</a></h1>
+<p>Usage notice for most of these functions can be obtained at the GrADS
+command line. For example,</p>
+<pre>
+   ga-&gt; d lw</pre>
+<p>produces</p>
+<pre>
+   lw
+   Error from LW:  10-13 arguments expected
+   lw(pl,ta,wa,taucl,fcld,ps,tg,eg,tb,wb [,'binfile','ctlfile',-r-c-h-l])
+   usage:
+   Function returns: thermal infrared fluxes
+   Following the NASA Technical Memorandum (NASA/TM-2001-104606,
+   Vol. 19) of Chou, Suarez, Liang, and Yan (2001). This NASA TM
+   has been revised a few timessince. It computes thermal infrared
+   fluxes due to emission by water vapor, ozone, co2, o2, minor
+   trace gases, clouds, and aerosols and due to scattering by
+   clouds and aerosols.
+    
+   Arguments:
+      pl = level pressure (hPa)
+      ta = layer temperature (K)
+      wa = layer specific humidity (kg/kg)
+      taucl= cloud optical thickness (dimensionless)
+    ...</pre>
+<p>
+</p>
+<hr />
+<h1><a name="time_related_functions">TIME RELATED FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="lt_expr_"><strong>lt</strong>(<em>EXPR</em>)</a></h2>
+<p>This function calculates local time (in hours); specify any valid
+GrADS expression on input.</p>
+<p>
+</p>
+<h2><a name="jd_expr_"><strong>jd</strong>(<em>EXPR</em>)</a></h2>
+<p>This function computes the Julian day since January 0001; specify any valid
+GrADS expression on input.</p>
+<p>
+</p>
+<h2><a name="cosz_expr__h_d_m_"><strong>cosz</strong>(<em>EXPR</em>, <em>h|d|m</em>)</a></h2>
+<p>This function calculates the cosine of solar zenith angle on various
+time scale. On input,</p>
+<dl>
+<dt><strong><a name="item_expr"><em>EXPR</em></a></strong>
+
+<dd>
+<p>Any GrADS vaild expression, e.g., <code>lat</code></p>
+</dd>
+<p>Specify one of the following for the time scale:</p>
+<dl>
+<dt><strong><a name="item_h"><em>h</em></a></strong>
+
+<dd>
+<p>Hourly value of the cosine of solar zenith angle.</p>
+</dd>
+</li>
+<dt><strong><a name="item_d"><em>d</em></a></strong>
+
+<dd>
+<p>Daily mean of the cosine of solar zenith angle.</p>
+</dd>
+</li>
+<dt><strong><a name="item_m"><em>m</em></a></strong>
+
+<dd>
+<p>XSMonthly mean of the cosine of solar zenith angle.</p>
+</dd>
+</li>
+</dl>
+</dl>
+<p>
+</p>
+<h2><a name="dayratio_expr_"><strong>dayratio</strong>(<em>EXPR</em>)</a></h2>
+<p>This function calculates daylight ratio of EXPR during the time interval of the variable, where 1 argument is required..</p>
+<dl>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>Any GrADS valid expression, e.g., <code>lat</code>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="statistical_functions">STATISTICAL FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="ftest_ratio_df1_df2_"><strong>ftest</strong>(<em>RATIO</em>,<em>DF1</em>,<em>DF2</em>)</a></h2>
+<p>This function conducts the F test. It calculates the probability for
+the <em>ratio</em> of two variances, where 3 arguments are expected.</p>
+<dl>
+<dt><strong><a name="item_ratio"><em>RATIO</em></a></strong>
+
+<dd>
+<p>The ration of variances: (variance 1)/(variance 2)</p>
+</dd>
+</li>
+<dt><strong><a name="item_df1"><em>DF1</em></a></strong>
+
+<dd>
+<p>Degrees of freedom for variance 1</p>
+</dd>
+</li>
+<dt><strong><a name="item_df2"><em>DF2</em></a></strong>
+
+<dd>
+<p>Degrees of freedom for variance 2</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="ttest_diff_df_"><strong>ttest</strong>(<em>DIFF</em>,<em>DF</em>)</a></h2>
+<p>This function conducts the T test. It calculates the probability two
+means to be different, where 2 arguments are expected.</p>
+<dl>
+<dt><strong><a name="item_diff"><em>DIFF</em></a></strong>
+
+<dd>
+<p>The normalized difference between 2 means:</p>
+</dd>
+<dd>
+<pre>
+   DIFF = (m1-m2)/stdv</pre>
+</dd>
+<dd>
+<p>where <code>m1</code> and <code>m2</code> are the 2 means, and <code>stdv</code> is the standard deviation.</p>
+</dd>
+</li>
+<dt><strong><a name="item_df"><em>DF</em></a></strong>
+
+<dd>
+<p>Degrees of freedom.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="tfit_y1_x1_x2_x3____xn_time_tbeg_time_tend__dt_filename__"><strong>tfit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>)</a></h2>
+<p>This function conducts point multiple linear regression for</p>
+<pre>
+   Y1 = F(X1,X2,X2,..,XN)</pre>
+<p>for each grid point seperately during the period between <em>TBEG</em> and
+<em>TEND</em>, with time interval <em>DT</em> to skip.  The correlation
+coefficients (r) at each grid are returned. If the option FILENAME
+is provided, many statictical summaries are written to the file.</p>
+<dl>
+<dt><strong><a name="item_y1_2cx1_2cx2_2cx3_2c_2e_2e_2cxn"><em>Y1,X1,X2,X3,..,XN</em></a></strong>
+
+<dd>
+<p>Must be expressions.</p>
+</dd>
+</li>
+<dt><strong><a name="item_time_3dtbeg"><em>time=TBEG</em></a></strong>
+
+<dd>
+<p>Begining of the time, which can be any valid time variable with
+formats like <code>time=jan1990</code> or <code>t=100</code>.</p>
+</dd>
+</li>
+<dt><strong><a name="item_time_3dtend"><em>time=TEND</em></a></strong>
+
+<dd>
+<p>End of the time period, which can be any valid time variable with
+formats like <code>time=dec2000</code>, <code>t=500</code> or <code>t+100</code>.</p>
+</dd>
+</li>
+<dt><strong><a name="item_dt"><em>DT</em> (optional)</a></strong>
+
+<dd>
+<p>Time interval to skip, which can be any valid time variable
+(e.g. <code>1mon, 1day</code>).</p>
+</dd>
+</li>
+<dt><strong><a name="item_filename"><em>FILENAME</em> (optional)</a></strong>
+
+<dd>
+<p>Filename to which many statistical summaries are written to.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fit_y1_x1_x2_x3____xn_time_tbeg_time_tend__dt_filename__"><strong>fit</strong>(<em>Y1,X1,X2,X3,..,XN,time=TBEG,time=TEND[,DT,FILENAME]</em>)</a></h2>
+<p>This function conducts global multiple linear regression for</p>
+<pre>
+   Y1 = F(X1,X2,X2,..,XN)</pre>
+<p>for all the grid points simultaneously during the period between
+<em>TBEG</em> and <em>TEND</em>, with time interval <em>DT</em> to skip.  The results
+are written to screen. If the option <em>FILENAME</em> is provided, many
+statictical summaries are written to the file.</p>
+<dl>
+<dt><strong><em>Y1,X1,X2,X3,..,XN</em></strong>
+
+<dd>
+<p>Must be expressions.</p>
+</dd>
+</li>
+<dt><strong><em>time=TBEG</em></strong>
+
+<dd>
+<p>Begining of the time, which can be any valid time variable with
+formats like <code>time=jan1990</code> or <code>t=100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>time=TEND</em></strong>
+
+<dd>
+<p>End of the time period, which can be any valid time variable with
+formats like <code>time=dec2000</code>, <code>t=500</code> or <code>t+100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>DT</em> (optional)</strong>
+
+<dd>
+<p>Time interval to skip, which can be any valid time variable
+(e.g. <code>1mon, 1day</code>).</p>
+</dd>
+</li>
+<dt><strong><em>FILENAME</em> (oprional)</strong>
+
+<dd>
+<p>Filename to which many statistical summaries are written to.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="tregr2_x_y_time_tbeg_time_tend__dt__"><strong>tregr2</strong>(<em>X,Y,time=TBEG,time=TEND[,DT]</em>)</a></h2>
+<p>This function calculates <a href="#item_m"><code>m</code></a> coefficient for the linear regression</p>
+<pre>
+   Y = m * X + C</pre>
+<p>at each grid during the period between <em>TBEG</em> and <em>TEND</em>, with
+timeinterval <em>DT</em> to skip. (Same as <strong>tregr</strong>, but with <em>DT</em> option).</p>
+<dl>
+<dt><strong><a name="item_y_2c_x"><em>Y, X</em></a></strong>
+
+<dd>
+<p>must be expressions.</p>
+</dd>
+</li>
+<dt><strong><em>time=TBEG</em></strong>
+
+<dd>
+<p>Begining of the time, which can be any valid time variable with 
+formats like <code>time=jan1990</code>. or <code>t=100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>time=TEND</em></strong>
+
+<dd>
+<p>End of the time, which can be any valid time variable with formats 
+like <code>time=dec2000</code>, <code>t=500</code> or <code>t+100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>DT</em></strong>
+
+<dd>
+<p>Time interval to skip, which can be any valid time variable 
+(e.g. <code>1mon</code>, <code>1day</code>.).</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="tmave2_maskexpr_expr_time_tbeg_time_tend__dt__"><strong>tmave2</strong>(<em>MASKEXPR,EXPR,time=TBEG,time=TEND[,DT]</em>)</a></h2>
+<p>This function does time averaging while applying a mask. 
+(Same as <strong>tmave</strong>, but with <em>DT</em> option.)</p>
+<dl>
+<dt><strong><a name="item_maskexpr"><em>MASKEXPR</em></a></strong>
+
+<dd>
+<p>The mask expression; when evaluated at a fixed time, it must give a
+single value.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>The expression to be averaged</p>
+</dd>
+</li>
+<dt><strong><em>time=TBEG</em></strong>
+
+<dd>
+<p>Begining of the time, which can be any valid time variable with
+formats like <code>time=jan1990</code> or <code>t=100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>time=TEND</em></strong>
+
+<dd>
+<p>End of the time, which can be any valid time variable with formats
+like <code>time=dec2000</code>, <code>t=500</code> or <code>t+100</code>.</p>
+</dd>
+</li>
+<dt><strong><em>DT</em></strong>
+
+<dd>
+<p>Time interval to skip, which can be any valid time variable 
+(e.g. <code>1mon</code>, <code>1day</code>).</p>
+</dd>
+</li>
+<dt><strong><a name="item_usage_notes"><em>Usage Notes</em></a></strong>
+
+<dd>
+<p>This function works similarly to the ave function, except for the
+masking. Using <strong>tmave2</strong> is much more efficient than using <strong>maskout</strong> with
+ave).</p>
+</dd>
+<dd>
+<p>The function loops through the specified time steps, and evaluates
+<em>MASKEXPR</em> at each fixed time. <em>MASKEXPR</em> must yeild a single
+value. If this value is the undefined/missing data value, then expr
+for that time is not included in the average.  If <em>MASKEXPR</em> is not
+the undefined data value, it is used as the weight for <em>EXPR</em> in the
+average. So if you define <em>MASKEXPR</em> accordingly, you can use the
+<strong>tmave2</strong> function to do weighted time averaging.</p>
+</dd>
+<dd>
+<p>The tricky aspect of using <strong>tmave2</strong> is setting up <em>MASKEXPR</em>. If <em>EXPR</em> is a
+grid with X and/or Y and/or Z varying, then <em>MASKEXPR</em> <strong>must</strong> refer to
+either a defined variable or a file with only time varying. In
+general, you have to set up <em>MASKEXPR</em> in advance.</p>
+</dd>
+</li>
+<dt><strong><a name="item_examples"><em>Examples</em></a></strong>
+
+<dd>
+<p>Say you want to average <code>slp</code> over some time range but only when <code>sst</code>
+over some region is above some value. You can do this by:</p>
+</dd>
+<dd>
+<pre>
+   ga-&gt; set x 1
+   ga-&gt; set y 1
+   ga-&gt; set t 1 last
+   ga-&gt; define sstmask = aave(sst,lon=-180,lon=-90,lat=-20,lat=20)
+   ga-&gt; define sstmask = const(maskout(sstmask,sstmask-25.0),1)</pre>
+</dd>
+<dd>
+<p>Now <em>SSTMASK</em> is a time series where the value is 1 when the <code>sst</code> areal
+average is above 25 and undefined when the value is below 25. <strong>maskout</strong>
+set the values below 25 to missing; const set the non-missing values
+to 1. We can now do our tmave2:</p>
+</dd>
+<dd>
+<pre>
+   ga-&gt; set lon -180 -90
+   ga-&gt; set lat -20 20
+   ga-&gt; set t 1
+   ga-&gt; d tmave2(sstmask,slp,t=1,t=last)</pre>
+</dd>
+<dd>
+<p>The mask could also be written to a file with all dimensions
+nonvarying except for time. Here is what some of the records in the
+data descriptor file might look like:</p>
+</dd>
+<dd>
+<pre>
+   DSET maskfilename
+   XDEF 1 linear 1 1
+   YDEF 1 linear 1 1
+   ZDEF 1 linear 1 1
+   TDEF 100 linear</pre>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="advection_functions">ADVECTION FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="madvu_u_expr_"><strong>madvu</strong>(<em>U</em>,<em>EXPR</em>)</a></h2>
+<p>This function calculates</p>
+<pre>
+   -d(u*EXPR)/dx</pre>
+<dl>
+<dt><strong><a name="item_u"><em>U</em></a></strong>
+
+<dd>
+<p>Zonal wind speed (u component), m/s.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="madvv_v_expr_"><strong>madvv</strong>(<em>V</em>,<em>EXPR</em>)</a></h2>
+<p>This function calculates</p>
+<pre>
+   -d(V*EXPR)/dy</pre>
+<dl>
+<dt><strong><a name="item_v"><em>V</em></a></strong>
+
+<dd>
+<p>Meridional wind speed (v component), m/s.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="madvw_w_expr_"><strong>madvw</strong>(<em>W</em>,<em>EXPR</em>)</a></h2>
+<p>This function calculates</p>
+<pre>
+   -d(W*EXPR)/dp</pre>
+<p>using an upwind scheme.</p>
+<dl>
+<dt><strong><a name="item_w"><em>W</em></a></strong>
+
+<dd>
+<p>Vertical wind speed (w component) (unit of vertical coordinate/s, such as hPa/s for the vertical coordinate in hPa)</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression.</p>
+</dd>
+</li>
+<dt><strong><a name="item_remarks"><em>Remarks</em></a></strong>
+
+<dd>
+<p>Note that no-slip boundary conditions are assumed. i.e.,</p>
+</dd>
+<dd>
+<pre>
+      w(lev=0)=0
+      C(lev=0)=C(lev=1)
+  
+      concp, wp
+           |---cn
+      conc, w
+           |---cnm
+      concm, wm</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="muadv_u_expr_"><strong>muadv</strong>(<em>U</em>,<em>EXPR</em>)</a></h2>
+<p>This function computes the time rate of change <em>EXPR</em> at each grid point due
+to zonal advecion (plus increase) according to Bott's 4-level scheme.</p>
+<dl>
+<dt><strong><em>U</em></strong>
+
+<dd>
+<p>Zonal wind speed (u component),  m/s.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression</p>
+</dd>
+</li>
+<dt><strong><a name="item_reference"><em>Reference</em></a></strong>
+
+<dd>
+<p>Bott, A., 1989a: A positive definite advection scheme obtained by
+nonlinear renormalization of the advection flux. <em>Mon. Wea.
+Rev.</em>, <strong>117</strong>, 1006-1015.</p>
+</dd>
+<dd>
+<p>Bott, A., 1989b: Notes and correspondance. <em>Mon. Wea. Rev.</em>,
+<strong>117</strong>, 2633-2636.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="mvadv_v_expr_"><strong>mvadv</strong>(<em>V</em>,<em>EXPR</em>)</a></h2>
+<p>This function computes the time rate of change <em>EXPR</em> at each grid point due
+to meridional advecion (plus increase) according to Bott's 4-level scheme.</p>
+<dl>
+<dt><strong><em>V</em></strong>
+
+<dd>
+<p>Meridional wind speed (v component),  m/s.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression</p>
+</dd>
+</li>
+<dt><strong><em>Reference</em></strong>
+
+<dd>
+<p>Bott, A., 1989a: A positive definite advection scheme obtained by
+nonlinear renormalization of the advection flux. <em>Mon. Wea.
+Rev.</em>, <strong>117</strong>, 1006-1015.</p>
+</dd>
+<dd>
+<p>Bott, A., 1989b: Notes and correspondance. <em>Mon. Wea. Rev.</em>,
+<strong>117</strong>, 2633-2636.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="mwadv_w_expr_"><strong>mwadv</strong>(<em>W</em>,<em>EXPR</em>)</a></h2>
+<p>This function computes the time rate of change <em>EXPR</em> at each grid point due
+to vertical advecion (plus increase) using an upwind scheme.</p>
+<dl>
+<dt><strong><em>W</em></strong>
+
+<dd>
+<p>Vertical wind speed (w component) (unit of vertical coordinate/s, such
+as hPa/s for the vertical coordinate in hPa)</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>An expression</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="thermodynamical_functions">THERMODYNAMICAL FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="satvap_t_"><strong>satvap</strong>(<em>T</em>)</a></h2>
+<p>This function calculates the saturated vapor pressure (Pa)</p>
+<dl>
+<dt><strong><a name="item_t"><em>T</em></a></strong>
+
+<dd>
+<p>Temperature (K)</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="dew_pvap_"><strong>dew</strong>(<em>PVAP</em>)</a></h2>
+<p>This function calcuates the dew point temperature (K).</p>
+<dl>
+<dt><strong><a name="item_pvap"><em>PVAP</em></a></strong>
+
+<dd>
+<p>Vapor pressure (Pa)</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="radiative_transfer_functions">RADIATIVE TRANSFER FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="lw_pl_ta_wa_taucl_fcld_ps_tg_eg_tb_wb_tauclb_fcldb__binfile_ctlfile_r_c_h_l__"><strong>lw</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,TAUCLB,FCLDB[,BINFILE,CTLFILE,-r|-c|-h|-l]</em>)</a></h2>
+<p>This function computes the cooling rate [K/day] and thermal infrared
+fluxes and returns it in a file.</p>
+<dl>
+<dt><strong><a name="item_pl"><em>PL</em></a></strong>
+
+<dd>
+<p>level pressure (hPa)</p>
+</dd>
+</li>
+<dt><strong><a name="item_ta"><em>TA</em></a></strong>
+
+<dd>
+<p>layer temperature (K)</p>
+</dd>
+</li>
+<dt><strong><a name="item_wa"><em>WA </em></a></strong>
+
+<dd>
+<p>layer specific humidity (kg/kg)</p>
+</dd>
+</li>
+<dt><strong><a name="item_taucl"><em>TAUCL</em></a></strong>
+
+<dd>
+<p>cloud optical thickness (dimensionless)</p>
+</dd>
+</li>
+<dt><strong><a name="item_fcld"><em>FCLD</em></a></strong>
+
+<dd>
+<p>cloud fraction</p>
+</dd>
+</li>
+<dt><strong><a name="item_ps"><em>PS</em></a></strong>
+
+<dd>
+<p>surface pressure (hPa)</p>
+</dd>
+</li>
+<dt><strong><a name="item_tg"><em>TG</em></a></strong>
+
+<dd>
+<p>land or ocean surface temperature (K)</p>
+</dd>
+</li>
+<dt><strong><a name="item_eg"><em>EG</em></a></strong>
+
+<dd>
+<p>land or ocean surface emissivity (fraction)</p>
+</dd>
+</li>
+<dt><strong><a name="item_tb"><em>TB</em></a></strong>
+
+<dd>
+<p>surface air temperature (K)</p>
+</dd>
+</li>
+<dt><strong><a name="item_wb"><em>WB</em></a></strong>
+
+<dd>
+<p>surface air specific humidity (kg/kg)</p>
+</dd>
+</li>
+<dt><strong><a name="item_tauclb"><em>TAUCLB</em></a></strong>
+
+<dd>
+<p>surface cloud optical thickness (dimensionless)</p>
+</dd>
+</li>
+<dt><strong><a name="item_fcldb"><em>FCLDB</em></a></strong>
+
+<dd>
+<p>surface cloud amount (fraction)</p>
+</dd>
+</li>
+<dt><strong><a name="item_binfile"><em>BINFILE</em></a></strong>
+
+<dd>
+<p>binary file name ('null' or blank for no output)</p>
+</dd>
+</li>
+<dt><strong><a name="item_ctlfile"><em>CTLFILE</em></a></strong>
+
+<dd>
+<p>ctl file name ('null' or blank for no output)</p>
+</dd>
+</li>
+<dt><strong><a name="item__2dr"><em>-r</em></a></strong>
+
+<dd>
+<p>using Roberts et al. (1976) water vaopr continuum</p>
+</dd>
+</li>
+<dt><strong><a name="item__2dc"><em>-c</em></a></strong>
+
+<dd>
+<p>using Clough et al. (1989) water vaopr continuum (default)</p>
+</dd>
+</li>
+<dt><strong><a name="item__2dh"><em>-h </em></a></strong>
+
+<dd>
+<p>using look-up table (high acc but slow) (default)</p>
+</dd>
+</li>
+<dt><strong><a name="item__2dl"><em>-l</em></a></strong>
+
+<dd>
+<p>using k-dist method (low acc but fast)</p>
+</dd>
+</li>
+<dt><strong><em>Reference</em></strong>
+
+<dd>
+<p>Following the NASA Technical Memorandum (NASA/TM-2001-104606,
+Vol. 19) of Chou, Suarez, Liang, and Yan (2001). This NASA TM
+has been revised a few times since. It computes thermal infrared
+fluxes due to emission by water vapor, ozone, CO2, O2, minor
+trace gases, clouds, and aerosols and due to scattering by
+clouds and aerosols.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="lw2_pl_ta_wa_taucl_fcld_ps_tg_eg_tb_wb_pm_tm_wm_tauclm_fcldm___binfile_ctlfile_r_c_h_l__"><strong>lw2</strong>(<em>PL,TA,WA,TAUCL,FCLD,PS,TG,EG,TB,WB,PM,TM,WM,TAUCLM,FCLDM [,BINFILE,CTLFILE,-r|-c|-h|-l]</em>)</a></h2>
+<p>This function computes the cooling rate [K/day] and thermal infrared
+fluxes and returns it in a file. (Same as lw, but required data at the
+top of mixed layer)</p>
+<dl>
+<dt><strong><em>PL </em></strong>
+
+<dd>
+<p>level pressure (hPa)</p>
+</dd>
+</li>
+<dt><strong><em>TA </em></strong>
+
+<dd>
+<p>layer temperature (K)</p>
+</dd>
+</li>
+<dt><strong><em>WA </em></strong>
+
+<dd>
+<p>layer specific humidity (kg/kg)</p>
+</dd>
+</li>
+<dt><strong><em>TAUCL</em></strong>
+
+<dd>
+<p>cloud optical thickness (dimensionless)</p>
+</dd>
+</li>
+<dt><strong><em>FCLD</em></strong>
+
+<dd>
+<p>cloud amount (fraction)</p>
+</dd>
+</li>
+<dt><strong><em>PS </em></strong>
+
+<dd>
+<p>surface pressure (hPa)</p>
+</dd>
+</li>
+<dt><strong><em>TG </em></strong>
+
+<dd>
+<p>land or ocean surface temperature (K)</p>
+</dd>
+</li>
+<dt><strong><em>EG </em></strong>
+
+<dd>
+<p>land or ocean surface emissivity (fraction)</p>
+</dd>
+</li>
+<dt><strong><em>TB </em></strong>
+
+<dd>
+<p>surface air temperature (K)</p>
+</dd>
+</li>
+<dt><strong><em>WB </em></strong>
+
+<dd>
+<p>surface air specific humidity (kg/kg)</p>
+</dd>
+</li>
+<dt><strong><em>TAUCLB</em></strong>
+
+<dd>
+<p>surface cloud optical thickness (dimensionless)</p>
+</dd>
+</li>
+<dt><strong><em>FCLDB</em></strong>
+
+<dd>
+<p>surface cloud amount (fraction)</p>
+</dd>
+</li>
+<dt><strong><a name="item_pm"><em>PM </em></a></strong>
+
+<dd>
+<p>pressure at the top of mixed layer (hPa)</p>
+</dd>
+</li>
+<dt><strong><a name="item_tm"><em>TM </em></a></strong>
+
+<dd>
+<p>temperature at the top of mixed layer (K)</p>
+</dd>
+</li>
+<dt><strong><a name="item_wm"><em>WM </em></a></strong>
+
+<dd>
+<p>specific humidity at the top of mixed layer (kg/kg)</p>
+</dd>
+</li>
+<dt><strong><a name="item_tauclm"><em>TAUCLM </em></a></strong>
+
+<dd>
+<p>cloud optical thickness at the top of mixed layer (dimensionless)</p>
+</dd>
+</li>
+<dt><strong><a name="item_fcldm"><em>FCLDM </em></a></strong>
+
+<dd>
+<p>cloud amount at the top of mixed layer (fraction)</p>
+</dd>
+</li>
+<dt><strong><em>BINFILE </em></strong>
+
+<dd>
+<p>binary file name ('null' or blank for no output)</p>
+</dd>
+</li>
+<dt><strong><em>CTLFILE </em></strong>
+
+<dd>
+<p>ctl file name ('null' or blank for no output)</p>
+</dd>
+</li>
+<dt><strong><a name="item_r"><em>-r </em> (optional)</a></strong>
+
+<dd>
+<p>using Roberts et al. (1976) water vaopr continuum</p>
+</dd>
+</li>
+<dt><strong><a name="item_c"><em>-c </em> (optional)</a></strong>
+
+<dd>
+<p>using Clough et al. (1989) water vaopr continuum (default)</p>
+</dd>
+</li>
+<dt><strong><em>-h </em> (optional)</strong>
+
+<dd>
+<p>using look-up table (high acc but slow) (default)</p>
+</dd>
+</li>
+<dt><strong><a name="item_l"><em>-l </em> (optional)</a></strong>
+
+<dd>
+<p>using k-dist method (low acc but fast)</p>
+</dd>
+</li>
+<dt><strong><em>Reference</em></strong>
+
+<dd>
+<p>Following the NASA Technical Memorandum (NASA/TM-2001-104606, Vol. 19)
+of Chou, Suarez, Liang, and Yan (2001). This NASA TM has been revised
+a few timessince. It computes thermal infrared fluxes due to emission
+by water vapor, ozone, co2, o2, minor trace gases, clouds, and
+aerosols and due to scattering by clouds and aerosols.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="vertical_interpolation_integration_functions">VERTICAL INTERPOLATION/INTEGRATION FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="pinterp_field_pgrid_plev__l_s_p__"><strong>pinterp</strong>(<em>FIELD,PGRID,PLEV,[-l|-s|-p]</em>)</a></h2>
+<p>This function interpolates a 3-D field to a specified pressure level.
+Can also be used on non-pressure level data, such as sigma or
+eta-coordinate output where pressure is a function of time and grid
+level.</p>
+<dl>
+<dt><strong><a name="item_function_returns"><em>Function returns</em></a></strong>
+
+<dd>
+<p>Defined grid <code>vinterp</code> holding interpolated values</p>
+</dd>
+</li>
+<dt><strong><a name="item_field"><em>FIELD</em></a></strong>
+
+<dd>
+<p>Name of 3-D grid to interpolate</p>
+</dd>
+</li>
+<dt><strong><a name="item_pgrid"><em>PGRID</em></a></strong>
+
+<dd>
+<p>Name of 3-D field holding pressure values at each gridpoint.  If you
+are using regular pressure-level data, this should be set to the
+builtin GrADS variable <code>lev</code>.</p>
+</dd>
+</li>
+<dt><strong><a name="item_plev"><em>PLEV</em></a></strong>
+
+<dd>
+<p>Pressure level at which to interpolate (can be 3-D, such as reserved
+variable <code>lev</code>)</p>
+</dd>
+</li>
+<dt><strong><em>-l</em> (optional)</strong>
+
+<dd>
+<p>for piecewise linear interpolation (fast) (default)</p>
+</dd>
+</li>
+<dt><strong><a name="item_s"><em>-s</em> (optional)</a></strong>
+
+<dd>
+<p>for spline interpolation (slow &amp; problematic while dx is small)</p>
+</dd>
+</li>
+<dt><strong><a name="item_p"><em>-p</em> (optional)</a></strong>
+
+<dd>
+<p>for polynomnial interpolation (fast but problematic with extrapolation)</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="zinterp_field_zgrid_zlev__l_s_p__"><strong>zinterp</strong>(<em>FIELD,ZGRID,ZLEV,[-l|-s|-p]</em>)</a></h2>
+<p>This function interpolates a 3-D field to a specified z level.  Can
+also be used on non-z level data, such as sigma or eta-coordinate
+output where <code>z</code> is a function of time and grid level.</p>
+<dl>
+<dt><strong><em>Function returns</em></strong>
+
+<dd>
+<p>Defined grid <code>vinterp</code> holding interpolated values</p>
+</dd>
+</li>
+<dt><strong><em>FIELD</em></strong>
+
+<dd>
+<p>Name of 3-D grid to interpolate</p>
+</dd>
+</li>
+<dt><strong><a name="item_zgrid"><em>ZGRID</em></a></strong>
+
+<dd>
+<p>Name of 3-D grid holding z values at each gridpoint</p>
+</dd>
+</li>
+<dt><strong><a name="item_zlev"><em>ZLEV</em></a></strong>
+
+<dd>
+<p>z level at which to interpolate</p>
+</dd>
+</li>
+<dt><strong>-l (optional)</strong>
+
+<dd>
+<p>for piecewise linear interpolation (fast) (default)</p>
+</dd>
+</li>
+<dt><strong>-s (optional)</strong>
+
+<dd>
+<p>for spline interpolation (slow &amp; problematic while dx is small)</p>
+</dd>
+</li>
+<dt><strong>-p (optional)</strong>
+
+<dd>
+<p>for polynomnial interpolation (fast but problematic with extrapolation)</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="vint2_psexpr_expr_top_"><strong>vint2</strong>(<em>PSEXPR,EXPR,TOP</em>)</a></h2>
+<p>This function performs a mass-weighted vertical integral in mb
+pressure coordinates.</p>
+<p>The calculation is a sum of the mass-weighted layers:</p>
+<pre>
+        f/g * sum(expr * Delta(level))</pre>
+<p>The bounds of the integration are the surface pressure and the
+indicated top value. The scale factors are <code>f=100</code> and <code>g=9.8</code>. The
+summation is done for each layer present that is between the bounds.
+The layers are determined by the Z levels of the default file. Each
+layer is considered to be from the midpoints between the levels actually
+present, and is assumed to have the same value throughout the layer, namely
+the value of the gridpoint at the middle of the layer.</p>
+<dl>
+<dt><strong><a name="item_psexpr"><em>PSEXPR</em></a></strong>
+
+<dd>
+<p>A GrADS expression for the surface pressure, in mb, which bounds the
+integral on the bottom.</p>
+</dd>
+</li>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>A GrADS expression representing the quantity to be integrated.</p>
+</dd>
+</li>
+<dt><strong><a name="item_top"><em>TOP</em></a></strong>
+
+<dd>
+<p>The bounding top pressure, in mb. This value must be a constant and
+cannot be provided as an expression.</p>
+</dd>
+</li>
+<dt><strong><em>Usage Notes</em></strong>
+
+<dd>
+<p>The summation is done using the Z levels from the default file, so it
+is important that the default file have the same Z dimension
+coordinates as <em>EXPR</em>. Data levels below and above the bounds of the
+summation are ignored. The Z dimension in world-coordinate units is
+assumed to be pressure values given in millibars (mb).  The units of <code>g</code>
+are such that when the expression integrated is specific humidity (<code>q</code>)
+in units of g/g, the result is kg of water per square meter, or
+precipitable water in mm.  It is usually a good idea to make the top
+pressure value to be at the top of a layer, which is midway between
+grid points. For example, if the default file (and the data) have
+pressure levels of ...,500,400,300,250,... then a good value for top
+might be 275, the value at the top of the layer that extends from 350
+to 275 mb. The <strong>vint2</strong> function operates only in an X-Y varying dimension
+environment.</p>
+</dd>
+</li>
+<dt><strong><a name="item_example"><em>Example</em></a></strong>
+
+<dd>
+<p>A typical use of vint might be:</p>
+</dd>
+<dd>
+<pre>
+   ga-&gt; d vint(ps,q,275)</pre>
+</dd>
+<dd>
+<p>This expression will integrate specific humidity to obtain
+precipitable water, in mm.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="miscelaneous_functions">MISCELANEOUS FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="if_expr1_op_expr2_true_expr_false_expr_"><strong>if</strong>(<em>EXPR1,OP,EXPR2,TRUE_EXPR,FALSE_EXPR</em>)</a></h2>
+<p>This function compares <em>EXPR1</em> and <em>EXPR2</em>, where 5 arguments are
+expected.  if their relation is true, <em>TRUE_EXP</em> is returned, otherwise
+expression <em>FALSE_EXPR</em> is returned.</p>
+<dl>
+<dt><strong><a name="item_op"><em>OP</em></a></strong>
+
+<dd>
+<p>One of the following: ==, =, &gt;, &lt;, &gt;=, &lt;=, !=</p>
+</dd>
+</li>
+<dt><strong><a name="item_expr2_2c_true_expr_2c_false_expr"><em>EXPR2, TRUE_EXPR, FALSE_EXPR</em></a></strong>
+
+<dd>
+<p>These can be a expression, constant or -u.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="which_expr_cond1_expr1_cond2_expr2_____else_expr_"><strong>which</strong>(<em>EXPR,COND1,EXPR1,COND2,EXPR2,...,ELSE_EXPR</em>)</a></h2>
+<p>This function labels gridpoints according to specified conditions,
+where an even number of arguments is expected. The number of arguments
+is limited by the maximum characters (about 128 charcters) being
+handled by the argument string. If <em>EXPR</em> equals to <em>COND1</em>, then <em>EXPR1</em> is
+returned.  Otherwise, if <em>EXPR</em> equals to <em>COND2</em>, then <em>EXPR2</em> is returned. If
+none of the conditions are met, <em>ELSE_EXPR</em> is returned.</p>
+<dl>
+<dt><strong><em>EXPR</em></strong>
+
+<dd>
+<p>A valid GrADS expression</p>
+</dd>
+</li>
+<dt><strong><em>EXPR2, TRUE_EXPR, FALSE_EXPR</em></strong>
+
+<dd>
+<p>These can be a expression, constant or -u.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="maxv_expr1_expr2_"><strong>maxv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)</a></h2>
+<p>This function displays the maximum value between <em>EXPR1</em> and <em>EXPR2</em>,
+where 2 arguments are expected.</p>
+<dl>
+<dt><strong><a name="item_expr1"><em>EXPR1</em></a></strong>
+
+<dd>
+<p>Must be an expression</p>
+</dd>
+</li>
+<dt><strong><a name="item_expr2"><em>EXPR2</em></a></strong>
+
+<dd>
+<p>Can be an expression, constant or -u.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="minv_expr1_expr2_"><strong>minv</strong>(<em>EXPR1</em>,<em>EXPR2</em>)</a></h2>
+<p>This function displays the minimum value between <em>EXPR1</em> and <em>EXPR2</em>,
+where 2 arguments are expected.</p>
+<dl>
+<dt><strong><em>EXPR1</em></strong>
+
+<dd>
+<p>Must be an expression</p>
+</dd>
+</li>
+<dt><strong><em>EXPR2</em></strong>
+
+<dd>
+<p>Can be an expression, constant or -u.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="line_expr_lon1_lat1_lon2_lat2__l_m_r__"><strong>line</strong>(<em>EXPR,LON1,LAT1,LON2,LAT2[,-l|-m|-r]</em>)</a></h2>
+<p>This function draws a line from <em>(LON1,LAT1)</em> to <em>(LON2,LAT2)</em>.  Set
+the line at the value <em>VAL</em> (default 1) using the template of <em>EXPR</em>.</p>
+<dl>
+<dt><strong><a name="item_lon1_2clat1"><em>LON1,LAT1</em></a></strong>
+
+<dd>
+<p>Starting longitude/latitude</p>
+</dd>
+</li>
+<dt><strong><a name="item_lon2_2clat2"><em>LON2,LAT2</em></a></strong>
+
+<dd>
+<p>Ending longitude/latitude</p>
+</dd>
+</li>
+<dt><strong><em>-l</em> (optional)</strong>
+
+<dd>
+<pre>
+ return the length [km] in each grid</pre>
+</dd>
+<dt><strong><em>-m</em> (optional)</strong>
+
+<dd>
+<pre>
+ return the logics (1:pass, 0: non-passing)</pre>
+</dd>
+<dt><strong><em>-r</em> (optional)</strong>
+
+<dd>
+<p>return the length ratio of each segment (fraction)</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h2><a name="minv__displaying_the_minimum_value_between_exp1_and_exp2"><code>Minv</code>: displaying the minimum value between <em>EXP1</em> and <em>EXP2</em></a></h2>
+<pre>
+  set clevs -12 -9 -6 -3 0 3 6 9 12
+  d minv(u,0)
+  run cbarn.gs
+  draw title d minv(u,0)</pre>
+<p>
+</p>
+<h2><a name="maxv__displaying_the_maximum_value_between_exp1_and_exp2"><code>Maxv</code>: displaying the maximum value between <em>EXP1</em> and <em>EXP2</em></a></h2>
+<pre>
+  set clevs -12 -9 -6 -3 0 3 6 9 12
+  d maxv(u,0)
+  run cbarn.gs
+  draw title d maxv(u,0)</pre>
+<p>
+</p>
+<h2><a name="if__selectively_displaying_values_according_to_the_relationship_between_two_expressions_"><code>If</code>: selectively displaying values according to the relationship between two expressions.</a></h2>
+<pre>
+  d if(u,&gt;,0,t,-u)
+  run cbarn.gs
+  draw title if(u,&gt;,0,t,-u)</pre>
+<p>
+</p>
+<h2><a name="which__label_gridpoints_according_to_specific_conditions"><code>Which</code>: label gridpoints according to specific conditions</a></h2>
+<pre>
+  set clevs 0 1 2  
+  d which(minv(maxv(u,0),10),0,0,10,2,1)
+  run cbarn.gs
+  draw title u&lt;=0: 0; 0&lt;u&lt;10: 1; u&gt;=10: 2</pre>
+<p>
+</p>
+<h2><a name="tfit__performing_multiple_linear_regression_on_individual_gridpoints"><code>tfit</code>: performing multiple linear regression on individual gridpoints</a></h2>
+<pre>
+  set t 1
+  d tfit('var.0','var.3','var.4',t=1,t=100)
+  d tfit('var.0','var.3',t=1,t=100,1mo,&quot;/silver/data/nchu/fit/dmdtE&quot;)
+  d tfit('var.0','var.3','var.4',t='mon',t+100,1mo,&quot;/silver/data/nchu/fit/dmdtEP&quot;)</pre>
+<pre>
+  d tfit('var.0','var.3','var.4',time=jan1990,time=dec2002)
+  d tfit('var.0','var.3',time=jan1990,time=dec2002,1mo,&quot;/silver/data/nchu/fit/dmdtE&quot;)
+  d tfit('var.0','var.3','var.4',time=jan1990,time=dec2002,1mo,&quot;/silver/data/nchu/fit/dmdtEP&quot;)</pre>
+<p>
+</p>
+<h2><a name="fit__performing_global_multiple_linear_regression"><code>fit</code>: performing global multiple linear regression</a></h2>
+<pre>
+
+  set t 1
+  d fit('var.0','var.3','var.4',t=1,t=100)
+  d fit('var.0','var.3',t=1,t=100,1mo,&quot;/silver/data/nchu/fit/dmdtE&quot;)
+  d fit('var.0','var.3','var.4',t='mon',t+100,1mo,&quot;/silver/data/nchu/fit/dmdtEP&quot;)</pre>
+<pre>
+  d fit('var.0','var.3','var.4',time=jan1990,time=dec2002)
+  d fit('var.0','var.3',time=jan1990,time=dec2002,1mo,&quot;/silver/data/nchu/fit/dmdtE&quot;)
+  d fit('var.0','var.3','var.4',time=jan1990,time=dec2002,1mo,&quot;/silver/data/nchu/fit/dmdtEP&quot;)</pre>
+<p>
+</p>
+<h2><a name="muadv__computing_zonal_advecion"><code>muadv</code>: computing zonal advecion</a></h2>
+<pre>
+  d muadv(u,t)
+  run cbarn.gs
+  draw title -u*dT/dx (K s`a-1`n)</pre>
+<p>
+</p>
+<h2><a name="mvadv__computing_meridional_advecion"><code>mvadv</code>: computing meridional advecion</a></h2>
+<pre>
+  d mvadv(v,t)
+  run cbarn.gs
+  draw title -v*dT/dy (K s`a-1`n)</pre>
+<p>
+</p>
+<h2><a name="mwadv__computing_vertical_advecion_using_an_upwind_scheme"><code>mwadv</code>: computing vertical advecion using an upwind scheme</a></h2>
+<pre>
+  d mwadv(w,t)/100  
+  run cbarn.gs
+  draw title -w*dT/dz (K s`a-1`n)</pre>
+<p>Notice that the 100 factor above converts the unit of <code>w</code> from <code>Pa/s</code> to
+<code>hPa/s</code> if the vertical coordinate is in <code>hPa</code>.</p>
+<p>
+</p>
+<h2><a name="cosz__computing_the_cosine_of_the_solar_zenith_angle"><code>cosz</code>: computing the cosine of the solar zenith angle</a></h2>
+<pre>
+  d cosz(lat,h)
+  run cbarn.gs
+  draw title hourly cosine zenith angle</pre>
+<pre>
+  d cosz(lat,d)
+  run cbarn.gs
+  draw title daily mean cosine zenith angle</pre>
+<pre>
+  d cosz(lat,m)
+  run cbarn.gs
+  draw title monthly mean cosine zenith angle</pre>
+<p>
+</p>
+<h2><a name="lt__computing_the_local_time"><code>lt</code>: computing the local time</a></h2>
+<pre>
+  d lt(lat)
+  run cbarn.gs
+  draw title local time (h)</pre>
+<p>
+</p>
+<h2><a name="dayratio__computing_the_daytime_ratio"><code>dayratio</code>: computing the daytime ratio</a></h2>
+<pre>
+  d dayratio(lat)
+  run cbarn.gs
+  draw title daytime ratio (lat)</pre>
+<p>
+</p>
+<h2><a name="jd__computing_the_julian_day_sice_january_0001"><code>jd</code>: computing the Julian day sice January 0001</a></h2>
+<pre>
+  d jd(lat)
+  run cbarn.gs
+  draw title julian date from 1 January 0001 (jd=1)\d jd(lat)</pre>
+<p>
+</p>
+<h2><a name="dew__computing_the_dew_point_temperature"><code>dew</code>: computing the dew point temperature</a></h2>
+<pre>
+  d dew(q/0.622*lev*100)
+  run cbarn.gs
+  draw title dew point (K)</pre>
+<p>
+</p>
+<h2><a name="satvap__computing_the_saturated_temperature"><code>satvap</code>: computing the saturated temperature</a></h2>
+<pre>
+  d satvap(t)
+  run cbarn.gs
+  draw title saturated temperature (Pa)</pre>
+<p>
+</p>
+<h2><a name="line__drawing_lines"><code>line</code>: drawing lines</a></h2>
+<pre>
+  d line(u,30,60,200,-40,-r)
+  run cbarn.gs
+  draw title draw line\d line(u,lon0,lat0,lon1,lat1,-r)</pre>
+<p>
+</p>
+<h2><a name="vint2__modified_vertical_integration"><code>vint2</code>: modified vertical integration</a></h2>
+<pre>
+  d vint2(1000,dtdt,300)
+  run cbarn.gs
+  draw title Integrate[dTdt,{dp,1000,300}] (K/s*kg/m2)</pre>
+<pre>
+  d vint2(pressfc/100,dTdt,presML/100)
+  run cbarn.gs
+  draw title (K/s*kg/m2)
+  
+  d vint(ps,q,275)
+  draw title Integrate q from surface to 275 hPa\ Total Precipitable Water (mm)</pre>
+<p>
+</p>
+<h2><a name="zinterp__vertical_interpolation_to_a_specified_p_level_"><code>zinterp</code>: Vertical interpolation to a specified p level.</a></h2>
+<p>First, conduct 3-d vertical interpolation from file 3 p level to file 1 level.
+</p>
+<pre>
+
+  define cbtzw=pinterp(cbtzw.3,lev.3,lev)</pre>
+<p>Then conduct vertical interpolation to 1000 hPa:</p>
+<pre>
+  define sxdflmc=pinterp(sxdfl1,pl1,1000)   
+  define flxmc=pinterp(flx.'id',pl.'id',levmc.2)
+  define tml=pinterp(tprs.2*pow(1000/lev.2,0.286),lev.2,levmh.2(z=1))
+  define tsfc=pinterp(tprs.2*pow(1000/lev.2,0.286),lev.2,pressfc.3(z=1)/100)</pre>
+<p>
+</p>
+<h2><a name="zinterp__vertical_interpolation_to_a_specified_z_level_"><code>zinterp</code>: Vertical interpolation to a specified z level.</a></h2>
+<pre>
+  define tmp1=zinterp(tprs.2,zprs.2/9.8,h1)
+  define tmp2=zinterp(tprs.2,zprs.2/9.8,h2)
+  define pressfc=zinterp(lev.4,zprs.4/9.8,elv.1(t=1))
+  define levmh=zinterp(lev.4,zprs.4/9.8,elvmh)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Ben-Jei Tsuang &lt;<a href="mailto:btsuang@yahoo.com">btsuang@yahoo.com</a>&gt;. Arlindo da Silva
+&lt;<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>&gt; implemented these functions as dynamic User
+Defined Extensions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (c) 2003-2008 by Ben-Jei Tsuang &lt;<a href="mailto:btsuang@yahoo.com">btsuang@yahoo.com</a>&gt;.
+All Rights Reserved.</p>
+<p>This is free software released under the GNU General Public License;
+see the source for copying conditions. There is NO warranty; not even
+for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;libbjt.gex - Ben-Jei Tsuang's Collection of GrADS v1.9 Extensions</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

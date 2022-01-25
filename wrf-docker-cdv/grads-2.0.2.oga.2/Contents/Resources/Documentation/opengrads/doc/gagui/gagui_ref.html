@@ -1,0 +1,852 @@
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+Using GrADS with Athena Widgets 
+</font> </H1>
+</center>
+
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_further.html>Going further...</a> |
+<b><font color=#ff0000>Beginning: </font></b> 
+         <a href=gagui_intro.html>Introduction </a>
+</center>
+
+<p>
+
+<!----------------------------------------------------------------->
+<hr>
+<h1>Reference section</h1>
+
+This sections lists alphabetically all the GUI functions and callbacks
+available with the GAGUI script processor.
+
+
+<h2>GUI Functions (in alphabetical order)</h2>
+
+The description of the GUI functions that follows are adapted from 
+the <i>Simple X Library</i> (libsx) documentation by Dominic Giampaolo.
+The original text has been modified to reflect the GAGUI script 
+interface which lacks the same data structures as the C language
+interface, and to remove some technical details over which the
+GAGUI user has no control.
+<p>
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<hr>
+<font color=#0000ff><h3>
+AllBgColor(my_color)
+</h3></font>
+
+This function sets the background color of all currently
+defined widgets to the specified
+color <b>my_color</b>. 
+You must define <b>my_color</b> by first calling
+<b>GetNamedColor()</b>, except if <b>my_color</b> is one of the
+automatically defined colors:<i> white, back, red, green, blue, yellow</i>.
+In any case, a call to this function must be preceded by a call to
+<b>ShowDisplay()</b>.
+
+<p>
+<b>Bugs:</b> Do NOT call this function for widgets in a window created
+with <b>MakeWindow()</b> or you may (eventually) crash GrADS. Restrict the
+use of this function to your main GUI script.
+
+<p>
+<b>SEE ALSO:</b><i> SetFgColor(), SetBgColor(), AllBgColor(), AllFgColor(), 
+                    GetNamedColor()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+AllFgColor(my_color)
+</h3></font>
+
+This function sets the foreground color of all currently defined widgets. This will set
+the text of all widgets to the specified color <b>my_color</b>. 
+You must define <b>my_color</b> by first calling
+<b>GetNamedColor()</b>, except if <b>my_color</b> is one of the
+automatically defined colors: <i>white, back, red, green, blue, yellow</i>.
+In any case, a call to this function must be preceded by a call to
+<b>ShowDisplay()</b>. 
+
+<p>
+<b>Bugs:</b> Do NOT call this function for widgets in a window created
+with <b>MakeWindow()</b> or you may (eventually) crash GrADS. Restrict the
+use of this function to your main GUI script.
+
+<p>
+<b>SEE ALSO:</b><i> SetFgColor(), SetBgColor(), AllBgColor(), AllFgColor(), 
+                    GetNamedColor()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+AllWidgetFont(my_fontname)
+</h3></font>
+
+This functions sets the font used by all widgets that are currently
+defined, to be the font referred to by the argument <b>my_fontname</b>.
+The argument <b>my_fontname</b> should have been obtained with
+<b>GetFont()</b>. 
+
+<p>
+<b>Bugs:</b> Do NOT call this function for widgets in a window created
+with <b>MakeWindow()</b> or you may (eventually) crash GrADS. Restrict the
+use of this function to your main GUI script.
+
+<p>
+<b>SEE ALSO:</b><i> GetFont(), SetWidgetFont()</i>
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+chdir(path)
+</h3></font>
+
+This function changes the current directory to <b>path</b>. 
+This function is particularly useful with CDROMs where one would like
+to start from a given directory.
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Debug(state)
+</h3></font>
+
+This function sets the internal debugging flag. If <b>state</b> == on,
+then all subsequent GAGUI script line is echoed to the screen.
+This behavior is inhibited by calling this function with
+<b>state</b> == off.
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+GetFont(my_fontname, X11_fontname)
+</h3></font>
+
+This function loads the X11 font named by <b>X11_fontname</b>.  The
+first argument, <b>my_fontname</b> is a shorter name you use to set the
+font of widgets with <b>SetWidgetFont()</b> or <b>AllWidgetFont()</b>.
+After you've loaded a font, you can then set that font in any widget
+that displays text. 
+<p>
+
+You can view the list of available X11 color names with the <b>xlsfonts</b>
+ command in a Unix shell.
+
+<p>
+<b>SEE ALSO:</b><i> SetWidgetFont(), AllWidgetFont()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+GetNamedColor(my_name, X11_name)
+</h3></font>
+
+This function allocates an entry in the color table for the color
+given by the ascii string <b>X11_name</b>, which is the name X windows
+uses for the color. The first argument, <b>my_name</b> is a shorter
+name you can use to assign colors to widgets with <b>SetFgColor(),
+SetBgColor()</b>, etc.
+<p>
+
+You can view the list of available X11 color names with the <b>showrgb</b>
+ command in a Unix shell (some nice ones are
+"peachpuff", "burlywood3", "aquamarine", and "paleturquoise3").  Color
+names can have spaces in them.  
+<p>
+
+<b>BUG:</b> With the current GAGUI script processor that is no way for
+checking whether a given color exists. However, there is no danger of
+crashing GrADS. If you try to assign an invalid color to a widget,
+the script processor will detect that and ignore your request.
+<p>
+<b>NOTE:</b><font color=#ff0000>
+       You can only call GetNamedColor() after calling the
+      ShowDisplay() function.</font>
+<p>
+<b>SEE ALSO: </b><i> SetFgColor(), SetBgColor(), AllFgColor(),
+AllBgColor()</i> 
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+MainLoop()
+</h3></font>
+
+After calling this function, your program yields control to the user
+interface, and it is entirely driven by what the user does and the
+callbacks associated with the various widgets.  For a single window
+application, the general flow of events is:
+<blockquote>
+<b>
+    # create widgets <br>
+    MakeButton(....)     
+    <p>     
+    # put the window on the screen<br> 
+    ShowDisplay()
+    <p>             
+    # optionally allocate colors 
+    <p>
+    # start the main loop going<br> 
+    MainLoop()                
+</b>
+</blockquote>
+<p>
+
+When you call this after calling <b>ShowDisplay()</b> for your first
+window, the <b>MainLoop()</b> function never returns and
+your application should have some callback function that will
+<b>quit</b> GrADS (such as a quit button or menu option).
+<p>
+If you did not call <b>ShowDisplay()</b>, <b>MainLoop()</b> will call
+it for you and then launch into the main loop.
+<p>
+<b>Note:</b><font color=#ff0000>
+You should NOT call <b>MainLoop()</b> when you use
+<b>MakeWindow()</b> to create your (secondary) window.
+</font>
+<p>
+<b>SEE ALSO:</b><i> MakeWindow(), ShowDisplay() </i>.
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff>
+<h3>MakeButton(widget, label, callback, cb_args)</h3> 
+</font>
+
+This function creates a small rectangular button which the user can
+click on.  The first argument, <b>widget</b>, is a name you give to the
+widget for later changing its attributes (such as colors, fonts, etc.)
+The character string <b>label</b> will be printed inside the
+button.  If the string has newline characters in it, they will be
+interpreted properly (<i>i.e.</i>, you will get a multiline label).  The
+next argument, <b>callback</b>, is the name of the callback function,
+and <b>cb_args</b> (callback arguments) is a character string that will be
+passed to the callback function. See the next subsection for a
+description of available callbacks.
+<p>
+You use <i>buttons</i> to allow the user to indicate various actions
+(things like load a file, display a GrADS expression are good
+examples).  The mental model of how a button works is that when the
+user clicks on the button with the mouse, the function you specify is
+called. 
+
+<p>
+Here is an <a href=ex1.gui>example</a> of simple buttons:
+<p>
+<center>
+<IMG SRC="gui_ex1.gif" ALT="GAGUI Example 1">
+</center>
+<p>
+
+<p>
+<b>SEE ALSO:</b> <i>  SetWidgetPos(), 
+            SetWidgetFont(), SetFgColor(), SetBgColor()</i>
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff>
+<h3>MakeLabel ( widget, text )</h3>
+</font>
+
+This function creates a label that contains the text in the character
+string <b>text</b>; <b>widget</b> is a name you give to the widget for
+later changing its attributes (such as colors, fonts, etc.) The text
+will simply be displayed, with no fancy borders or special highlighting.
+If the text contains new line characters, they will be interpreted
+properly. 
+<p>
+This widget is useful for displaying a piece of textual information
+like the title of a CDROM or dataset.
+
+<p>
+Here is an <a href=window.gui>example</a> of a window with a label:
+<p>
+<center>
+<IMG SRC="gui_window.gif" ALT="GAGUI Example 1">
+</center>
+<p>
+
+<p>
+<b>SEE ALSO:</b><i>  SetWidgetPos(), SetWidgetFont(), AllWidgetFont(),
+            SetFgColor(), SetBgColor(), AllFgColor(), AllBgColor()
+            </i>
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+MakeMenu(menu, text)
+</h3></font>
+
+This function creates a menu button that contains the text in the
+character string <b>text</b>.  When the button is clicked, a menu pops
+up.  The menu contains items created with <b>MakeMenuItem().</b> <p> The
+first argument of this function, <b>menu</b>, is passed to
+<b>MakeMenuItem()</b> so that menu items can attached to a menu. 
+
+<p>
+Here is an <a href=ex2.gui>example</a> of a simple menu with items
+associated with them (see <b>MakeMenuItem()</b>):
+<p>
+<center>
+<IMG SRC="gui_ex2.gif" ALT="GAGUI Example 2">
+</center>
+
+<p>
+<b>SEE ALSO:</b> <i>MakeMenuItem(), MakeButton(), SetWidgetPos()</i>
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+MakeMenuItem(widget, menu, label, callback, cb_args )
+</h3></font>
+
+This function adds a menu item to a menu.  The menu item contains the
+text in the string <b>label</b>.  Whenever the user selects this menu
+item, the callback function, <b>callback</b>, is called.  The final
+argument, <b>cb_args</b> is a character string which is passed to the
+callback function. 
+See the next subsection for a description of available callbacks.
+<p>
+
+The first argument, <b>widget</b>, is a name you give to the menu item
+for later changing its attributes (such as colors, fonts, etc.) The
+second argument, <b> menu</b>, must be a menu widget set with
+<b>MakeMenu()</b> (results are undefined if it is not). 
+<p>
+
+Setting of widget attributes with <b>SetFgColor(), SetBgColor()</b>, etc
+work normally except that only one background color may be specified and
+it takes effect for the entire menu.  You can set different fonts for
+each menu item. 
+<p>
+
+<b>NOTE:</b> You do not need to call <b>SetWidgetPos()</b> for menu items. 
+      Successive menu items are placed below previous menu items.
+
+<p>
+<b>SEE ALSO:</b><i> MakeMenu()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+  MakeToggle( widget, label, state,  NULL, callback,  cb_args )
+</h3></font>
+
+This function makes a widget that will toggle between a highlighted
+<i>ON</i> state and an unhighlighted <i>OFF</i> state.
+<p>
+
+The first argument, <b>widget</b>, is a name you give to the menu item
+for later changing its attributes (such as colors, fonts, etc.) 
+The second argument, <b>label</b> is the text that will be displayed
+inside the widget.  The <b>state</b> argument is a boolean (<i>TRUE</i>
+or <i>FALSE</i>) value of the initial state of the toggle button
+(<i>TRUE</i> == on/highlighted, <i>FALSE</i> == off).  The next
+argument, a widget, is always <i> NULL</i> for now (this is 
+place holder for a future implementation of radio groups).
+<p>
+
+The fifth argument, <b>callback</b> is a standard callback function
+(see next subsection), although usually the <b>Toggle</b> callback 
+is used in this context.
+The last argument, <b>cb_args</b>, is a character string that you 
+would like passed to your callback function.
+<p>
+
+Each time the widget changes state, your callback function is called.
+That is, each time the user clicks the toggle, your function is
+called. 
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+MakeWindow( widget, window_name );
+</h3></font>
+
+<b>NOTE:</b><font color=#ff0000>
+Do not call this function to open your first window. Your
+      application's first window is opened internally.
+      If your application only needs one window, do NOT call this
+      function. </font>
+<p>
+This function opens a new window.
+The first argument, <b>widget</b>, is a name you give to the
+window for later changing its attributes (such as colors, fonts, etc.)
+The new window has the name specified by the argument
+<b>window_name</b>.
+<p>
+After this functions returns, the current window is the one you just
+created and you can begin adding widgets to it with the <b>MakeXXX()</b>
+calls.  After having created and added any widgets you want, you should
+call <b>ShowDisplay()</b>; you should NOT call <b>MainLoop()</b>. 
+<p>
+
+<p>
+This <a href=window.gui>example</a> illustrates how to create
+a secondary window, and how to attach a <font
+color=#ff0000>Quit</font> button which calls the <b>CloseWindow</b>
+callback.
+<p>
+<center>
+<IMG SRC="gui_window.gif" ALT="GAGUI Example 1">
+</center>
+<p>
+
+
+<b>SEE ALSO:</b><i> ShowDisplay(), MainLoop()</i>
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+SetBgColor(widget, my_color)
+</h3></font>
+
+This function sets the background color of a widget to the specified
+color <b>my_color</b>. 
+You must define <b>my_color</b> by first calling
+<b>GetNamedColor()</b>, except if <b>my_color</b> is one of the
+automatically defined colors: <i>white, back, red, green, blue, yellow</i>.
+In any case, a call to this function must be preceded by a call to
+<b>ShowDisplay()</b>. 
+<p>
+<b>SEE ALSO:</b><i> SetFgColor(), SetBgColor(), AllBgColor(), AllFgColor(), 
+                    GetNamedColor()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+SetFgColor(widget, my_color)
+</h3></font>
+
+This function sets the foreground color of a widget. This will set
+the text of the widget to the specified color <b>my_color</b>. 
+You must define <b>my_color</b> by first calling
+<b>GetNamedColor()</b>, except if <b>my_color</b> is one of the
+automatically defined colors: <i>white, back, red, green, blue, yellow</i>.
+In any case, a call to this function must be preceded by a call to
+<b>ShowDisplay()</b>. 
+<p>
+<b>SEE ALSO:</b><i> SetFgColor(), SetBgColor(), AllBgColor(), AllFgColor(), 
+                    GetNamedColor()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+SetWidgetFont(widget, my_fontname)
+</h3></font>
+
+This functions sets the font used by the widget <b>widget</b>, to be the
+font referred to by the argument <b>my_fontname</b>.  The argument
+<b>my_fontname</b> should have been obtained with <b>GetFont()</b>. 
+<p>
+<b>SEE ALSO:</b><i> GetFont(), AllWidgetFont()</i>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+SetWidgetPos(widget, where1, from1, where2, from2)
+</h3></font>
+
+This function lets you position a Widget in your window.  The idea is
+that you specify logical placement of the Widget (<i>i.e.</i>, place it
+to the right of this widget, and under that widget).  Many layouts are
+possible, and you can even specify that you don't care where a specific
+widget is placed. 
+<p>
+
+There are three types of placement.  You can place a widget to the right
+of another widget with <i>PLACE_RIGHT</i>.  If the argument
+<b>where1</b> is PLACE_RIGHT, then the Widget <b>widget</b> will be
+placed to the right of the Widget <b>from1</b>.  If <b>where1</b> is
+equal to <i>PLACE_UNDER</i>, <b>widget</b> will be placed under the
+widget <b>from1</b>.  The same holds true for the argument <b>where2</b>
+and Widget <b>from2</b>.  Having two arguments is necessary to be able
+to unambiguously specify where you want components placed in the
+display.  If you don't care about where a widget is placed, you can use
+<i>NO_CARE</i> for the <b>where</b> argument and a <i>NULL</i> value for the 
+<b>from</b> argument. 
+<p>
+
+Generally, the first widget created need not be specified, it will
+always be in the top left corner.  Other widgets can the be placed
+relative to that widget.  For example, if you created 4 widgets (w0
+through w3) and wanted to arrange them in a column, you would do the
+following:
+<blockquote>
+<b>
+     SetWidgetPos(w1, PLACE_UNDER, w0, NO_CARE, NULL)<br>
+     SetWidgetPos(w2, PLACE_UNDER, w1, NO_CARE, NULL)<br>
+     SetWidgetPos(w3, PLACE_UNDER, w2, NO_CARE, NULL)
+</b>
+</blockquote>
+
+Notice how the third argument changes; we are placing the next widget
+underneath the previous widget.  The zeroth widget (w0) doesn't
+have to be placed because it is always in the top left corner (this
+can not be changed).
+<p>
+If you wanted to arrange things in a row, you would use <i>PLACE_RIGHT</i>
+instead of <i>PLACE_UNDER</i>.
+<p>
+
+As a more complicated example, supposed you want to create two rows of
+widgets, and a drawing area.  You would do the following :
+<blockquote>
+<b>
+     # first three across the top<br>
+     SetWidgetPos(w1, PLACE_RIGHT, w0, NO_CARE, NULL)<br>
+     SetWidgetPos(w2, PLACE_RIGHT, w1, NO_CARE, NULL)<br>
+     SetWidgetPos(w3, PLACE_RIGHT, w2, NO_CARE, NULL);<br>
+<p>
+     # next three underneath the top row<br>
+     SetWidgetPos(w4, PLACE_UNDER, w0, NO_CARE, NULL)<br>
+     SetWidgetPos(w5, PLACE_UNDER, w0, PLACE_RIGHT, w4)<br>
+     SetWidgetPos(w6, PLACE_UNDER, w0, PLACE_RIGHT, w5)<br>
+<p>
+     # put the drawing area under the second row<br>
+     SetWidgetPos(w7, PLACE_UNDER, w4, NO_CARE, NULL)
+</b>
+</blockquote>
+
+
+It is useful to think of the window as a kind of grid in which you can
+put various pieces.  Just draw a picture of what you want and then use
+<b>SetWidgetPos()</b> to indicate to the system what is next to/underneath of
+what. 
+
+<p>
+This <a href=ncep.gui>example</a> illustrates how to line up
+3 rows of buttons and menus:
+<p>
+<center>
+<IMG SRC="gui_ncep.gif" ALT="GAGUI ncep.gui">
+</center>
+<p>
+
+
+<p>
+Also, not all imaginable layouts are possible with <b>SetWidgetPos()</b>.
+For example, you cannot specify specific pixel offsets for a widget,
+or that it be centered in the display, or right justified.  This
+limitation is for the sake of simplicity.  Generally this should not be
+a problem (if it is, you are probably getting beyond the scope of what
+GAGUI was intended to provide, i.e. you're becoming an X hacker :).
+
+<p>
+You can simulate more complicated layouts by cheating and creating
+label widgets whose label is just spaces and then placing other widget
+the left or underneath the label.  This works but is kind of hackish. 
+
+
+
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+ShowDisplay()
+</h3></font>
+
+This function displays the currently active window (user interface)
+you've created with the <b>MakeXXX()</b> calls.  After this call completes,
+the interface will be visible on the display.
+<p>
+Until you call this function, your interface will not be visible and
+drawing into a draw area will have no effect.
+<p>
+Usually one calls <b>ShowDisplay()</b>, allocates some colors and then
+immediately calls <b>MainLoop()</b>.  If you do not call <b>ShowDisplay()</b>, but
+just directly call <b>MainLoop()</b>, then <b>MainLoop()</b> implicitly calls
+<b>ShowDisplay()</b>.  
+<p>
+<b>SEE ALSO:</b><i> MainLoop(), MakeWindow() </i>
+
+
+
+<hr>
+<h2>Callbacks (in alphabetical order)</h2>
+
+The callbacks listed below are written in the form
+<blockquote>
+<b>
+         callback(cb_args)
+</b>
+</blockquote>
+Notice that all the GUI functions described above take as arguments
+the callback name <b>callback</b> and its arguments, <b>cb_args</b>,
+separately.
+For example, a button using the <b>Cmd</b> callback would read
+<blockquote>
+<b>
+  MakeButton( clear,  "Clear", Cmd, "clear" )
+</b>
+</blockquote>
+although in the notation of this section one would be tempted to write
+<b>Cmd("clear")</b>. I hope I haven't confused you with that.
+<p>
+
+At his stage of development, all callbacks are defined internally.
+Therefore, there is no way for users to directly provide their own
+callbacks as they would in a C program.  However, the callback
+<b>Cmd</b> allows the user to execute a generic GrADS command. In
+particular, one could execute the command <b>"run my_script.gs"</b>, where
+<i>my_script.gs</i> is a generic GrADS script.  Therefore, there is a
+mechanism for users to indirectly provide their own callbacks. 
+
+<p>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<hr>
+<font color=#0000ff><h3>
+Browse(file_name)
+</h3></font>
+
+This callback opens the text file <b>file_name</b>, such as a help file,
+on a separate window. Here a screenshot of the <i>Text Viewer</i>
+widget:
+<p>
+<center>
+<IMG SRC="gui_textw.gif" ALT="GAGUI Text widget">
+</center>
+<p>
+
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+CloseWindow(NULL)
+</h3></font>
+
+This callback closes and removes from the display the currently
+active window.
+<p>
+After calling this callback, you should not refer to any of the
+widgets contained in the window as they are invalid (as is the window
+handle). 
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Cmd(grads_cmd)
+</h3></font>
+
+This callback executes a generic GrADS command such as "clear",
+"quit", "run rgbmap", etc.
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+CmdStr(partial_grads_cmd)
+</h3></font>
+
+This callback is similar to <b>Cmd</b>, but the user is prompted for an
+additional string to be appended to the GrADS command. For example,
+one could have <b>partial_grads_cmd</b> == "set lat", and the user
+would be asked to provide the actual latitude range.
+Here is a screenshot of this dialog box:
+<p>
+<center>
+<IMG SRC="gui_strw.gif" ALT="GAGUI String Widget">
+</center>
+<p>
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+CmdWin(NULL)
+</h3></font>
+
+This callback invokes a GrADS Command window with a scrollable history
+list where the user can click on past commands from the list.
+Here is a screenshot of the <i>GrADS Command Window</i> widget:
+<p>
+<center>
+<IMG SRC="gui_cmdw.gif" ALT="GAGUI CmdWin Widget">
+</center>
+<p>
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+CmdLine(NULL)
+</h3></font>
+
+    This callback invokes the classic GrADS command line interface with
+the familiar <b>ga></b> prompt.  When the classic command line is active
+the GUI with its widgets is not available. In order to re-activate the
+GUI you must type a dot (".") at the command line.
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Display(option)
+</h3></font>
+
+This call displays the default variable (or expression) set with 
+<b>VarSel</b>, or after a data file is open with the <b>Load</b>
+or <b>Open</b> callbacks. The callback argument <b>option</b> can take one
+of the values:
+<ul>
+
+<li>"<font color=#ff0000><b><<</b></font>"
+          decrements time one time step and executes the GrADS 
+          display command for the default expression
+
+<li>"<font color=#ff0000><b>PLAY</b></font>"
+          starts animation of the default expression
+          from current to last time. The time
+          dimension environment is reset to its initial 
+          state after the animation is completed. <br>
+  
+<li>"<font color=#ff0000><b>DISPLAY</b></font>" 
+          executes the GrADS display command on the default expression 
+
+<li>"<font color=#ff0000><b>>></b></font>"
+          increments time one time step and executes the GrADS 
+          display command for the default expression
+
+</ul>
+<b>Notes:</b>
+<ol>
+<li>      When an animation sequence is completed the following
+          message will be written to the console:
+          <blockquote><b>
+          Press enter to continue::::: 
+          </b></blockquote>
+          You must press ENTER before the GUI widgets can become active again.
+
+<li>      If the <B>hold</B> toggle state is OFF (the default),
+          the screen is cleared before displaying.
+
+</ol>
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+FileSel(NULL)
+</h3></font>
+
+This callback pops up a scrollable list and asks the user to selected
+               a file among the currently opened GrADS files (including
+               SDFs). The selected file becomes the default.
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Load(grads_cmd)
+</h3></font>
+
+This callback pops up a <i>File Requestor</i> widget, and after the user
+clicks on a file name, it executes the GrADS command
+<b>grads_cmd</b>.
+<p>
+When <b>grads_cmd</b> is one of the following
+<ul>
+<b>
+<li> open
+<li> sdfopen
+<li> xdfopen
+</b>
+</ul>
+a <i>Variable Selection</i> widget is started after opening the file,
+given the user the option of changing the default expression.
+Notice that you can use other values for <b>grads_cmd</b>, such as
+<i>exec, run, gui, enable print, </i> etc; in such cases the 
+<i>Variable Selection</i> widget is NOT started after opening the file.
+
+Here is a screenshot of the <i>File Requestor</i> widget:
+<p>
+<center>
+<IMG SRC="gui_filew.gif" ALT="GAGUI File Req Widget">
+</center>
+<p>
+
+
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+NULL(NULL)
+</h3></font>
+
+This callback      does not do anything. It is useful
+for defining inactive menu items such as a horizontal lines
+separating item groups within a menu.
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Open(grads_cmd)
+</h3></font>
+This callback is similar to <b>Load</b>, but except that the file name 
+must be specified as part of <b>grads_cmd</b>, <i>i.e.</i>, no <i>File
+Requestor</i> widget is started. 
+<p>
+This callback is useful to open
+files from a CDROM when is necessary to ask the user to define
+or reset the default expression.
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+Toggle(toggle_var)
+</h3></font>
+This callback turns internal <i>toggle variables</i> ON/OFF. 
+               The only internal <i>toggle variable</i> 
+               currently supported is <b>"hold"</b>. This callback is
+               usually used with <b>MakeToggle()</b>.
+
+<! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ >
+<!hr>
+<font color=#0000ff><h3>
+VarSel(NULL)
+</h3></font>
+This callback pops up a scrollable list and asks the user to select
+               a variable from the default file. The user can also
+               type a generic GrADS expression instead of selecting
+               a single variable.
+
+
+<p>
+Here is a screenshot of the <i>Variable Selection</i> widget:
+<p>
+<center>
+<IMG SRC="gui_varw.gif" ALT="GAGUI Var Selection Widget">
+</center>
+<p>
+
+
+<p>
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_further.html>Going further...</a> |
+<b><font color=#ff0000>Beginning: </font></b> 
+         <a href=gagui_intro.html>Introduction </a>
+</center>
+

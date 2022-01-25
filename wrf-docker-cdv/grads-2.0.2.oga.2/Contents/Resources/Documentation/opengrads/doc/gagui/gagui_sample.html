@@ -1,0 +1,356 @@
+
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+Using GrADS with Athena Widgets 
+</font> </H1>
+</center>
+
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_simple.html>Writing simple scripts</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_further.html>Going further... </a>
+</center>
+
+<p>
+
+<!----------------------------------------------------------------->
+<hr>
+<h1>Writing the sample script</h1>
+
+<p>
+<center>
+<IMG SRC="gui_main.gif" ALT="GAGUI Window">
+</center>
+<p>
+
+In the <a href=gagui_simple.html>previous section</a> you have been
+introduced to the basic aspects of GAGUI scripting. In this section we
+will walk you through the <a href=sample.gui>sample script</a> that
+you first learned how to run in an <a href=gagui_run.html>earlier
+section</a>. The <a href=gagui_further.html>following section</a>
+ will wrap things up, while the glory details are given in the <a
+href=gagui_ref.html>Reference section</a>. 
+
+<p>
+
+In addition of the GUI specific functions that you have seen so far,
+the GAGUI scripting processor can handle any GrADS command that
+you would enter at the command line interface, <i>e.g.</i>,
+<blockquote>
+<b>
+   set gxout shaded
+</b>
+</blockquote>
+which selects the color shading style for contour plots.
+<p>
+   
+
+When debugging a script it is sometimes helpful to have 
+every GAGUI command being executed to be echoed to the 
+screen. You turn this echo feature ON with this function.
+<blockquote>
+<b>
+   Debug(on)
+</b>
+</blockquote>
+You have commented this function out in the sample script
+by placing the character '<b>#</b>' in front of it; you can also use
+'<b>*</b>' as a comment character.
+<p>
+
+A <i>label</i> is an inactive widget which displays some text, 
+<i>e.g.</i>, an informative  title. The first argument, <b>"root"</b>
+in this case, is the name you give to the widget so that
+you can refer to it later on:
+<p>
+<blockquote>
+<b>
+  MakeLabel(root,"GrADS") 
+</b>
+</blockquote>
+<p>
+
+Next we create a pushdown menu called <i><font
+color=#ff0000>File</font></i>.  As usual, the first argument,
+<b>file</b> is the name of the widget
+<blockquote>
+<b>
+  MakeMenu(file, " File ")
+</b>
+</blockquote>
+<p>
+Now that we have created a menu, we define its items.
+For the first item:
+<blockquote>
+<b>
+      MakeMenuItem(open,  file, "Open",             Load,    "open")
+</b>
+</blockquote>
+The parameters this particular item are:
+<ul>
+<li>  <b>open</b> - the name of the item widget
+<li>  <b> file</b> - the menu the item belongs to 
+                   (see <b>MakeMenu()</b> above)
+<li>  <b>"Open"</b> -  This is the text it displays on the screen
+<li>  <b> Load</b> -    this is the callback name, i.e., the widget invokes
+            this function when pressed. This particular callback
+            pops up a <i>File Requestor</i> widget, and after the user
+            clicks on a file name it executes the grads command
+            <b>open</b> (see last argument) on this file. A list
+            of the other available callbacks can be found in the
+            <a href=gagui_ref.html>Reference section</a>.
+<li>  <b>"open"</b> -  argument to be passed to the callback. In this 
+            particular case, it is the GrADS command to be
+            executed on the file.
+</ul>
+The definition of the other items in this menu follows.
+<blockquote>
+<b>
+      MakeMenuItem(sdf,   file, "SDF Open",         Load,    "sdfopen")<br>
+      MakeMenuItem(xdf,   file, "XDF Open",         Load,    "xdfopen")<br>
+      MakeMenuItem(fsel,  file, "File Selection ",  FileSel, NULL )<br>
+      MakeMenuItem(browse,file, "View Text File",   Browse,  NULL)<br>
+      MakeMenuItem(junk,  file, "_______________",  NULL,    NULL )<br>
+      MakeMenuItem(exec,  file, "Exec",             Load,    "exec")<br>
+      MakeMenuItem(run,   file, "Run",              Load,    "run")<br>
+      MakeMenuItem(gui,   file, "GUI",              Load,    "gui")<br>
+      MakeMenuItem(junk,  file, "_______________",  NULL,    NULL )<br>
+      MakeMenuItem(fresh, file, "Refresh",          Cmd,     "  ")<br>
+      MakeMenuItem(init,  file, "Reinit",           Cmd,     "reinit")<br>
+      MakeMenuItem(exit,  file, "Exit",             Cmd,     "quit")
+</b>
+</blockquote>
+Consult the <a href=gagui_ref.html>Reference section</a> for a
+description of the callbacks (fourth argument of <b>MakeMenuItem()</b>)
+used for these menu items. Notice that a NULL callback is used to
+introduce a horizontal line separating groups of items which are
+functionally related.
+<p>
+Had we turned debug ON before, we could turn it off here
+<blockquote>
+<b>
+  Debug(off)
+</b>
+</blockquote>
+<p>
+
+Next we create a menu GrADS metafile printing related operations.
+Note that we use the <b>Load</b> callback for specifying the
+metafile name.
+<blockquote>
+<b>
+  MakeMenu ( print, " Print " )<br>
+      MakeMenuItem(printit, print, "Print",         Cmd,   "print")<br>
+      MakeMenuItem(enable,  print, "Enable  Print", Load,  "enable print")<br>
+      MakeMenuItem(disable, print, "Disable Print", Cmd,   "disable print")
+</b>
+</blockquote>
+<p>
+
+The following menu creates shortcuts for setting GrADS graphic options.
+Notice the use of callback <b>CmdStr</b> which pops up a dialog box
+asking the user to complement the command to be executed.
+<blockquote>
+<b>
+  MakeMenu ( options, " Options " )<br>
+      MakeMenuItem(shade,  options, "Shaded",      Cmd, "set gxout shaded" )<br>
+      MakeMenuItem(cont,   options, "Contour",     Cmd, "set gxout contour" )<br>
+      MakeMenuItem(grfill, options, "Grid Fill",   Cmd, "set gxout grfill" )<br>
+      MakeMenuItem(grvals, options, "Grid Values", Cmd, "set gxout grid" )<br>
+      MakeMenuItem(vec,    options, "Vector",      Cmd, "set gxout vector" )<br>
+      MakeMenuItem(strm,   options, "Streamlines", Cmd, "set gxout stream" )<br>
+      MakeMenuItem(bar,    options, "Bar Chart",   Cmd, "set gxout bar" )<br>
+      MakeMenuItem(line,   options, "Line Plot",   Cmd, "set gxout line" )<br>
+      MakeMenuItem(barb,   options, "Wind Barbs",  Cmd, "set gxout  barb" )<br>
+      MakeMenuItem(junk,   options, "_______________",  NULL, NULL )<br>
+      MakeMenuItem(ci,     options, "Contour Interval",  CmdStr, "set cint" )<br>
+      MakeMenuItem(tit,    options, "Draw Title", CmdStr, "draw title " )<br)
+      MakeMenuItem(cbar,   options, "Color Bar",  Cmd, "run cbarn" )
+</b></b>
+</blockquote>
+<p>
+
+
+Here is a crude menu for defining GrADS dimensions. 
+We plan to develop  a specific callback with rubber bands, sliding bars,
+etc, for defining the GrADS dimension environment. For now, this menu
+will server as a place holder.
+<blockquote>
+<b>
+  MakeMenu( dim, "Dim")<br>
+      MakeMenuItem(lat,  dim, "Latitude",  CmdStr, "set lat " )<br>
+      MakeMenuItem(lon,  dim, "Longitude", CmdStr, "set lon " )<br>
+      MakeMenuItem(lev,  dim, "Level",     CmdStr, "set lev " )<br>
+      MakeMenuItem(time, dim, "Time",      CmdStr, "set time " )<br>
+      MakeMenuItem(junk, dim, "_________", NULL,   NULL )<br>
+      MakeMenuItem(x,    dim, "x",         CmdStr, "set x " )<br>
+      MakeMenuItem(y,    dim, "y",         CmdStr, "set y " )<br>
+      MakeMenuItem(z,    dim, "z",         CmdStr, "set z " )<br>
+      MakeMenuItem(t,    dim, "t",         CmdStr, "set t " )
+</b>
+</blockquote>
+<p>
+
+Now, let's create simple buttons. Buttons work pretty much like menu items
+but they do not belong to any menu and are directly clickable.
+<blockquote>
+<b>
+  MakeButton( clear,  "Clear",      Cmd,      "clear" )<br>
+  MakeButton( quit,   "Quit",       Cmd,      "quit" )<br>
+  MakeButton( rein, "Reinit", Cmd,     "reinit")<br>
+  MakeButton( prompt, "ga>",  CmdWin,  NULL )
+</b>
+</blockquote>
+Notice the <b>CmdWin</b> callback which spawns a separate window
+with a <i>GrADS Command Window</i> widget with a scrollable
+history list and what not.
+<p>
+
+Here are the buttons (and toggle) which handle the display of GrADS
+default expressions. Currently only the <b>hold</b> toggle variable is
+implemented. 
+<blockquote>
+<b>
+  MakeButton( var,  "Var",    VarSel,  NULL )<br>
+  MakeToggle( hold, "Hold",   FALSE,  NULL, Toggle,  "hold" )<br>
+  MakeButton( prev, " << ",   Display, "<<" )<br>
+  MakeButton( play, "Display",   Display, "DISPLAY" )<br>
+  MakeButton( next, " >> ",   Display, ">>" )
+</b>
+</blockquote>
+<p>
+
+Once you define buttons and menus you need to enforce their
+relative position. The very first button is always placed at the
+upper left corner.
+<p>
+
+First row:
+<blockquote>
+<b>
+  SetWidgetPos(file,    PLACE_UNDER, root, NO_CARE, NULL)<br>
+  SetWidgetPos(print,   PLACE_UNDER, root, PLACE_RIGHT, file )<br>
+  SetWidgetPos(options, PLACE_UNDER, root, PLACE_RIGHT, print )<br>
+  SetWidgetPos(dim,     PLACE_UNDER, root, PLACE_RIGHT, options )<br>
+  SetWidgetPos(rein,  PLACE_UNDER, root, PLACE_RIGHT, dim )<br>
+  SetWidgetPos(prompt,  PLACE_UNDER, root, PLACE_RIGHT, rein )
+</b>
+</blockquote>
+<p>
+
+Second row:
+<blockquote>
+<b>
+  SetWidgetPos(hold,  PLACE_UNDER, file, NO_CARE, NULL)<br>
+  SetWidgetPos(var,   PLACE_UNDER, file, PLACE_RIGHT, hold )<br>
+  SetWidgetPos(prev,  PLACE_UNDER, file, PLACE_RIGHT, var )<br>
+  SetWidgetPos(play,  PLACE_UNDER, file, PLACE_RIGHT, prev )<br>
+  SetWidgetPos(next,  PLACE_UNDER, file, PLACE_RIGHT, play )<br>
+  SetWidgetPos(clear, PLACE_UNDER, file, PLACE_RIGHT, next )<br>
+  SetWidgetPos(quit,  PLACE_UNDER, file, PLACE_RIGHT, clear )
+</b>
+</blockquote>
+<p>
+
+You can optionally select a font for ALL widgets:
+<blockquote>
+<b>
+  GetFont(font,"-*-helvetica-bold-o-normal--*-*-*-*-*-*-*-*" )<br>
+  AllWidgetFont(font)
+</b>
+</blockquote>
+<p>
+and select a font for and individual widget. Here is one example:
+<blockquote>
+<b>
+  GetFont(myfont,"-*-helvetica-bold-o-normal--14-*-*-*-*-*-*-*" )<br>
+  SetWidgetFont(root,myfont)
+</b>
+</blockquote>
+<p>
+
+In order to make your widgets appear on the screen you must
+issue this command.
+<blockquote>
+<b>
+  ShowDisplay()
+</b>
+</blockquote>
+<p>
+  
+After your widgets appear on the screen, you can set the color 
+of your widgets. The following colors are pre-defined:
+white, back, red, green, blue, yellow.
+<blockquote>
+<b>
+  GetNamedColor(gray,"grey")<br>
+  GetNamedColor(Blue,"LightSkyBlue")<br>
+  GetNamedColor(pink,"gold")  <br>       
+  AllFgColor(black)<br>
+  AllBgColor(Blue)<br>
+  SetBgColor(root,white)<br>
+  SetFgColor(root,red)<br>
+  SetFgColor(prompt,yellow)<br>
+  SetBgColor(prompt,red)<br>
+  SetBgColor(prev,pink)<br>
+  SetBgColor(play,pink)<br>
+  SetBgColor(next,pink)<br>
+  SetBgColor(hold,gray)<br>
+  SetBgColor(var,gray)<br>
+  SetBgColor(clear,gray)<br>
+  SetBgColor(rein,gray)<br>
+  SetBgColor(quit,gray)
+</b>
+</blockquote>
+Notice that the X window color <b>"gold"</b> has been assigned to the color
+variable <b>pink</b>. You usually you don't do silly things like this, but 
+I wanted to make a point.
+<p>
+
+ And you must call this function at the end of your first GUI script.
+ This instructs the X Toolkit to enter an infinite loop, monitoring
+ keyboard and mouse events. 
+<blockquote>
+<b>
+  MainLoop()
+</b>
+</blockquote>
+<i><font color=#ff0000>Repeating: you must
+call <b>MainLoop()</b>. </font></i>
+
+<p>
+
+When all is said and done, you can
+save the <a href=sample.gui>sample script</a> to somewhere
+in your local disk, say to a file named <b>sample.gui</b>.  
+Then, at the GrADS prompt type
+<blockquote>
+<b>
+ga-> gui sample.gui
+</b>
+</blockquote>
+to execute the sample script. You should see something like this:
+<p>
+<center>
+<IMG SRC="gui_main.gif" ALT="GAGUI Window">
+</center>
+<p>
+Please refer to the <a href=gagui_run.html>Running the sample
+script</a> for additional information.
+
+
+<!----------------------------------------------------------------->
+<p>
+
+<center>
+<b><font color=#ff0000>Previous section: </font></b> 
+         <a href=gagui_simple.html>Writing simple scripts</a> |
+<b><font color=#ff0000>Next section: </font></b> 
+         <a href=gagui_further.html>Going further... </a>
+</center>
+

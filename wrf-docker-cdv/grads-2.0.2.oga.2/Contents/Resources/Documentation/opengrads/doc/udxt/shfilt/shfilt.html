@@ -1,0 +1,464 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>shfilt.gex - GrADS Extension Library with Spherical Harmonic Utilities</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_locationd@tennine-slave.macports.org" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;shfilt.gex - GrADS Extension Library with Spherical Harmonic Utilities</span></strong></big>
+</td></tr>
+</table>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_functions_">GrADS Functions:</a></li>
+			<li><a href="#grads_script_">GrADS Script:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#filtering_surface_pressure_">Filtering surface pressure.</a></li>
+		<li><a href="#power_spectra_of_surface_temperature">Power spectra of surface temperature</a></li>
+		<li><a href="#computing_streamfunction_from_vorticity">Computing Streamfunction from Vorticity</a></li>
+		<li><a href="#computing_streamfunction_from_wind_components">Computing Streamfunction from Wind Components</a></li>
+		<li><a href="#computing_the_rotational_wind">Computing the Rotational Wind</a></li>
+		<li><a href="#computing_velocity_potential_from_divergence">Computing Velocity Potential from Divergence</a></li>
+		<li><a href="#computing_velocity_potential_from_wind_components">Computing Velocity Potential from Wind Components</a></li>
+		<li><a href="#calculating_the_divergent_wind">Calculating the Divergent Wind</a></li>
+		<li><a href="#computing_vorticity_and_divergence">Computing Vorticity and Divergence</a></li>
+		<ul>
+
+			<li><a href="#important">IMPORTANT</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#functions_provided">FUNCTIONS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#sh_filt_expr_n1__n2__"><strong>sh_filt</strong>(<em>EXPR,N1[,N2]</em>)</a></li>
+		<li><a href="#sh_power_expr_"><strong>sh_power</strong>(<em>EXPR</em>)</a></li>
+		<li><a href="#sh_fish_expr_"><strong>sh_fish</strong>(<em>EXPR</em>)</a></li>
+		<li><a href="#sh_psi_uexpr_vexpr____computes_stream_function"><strong>sh_psi</strong>(<em>UEXPR,VEXPR</em>) - Computes Stream Function</a></li>
+		<li><a href="#sh_chi_uexpr_vexpr____computes_velocity_potential"><strong>sh_chi</strong>(<em>UEXPR,VEXPR</em>) - Computes Velocity Potential</a></li>
+		<li><a href="#sh_vor_uexpr_vexpr____computes_relative_vorticity"><strong>sh_vor</strong>(<em>UEXPR,VEXPR</em>) - Computes Relative Vorticity</a></li>
+		<li><a href="#sh_div_uexpr_vexpr____computes_divergence"><strong>sh_div</strong>(<em>UEXPR,VEXPR</em>) - Computes Divergence</a></li>
+	</ul>
+
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>shfilt.gex - GrADS Extension Library with Spherical Harmonic Utilities</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_functions_">GrADS Functions:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>display <strong>sh_filt</strong>(<em>EXPR,N1[,N2]</em>) - Spherical Harmonic Filter</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_power</strong>(<em>EXPR</em>) - Spherical Harmonic Power Spectra</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_fish</strong>(<em>EXPR</em>) - Poisson Solver</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_psi</strong>(<em>UEXPR,VEXPR</em>) - Computes Stream Function</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_chi</strong>(<em>UEXPR,VEXPR</em>) - Computes Velocity Potential</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_vor</strong>(<em>UEXPR,VEXPR</em>) - Computes Relative Vorticity</p>
+</dd>
+<dt>
+<dd>
+<p>display <strong>sh_div</strong>(<em>UEXPR,VEXPR</em>) - Computes Divergence</p>
+</dd>
+</dl>
+<p>
+</p>
+<h3><a name="grads_script_">GrADS Script:</a></h3>
+<dl>
+<dt>
+<dd>
+<p>run <strong>power.gs</strong> <em>EXPR</em> N - Plot Spherical Harmonic Power Spectra</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library provides GrADS extensions (<em>gex</em>) with functions for
+spherical harmonic filtering and calculation of spherical harmonic
+power spectra. The numerical calculations rely on the excellent
+<em>Spherepak</em> library by John C. Adams and Paul N. Swarztrauber.
+Quoting from the Speherepak website:</p>
+<p>SPHEREPACK 3.1 is a collection of FORTRAN programs that facilitates
+computer modeling of geophysical processes. The package contains
+programs for computing certain common differential operators including
+divergence, vorticity, gradients, and the Laplacian of both scalar and
+vector functions. Programs are also available for inverting these
+operators. For example, given divergence and vorticity, the package
+can be used to compute the velocity components. The Laplacian can also
+be inverted and therefore the package can be used to solve both the
+scalar and vector Poisson equations. Its use in model development is
+demonstrated by a sample program that solves the time-dependent
+non-linear shallow-water equations. Accurate solutions are obtained
+via the spectral method that uses both scalar and vector spherical
+harmonic transforms that are available to the user. The package also
+contains utility programs for computing the associated Legendre
+functions, Gauss points and weights, and multiple fast Fourier
+transforms. Programs are provided for both equally-spaced and Gauss
+distributed latitudinal points as well as programs that transfer data
+between these grids.</p>
+<p>The current GrADS extensions only begin to explore the capabilties of
+Spherepak. The function <strong>sh_filt</strong> takes a scalar global 2D field on
+the sphere, expands it in terms of spherical harmonics, and
+reconstructs it includng only (total) wavenumbers in the range [N1,N2]
+specified by the user. Additionally, function <strong>sh_power</strong> returns the
+power spectra in terms of total waenumbers. This is accomplished by
+returning a 1D array (fixed longitude, varying latitude) with the
+spectra as a function of total wavenumber. The GrADS script
+<strong>power.gs</strong> is useful to plot this power spectra and should be used in
+place of the function <strong>sh_power()</strong>.</p>
+<p>This library also provides functions for computation of streamfunction
+and velocity potential from zonal and meridional wind components using
+a spectral method:</p>
+<pre>
+   laplacian(psi) = vorticity (1)
+   laplacian(chi) = divergence (2)</pre>
+<p>where <code>psi</code> is the streamfunction and <code>chi</code> is the velocity
+potential. (See Wikipedia links below for more information on
+streamfunction/velocity potential.) The vorticity and divergence
+computation relies on functions <strong>madvu</strong> and <strong>madvv</strong> provided in the
+OpenGrADS extension <em>Libbjt</em> by B.-J. Tsuang. The Poisson equations
+(1)-(2) above are solved using a spectral method in Spherepak. These
+functions complement similar functions in the OpenGrADS <em>fish</em> extension
+which become numerically unstable for resolutions finer than 1/2 deg.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h2><a name="filtering_surface_pressure_">Filtering surface pressure.</a></h2>
+<p>The example expands the surface pressure field in terms of spherical
+harmonics and reconstructs it retaining only 10 wavenumber.</p>
+<pre>
+ open model
+ set gxout shaded
+ d sh_filt(ps,10)</pre>
+<p>
+</p>
+<h2><a name="power_spectra_of_surface_temperature">Power spectra of surface temperature</a></h2>
+<p>The example expands the surface temperature field in terms of
+spherical harmonics and plots it as function of the 32 first total
+numbers.</p>
+<pre>
+ run power.gs ts 32</pre>
+<p>
+</p>
+<h2><a name="computing_streamfunction_from_vorticity">Computing Streamfunction from Vorticity</a></h2>
+<p>If you have the relative vorticity field available, say <code>vor</code>, you
+can easily compute streamfunction</p>
+<pre>
+   ga-&gt; psi = sh_fish(vor)</pre>
+<p>
+</p>
+<h2><a name="computing_streamfunction_from_wind_components">Computing Streamfunction from Wind Components</a></h2>
+<p>The first step is to evaluate the streamfunction:</p>
+<pre>
+  ga-&gt; set lev 200
+  ga-&gt; psi = sh_psi(ugrd,vgrd)</pre>
+<p>It is often convenient to <em>center</em> the streamfunction by
+subtracting its global mean:</p>
+<pre>
+  ga-&gt; psi = psi - aave(psi,global)</pre>
+<p>We can finally display it:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display psi/1e7
+  draw title Streamfunction</pre>
+<p>Notice that if you would like to compare the results of
+<code>sh_psi</code> and <code>fish_psi</code> you must first remove the global
+mean of both.</p>
+<p>
+</p>
+<h2><a name="computing_the_rotational_wind">Computing the Rotational Wind</a></h2>
+<p>Although the intrinsc GrADS function <code>cdiff</code> could be used for
+numerically diffferentiating the streamfunction, we use here functions
+<code>mvadv/muadv</code> from <em>Libbjt</em> because of its handling of the
+boundaries:</p>
+<pre>
+  ga-&gt; one = 1 + 0 * lat
+  ga-&gt; upsi = mvadv(one,psi)
+  ga-&gt; vpsi = - muadv(one,psi)</pre>
+<p>We then plot the rotational streamlines on top of the streamfunction:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display psi/1e7
+  ga-&gt; set gxout stream
+  ga-&gt; display upsi;vpsi
+  ga-&gt; draw title Streamfunction/Rotational Wind</pre>
+<p>
+</p>
+<h2><a name="computing_velocity_potential_from_divergence">Computing Velocity Potential from Divergence</a></h2>
+<p>If you have the divergence field available, say <code>div</code>, you
+can easily compute streamfunction</p>
+<pre>
+   ga-&gt; chi = sh_fish(div)</pre>
+<p>
+</p>
+<h2><a name="computing_velocity_potential_from_wind_components">Computing Velocity Potential from Wind Components</a></h2>
+<p>Start by computing the velocity potential:</p>
+<pre>
+  ga-&gt; set lev 200
+  ga-&gt; chi = sh_chi(ugrd,vgrd)</pre>
+<p>It is often convenient to <em>center</em> the velocity potential by
+subtracting its global mean:</p>
+<pre>
+  ga-&gt; psi = psi - aave(psi,global)</pre>
+<p>We can finally display it:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display chi/1e6
+  draw title Velocity</pre>
+<p>Notice that if you would like to compare the results of
+<code>sh_chi</code> and <code>fish_chi</code> you must first remove the global
+mean of both.</p>
+<p>
+</p>
+<h2><a name="calculating_the_divergent_wind">Calculating the Divergent Wind</a></h2>
+<p>Although the intrinsc GrADS function <code>cdiff</code> could be used for
+numerically diffferentiating the velocity potential, we use here
+functions <code>mvadv/muadv</code> from <em>Libbjt</em> because of its handling of the
+boundaries:</p>
+<pre>
+  ga-&gt; uchi = - muadv(one,chi)
+  ga-&gt; vchi = - mvadv(one,chi)</pre>
+<p>We finally display the divergent wind as vectors on top of the
+velocity potential:</p>
+<pre>
+  ga-&gt; display chi/1e6
+  ga-&gt; set gxout vector
+  ga-&gt; set cmin 2
+  ga-&gt; set cmax 20
+  ga-&gt; display skip(uchi,6,6);vchi
+  ga-&gt; draw title Velocity Potential/Divergent Wind</pre>
+<p>
+</p>
+<h2><a name="computing_vorticity_and_divergence">Computing Vorticity and Divergence</a></h2>
+<p>As an alternative to the intrinsic GrADS functions <code>hcurl/hdivg</code>,
+<code>sh_vor</code> and <code>sh_div</code> uses the advention functions in
+<em>Libbjt</em> to numerically evaluate vorticity and divergence</p>
+<pre>
+   ga-&gt; vor = sh_vor(ugrd,vgrd)
+   ga-&gt; div = sh_div(ugrd,vgrd)</pre>
+<p>These functions provide a better handling of the boundaries compared
+to their intrinsic counterparts.</p>
+<p>
+</p>
+<h3><a name="important">IMPORTANT</a></h3>
+<p>You cannot <code>hcurl/hdivg</code> with <code>sh_fish</code>, you must use
+<code>sh_vor/sh_div</code> instead.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions_provided">FUNCTIONS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="sh_filt_expr_n1__n2__"><strong>sh_filt</strong>(<em>EXPR,N1[,N2]</em>)</a></h2>
+<p>This function takes a scalar global 2D field on the sphere, expands it
+in terms of spherical harmonics, and reconstructs it includng only
+(total) wavenumbers in the range [N1,N2] specified by the user.</p>
+<dl>
+<dt><strong><a name="expr" class="item"><em>EXPR</em></a></strong></dt>
+
+<dd>
+<p>GrADS expressions with scalar expression to be filtered.</p>
+</dd>
+<dt><strong><a name="n1_n2" class="item"><em>N1[,N2]</em></a></strong></dt>
+
+<dd>
+<p>When both <em>N1</em> and <em>N2</em> are specified, only spherical harmonics with
+total wavenumber in the range <em>[N1,N2]</em> will be retained. When only
+<em>N1</em> is specified, only spherical harmonics with total wavenumber in
+the range <em>[1,N1]</em> will be retained.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="sh_power_expr_"><strong>sh_power</strong>(<em>EXPR</em>)</a></h2>
+<p>This function returns the power spectra in terms of total
+waenumbers. This is accomplished by returning a 1D array (fixed
+longitude, varying latitude) with the spectra as a function of total
+wavenumber. The GrADS script <strong>power.gs</strong> is useful to plot this power
+spectra and should be used in place of the function <strong>sh_power()</strong>.</p>
+<p>
+</p>
+<h2><a name="sh_fish_expr_"><strong>sh_fish</strong>(<em>EXPR</em>)</a></h2>
+<p>This function returns the inverse laplacian of <em>EXPR</em> using a spectral method.
+This is particularly useful when the finite difference implementation in <strong>fish()</strong>
+fails for high resolution grids.</p>
+<p>
+</p>
+<h2><a name="sh_psi_uexpr_vexpr____computes_stream_function"><strong>sh_psi</strong>(<em>UEXPR,VEXPR</em>) - Computes Stream Function</a></h2>
+<p>This function computes vorticity as in <strong>sh_vor</strong> and uses <strong>sh_fish</strong> to
+solve the Poisson equation for the streamfunction <code>psi</code>:</p>
+<pre>
+   laplacian(psi) = vorticity</pre>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="sh_chi_uexpr_vexpr____computes_velocity_potential"><strong>sh_chi</strong>(<em>UEXPR,VEXPR</em>) - Computes Velocity Potential</a></h2>
+<p>This function computes divergence as in <strong>sh_div</strong> and uses <strong>sh_fish</strong> to
+solve the Poisson equation for the velocity potential <code>chi</code>:</p>
+<pre>
+   laplacian(chi) = divergence</pre>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required2" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="sh_vor_uexpr_vexpr____computes_relative_vorticity"><strong>sh_vor</strong>(<em>UEXPR,VEXPR</em>) - Computes Relative Vorticity</a></h2>
+<p>This function computes the vorticity using the expression:</p>
+<pre>
+   vorticity = - ( madvu(v,one) - madvv(u,cosphi) / cosphi )</pre>
+<p>where <code>u</code> and <code>v</code> are the zonal/meridional wind components, <code>one</code>
+is a constant field equal to 1, and <code>cosphi</code> is the cosine of
+latitude. The functions <strong>madvu</strong> and <strong>madvv</strong> are provided in the OpenGrADS
+extension library <em>Libbjt</em>.</p>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required3" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="sh_div_uexpr_vexpr____computes_divergence"><strong>sh_div</strong>(<em>UEXPR,VEXPR</em>) - Computes Divergence</a></h2>
+<p>This function computes the divergence using the expression:</p>
+<pre>
+   divergence = - ( madvu(u,one) + madvv(v,cosphi) / cosphi )</pre>
+<p>where <code>u</code> and <code>v</code> are the zonal/meridional wind components, <code>one</code>
+is a constant field equal to 1, and <code>cosphi</code> is the cosine of
+latitude. The functions <strong>madvu</strong> and <strong>madvv</strong> are provided in the OpenGrADS
+extension library <em>Libbjt</em>.</p>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required4" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Do not use the GrADS intrinsic functions <strong>hcurl</strong> and <strong>hdivg</strong>
+with <strong>sh_fish</strong>. Use the provided functions <strong>sh_vor</strong> and
+<strong>sh_div</strong> instead.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://cookbooks.opengrads.org/index.php?title=Main_Page">http://cookbooks.opengrads.org/index.php</a> -
+OpenGrADS Cookbooks</p>
+</li>
+<li>
+<p><a href="http://www2.cisl.ucar.edu/resources/legacy/spherepack">http://www2.cisl.ucar.edu/resources/legacy/spherepack</a> - Spherepack Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://en.wikipedia.org/wiki/Velocity_potential">http://en.wikipedia.org/wiki/Velocity_potential</a> - Velocity Potential definition on Wikipedia.</p>
+</li>
+<li>
+<p><a href="http://en.wikipedia.org/wiki/Stream_function">http://en.wikipedia.org/wiki/Stream_function</a> - Stream function
+definition on Wikipedia.</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>) with contributions from Ben Auer (Poisson Solver.)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2008-2009 Arlindo da Silva; All Rights Reserved.</p>
+<p>This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;shfilt.gex - GrADS Extension Library with Spherical Harmonic Utilities</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

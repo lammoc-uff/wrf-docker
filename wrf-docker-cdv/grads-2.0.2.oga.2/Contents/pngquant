@@ -1,0 +1,429 @@
+#!/usr/bin/perl 
+#
+#    Copyright (C) 2009 by Arlindo da Silva <dasilva@opengrads.org>
+#    All Rights Reserved.
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; using version 2 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, please consult  
+#              
+#              http://www.gnu.org/licenses/licenses.html
+#
+#    or write to the Free Software Foundation, Inc., 59 Temple Place,
+#    Suite 330, Boston, MA 02111-1307 USA
+#
+# ---
+#
+#   Generic wrapper script for running GrADS and utilities from the
+#   the top Contents/ directory.
+#
+
+# use Strict;
+use Env qw(PATH GADDIR GASCRP GAGUI GAVERSION GA2UDXT GADSET LD_LIBRARY_PATH DYLD_LIBRARY_PATH YYYYMMDD ); 
+use FindBin;
+use File::Basename;
+use Getopt::Long qw(:config no_auto_abbrev pass_through);
+
+# Platform Detection
+# ------------------
+  chomp($arch=`uname -s`);
+  if ( $arch =~ /^Darwin/ ) {
+       chomp($mach=`uname -p`); # or else you get "Power MacInstosh"
+  } elsif ( $arch =~ /^AIX/ ) {
+       chomp($mach=`uname -p`); # or else you get variable processor type
+  } else {
+       chomp($mach=`uname -m`);
+  }
+
+  $arch = "Cygwin" if ( $arch =~ /^CYGWIN/ );
+
+# Command line options
+# --------------------
+  $print_gaddir = $print_gascrp = $print_ga2udxt = $print_version = ""; 
+  $asif = $with_version = $help = $quiet = $debug ="";
+  die unless 
+  GetOptions("gaddir"         => \$print_gaddir,
+             "gascrp"         => \$print_gascrp,
+             "ga2udxt"        => \$print_ga2udxt,
+             "asif:s"         => \$asif,
+             "with-arch:s"    => \$arch,
+             "with-mach:s"    => \$mach,
+             "with-version:s" => \$with_version,
+             "version"        => \$print_version,
+             "whereami"       => \$whereami,
+             "quiet"          => \$quiet,
+	     "debug"          => \$debug,
+             "h"              => \$help);
+
+# Key directories
+# ---------------
+  $garoot  = "$FindBin::RealBin";
+  $gaddir  = "$garoot/Resources/SupportData";
+  $gadset  = "$garoot/Resources/SampleDatasets";
+  $gascrp  = "$garoot/Resources/Scripts";
+ 
+  if ( $whereami ) { print $garoot; exit; }
+
+# Special options
+# ---------------
+  $Alias = basename($0) unless ($Alias=$asif);
+  $Name = $Alias;
+  $bkg = "";
+  $Msg="";
+  if ( "$Alias" eq "opengrads" ) {
+     $Name = "grads";
+     $Opts = "-HC 1"
+  } elsif ( "$Alias" eq "sgrads" ) {
+     $Name = "sgrads";
+     $Opts = "-u"
+ } elsif ( "$Alias" eq "gradsdap" ) {
+     $Name = "grads";
+     $Msg = "WARNING: $Alias is deprecated, using $Name instead";
+ } elsif ( "$Alias" eq "merra" ) {
+     $Name = "grads";
+     $GAGUI="$garoot/Resources/Scripts/merra.gui";
+     $Opts = "-lC 1";
+     $bkg = '&';
+ } elsif ( "$Alias" eq "geos5" ) {
+     $Name = "grads";
+     $GAGUI="$garoot/Resources/Scripts/geos5.gui";
+     $Opts = "-lC 1";
+     $bkg = '&';
+ } elsif ( "$Alias" eq "nomads" ) {
+     $Name = "grads";
+     $GAGUI="$garoot/Resources/Scripts/nomads.gui";
+     $Opts = "-lC 1";
+     chomp($YYYYMMDD = `date '+%Y%m%d'`);
+     $bkg = '&';
+  } else {
+     $Opts = "";
+  }
+
+  usage() if $help;
+
+# On Linux, try i686 if build for $mach is not available
+# ------------------------------------------------------
+  if ( "$arch" eq "Linux" ) {
+    if ( -e x_fakelinks("$garoot/$arch/i686") ) {
+         $mach = "i686" unless ( -e x_fakelinks("$garoot/$arch/$mach") );
+    }
+  }
+
+# Versioning
+# ----------
+  if ( $with_version ) {
+       $version = $with_version;
+       $gabdir  = x_fakelinks("$garoot/$arch/Versions/$with_version/$mach");
+  } elsif ( $GAVERSION ) {
+       $version = $GAVERSION;
+       $gabdir  = x_fakelinks("$garoot/$arch/Versions/$GAVERSION/$mach");
+  } else {
+       $gabdir  = x_fakelinks("$garoot/$arch/$mach");
+       if ( -e "$gabdir/VERSION" ) { 
+         chomp ( $version = get_line("$gabdir/VERSION") );
+       } else {
+         $version = "unknown";
+       }
+  }
+
+  $ga2udxt = "$gabdir/gex/udxt";
+
+
+# Set key environment variables if not set
+# ----------------------------------------
+  $GADDIR  = $gaddir   unless ( $GADDIR );
+  $GADSET  = $gadset   unless ( $GADSET );
+  $GA2UDXT = $ga2udxt  unless ( $GA2UDXT);
+
+  if ( -d "$gascrp" ) {
+    if ( $GASCRP ) { $GASCRP .= " $gascrp"; }
+    else           { $GASCRP  = "$gascrp";  }
+  }
+
+# Just in case, make sure this is set; you could also put
+# under gex/ the dynamic libraries that we missed
+# -------------------------------------------------------
+  if ( "$arch" eq "Darwin" ) {
+     $DYLD_LIBRARY_PATH = "$gabdir/gex:$DYLD_LIBRARY_PATH";
+	 print "DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH\n" if $debug;
+  } else {
+     $LD_LIBRARY_PATH = "$gabdir/gex:$LD_LIBRARY_PATH";
+	 print "LD_LIBRARY_PATH=$LD_LIBRARY_PATH\n" if $debug;
+  }
+
+# Validate directories
+# --------------------
+  foreach $dir ( $garoot, $gabdir ) {
+      die "$Alias: missing required directory\n <$dir>\n     ---> " unless -d $dir;
+  }
+
+# Special cases
+# -------------
+  $debug ? ($exit = "pass") : ($exit = "exit");
+  if ( $print_gaddir  or $debug ) { print "GADDIR=$GADDIR\n";     eval $exit; }
+  if ( $print_gascrp  or $debug ) { print "GADDIR=$GASCRP\n";     eval $exit; }
+  if ( $print_ga2udxt or $debug ) { print "GAUDXT=$GA2UDXT\n";    eval $exit; }
+  if ( $print_version or $debug ) { print "GAVERSION=$version\n"; eval $exit; }
+
+# Find appropriate binary name
+# ----------------------------
+  $gabin = "$gabdir/$Name";
+  die "$Alias: cannot run <$gabin>\n    ---> " unless ( -x $gabin );
+
+# Handle multiple word arguments
+# ------------------------------
+  $cmd = "$gabin $Opts ";
+  foreach $arg ( @ARGV ) {
+        @Arg = split " ", $arg;
+        if ( $#Arg > 0 ) {
+             $cmd = "$cmd '" . $arg . "'";
+        } else {
+             $cmd = "$cmd " . $arg;
+        }
+  }
+  $cmd = "$cmd $bkg";
+
+# Finally, run the poor binary
+# ----------------------------
+  hello() if ( $Name =~ /grads/ );
+  $rc = system("$cmd");
+
+# All done
+# --------
+  exit $rc;
+
+#......................................................................
+
+sub hello {
+   unless ( $debug ) { return if $quiet; }
+   
+   print <<"EOF";
+
+              Welcome to the OpenGrADS Bundle Distribution
+              --------------------------------------------
+
+For additional information enter "$Alias -h".
+$Msg
+Starting "$cmd" ...
+
+EOF
+}
+
+#......................................................................
+
+#
+# Expands fakelinks (fake symlinks); a fakelink is a text file ending
+# in '@' which contains the name of another file/directory. This is
+# used to simulate symlinks in a portable way (say on Windows file
+# systems, USB mem sticks). 
+#
+
+sub x_fakelinks {       
+   my $path = shift;
+   
+   my $path_ = "";
+   $path_ = "/" if ( substr($path,0,1) eq "/" );
+   foreach $token ( split('/',$path) ) {
+     my $cur;
+     if ( "$path_" eq "" )  { $cur = $token;          }
+     else                   { $cur = "$path_/$token"; }
+     unless ( -e $cur ) {
+       my $flink = "$path_/$token\@";
+       chomp ($token = get_line($flink) ) if ( -e $flink );
+     } 
+     if ( "$path_" eq "" )  { $path_  = $token;    }
+     else                   { $path_ .= "/$token"; }
+   }
+
+   if ( $path_ =~ /@/ ) {
+        $path_ =~ s/@//g;
+        $path_ = x_fakelinks($path_)
+   }
+
+   $path_ =~ s/^[\/]*/\//;
+   return $path_;
+} 
+
+#......................................................................
+
+sub get_line {
+    my $filename = shift;
+    open (File, "$filename" )
+      or die "Unable to open $filename: $! \n   ---> ";
+    $link = <File>
+      or die "Unable to read $filename \n   ---> ";
+    close(File);
+    return $link;
+}
+
+#......................................................................
+
+sub usage {
+
+   print <<"EOF";
+
+NAME
+     $Alias - OpenGrADS wrapped "$Name" 
+          
+SYNOPSIS
+     $Alias [OpenGRADS_OPTIONS]  {regular $Name arguments}
+          
+DESCRIPTION
+     This wrapper script provides the standard interface to software 
+     installed within an OpenGrADS Bundle. It enables the "$Name"
+     application to select specific versions of the OpenGrADS Bundle,
+     as well as to detect and set the relevant environment variables.
+     
+     The "OpenGrADS Bundle" (OB) is simply a directory structure that 
+     organizes GrADS, utilities, extension libraries as well as 
+     supporting resources (fonts, map datasets, scripts). The main
+     goal is to provide a relocatable, minimum configuration installation.
+     Additional information about OBs can be found at
+
+      http://opengrads.org/wiki/index.php?title=The_OpenGrADS_Bundle
+
+     An OB allows for multiple-version, multi-platform installations on
+     a single directory structure. This is convenient for shipping
+     multi-platform software with data DVD-ROMs, or to have a GrADS
+     installation on a network disk cross mounted on diverse platforms
+     (Mac OS X, Linux, FreeBSD, Windows, etc.) By allowing concurrent
+     installation of multiple versions users can choose when to upgrade
+     to a specific version, while keeping stable production software
+     running with a frozen release.
+EOF
+
+   if ( "$ALias" eq "opengrads" ) {
+         print <<"EOF";
+
+     NOTE: This *opengrads* script is simply a wrapper for *grads* where  
+           the additional options *$Opts* have been specified. 
+EOF
+   } elsif ( "$Alias" eq "merra" ) {
+         print <<"EOF";
+
+     NOTE: This *merra* script is simply a wrapper for *grads* where the 
+           additional options *$Opts* have been specified, and the
+           environment variable GAGUI has been set to automatically 
+           start *merra.gui*, an Athena Widget script implementing
+           the MERRA Visualization Tool. 
+EOF
+   } elsif ( "$Alias" eq "geos5" ) {
+         print <<"EOF";
+
+     NOTE: This *geos5* script is simply a wrapper for *grads* where the 
+           additional options *$Opts* have been specified, and the
+           environment variable GAGUI has been set to automatically 
+           start *geos5.gui*, an Athena Widget script implementing
+           the GEOS-5 Forward Processing Visualization Tool. 
+EOF
+   }
+
+   print <<"EOF";
+
+EXAMPLES
+      1) To start GrADS version 2.0.a5.oga.1 enter
+
+         % grads --with-version 2.0.a5.oga.1
+
+      2) To always start version 2.0.a5.1 set this environment variable
+         in your .cshrc or .profile:
+
+         C-shell:
+                   setenv GAVERSION 2.0.a5.oga.1
+
+         Bash and variants:
+                   export GAVERSION=2.0.a5.oga.1
+
+      3) To see which versiob is your default
+
+          % grads --version
+
+OPTIONS
+     --asif  name   behave as if this script was called *name*
+
+	 --debug        very loud, prints all kinds of debugging info
+	 
+     --ga2udxt      print the value of the GA2UDXT variable right
+                    before calling the real "$Name"
+
+     --gaddir       print the value of the GA2UDXT variable right
+                    before calling the real "$Name"
+
+     --gascrp       print the value of the GA2UDXT variable right
+                    before calling the real "$Name"
+
+     --h            print this page
+
+     --with-arch arch
+                    select OpenGrADS bundle with this architecture;
+                    default is the results of `uname -n`. Usually
+                    one would take the default, unless perhaps when
+                    Java becomes available.
+
+     --with-mach mach
+                    select OpenGrADS bundle with this type of processor;
+                    default is the results of `uname -m`. Usually one
+                    would take the default. However, on architectures
+                    such as Linux sometimes i386 works more reliably
+                    than the neative x86_64.
+
+     --with-version x.y.z
+                    select OpenGrADS bundle with version x.y.z
+
+     --version      print OpenGrADS Bundle version 
+
+	 --quiet        eliminates some of the verbosity
+	 
+ENVIRONMENT VARIABLES
+     GA2UDXT        The name of the directory where grads looks for its
+                    User Denied eXtension Table; when GA2UDXT is already
+                    set this wrapper will not redefine it.
+
+     GADDIR         The name of the directory where grads looks for its
+                    fonts and map database files; when GADDIR is already
+                    set this wrapper will not redefine it
+
+     GADSET         This wrapper sets this variable with the name
+                    of the directory containg th sample datasets. From
+                    the grads command line one can enter
+
+                       ga-> @ open $GADSET/model.ctl
+
+     GAGUI          The name of the Athena GUI script to start grads
+                    with. Currently the *merra.gui* script when the
+                    file name for this wrapper is *merra*
+
+     GASCRP         Space delimited list of directories where grads looks 
+                    for its scripts; this wrapper always adds the 
+                    Resources/Scripts directory to the end of this list
+
+     GAVERSION      By default selects this version of the software
+                    instead of "Current"
+
+SEE ALSO
+     http://opengrads.org --- OpenGrADS Home Page
+     http://cookbooks.opengrads.org --- OpenGrADS Cookbooks
+     
+AUTHOR
+     Arlindo da Silva <dasilva@opengrads.org>
+
+COPYRIGHT
+     Copyright (c) 2009 Arlindo da Silva
+     This is free software released under the GNU General Public
+     License; see the source for copying conditions.
+     There is NO  warranty;  not even for MERCHANTABILITY or FITNESS 
+     FOR A PARTICULAR PURPOSE.
+
+EOF
+
+exit(1)
+
+}

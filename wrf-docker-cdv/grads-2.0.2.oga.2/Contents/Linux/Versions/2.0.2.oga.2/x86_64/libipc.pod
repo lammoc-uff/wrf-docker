@@ -1,0 +1,321 @@
+# 1 "libipc.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "libipc.c"
+# 45 "libipc.c"
+=pod
+
+=head1 NAME
+
+libipc.gex - Support Functions for GrADS Inter-process Communication
+
+=head1 SYNOPSIS
+
+=head3 GrADS Commands:
+
+=over 4
+
+B<ipc_open> I<FILENAME> I<MODE>
+
+B<ipc_save> I<EXPR> [I<FILENAME>]
+
+B<ipc_close> [I<MODE>]
+
+B<ipc_verb> [I<ON|OFF>]
+
+B<ipc_error>
+
+=back
+
+=head3 GrADS Functions:
+
+=over 4
+
+define C<var> = B<ipc_save> ( I<EXPR> [, I<FILENAME>] )
+
+define C<var> = B<ipc_load> ( [I<FILENAME>] )
+
+=back
+
+=head1 DESCRIPTION
+
+This library of GrADS extensions implements functions to enable GrADS
+inter-proceess communication. The primary use of these functions is
+to facilitate the interface of GrADS to other applications by means of
+bi-directional pipes (e.g., Perl, Python, IDL, Octave, etc.). The current
+implementation provides functions and commands for exporting and
+importing gridded fields from and into GrADS. These functions can also
+be used as a convenient alternative to C<LATS> or C<fwrite> for saving
+and retrieving gridded variables to and from disk files.
+
+Data is exchanged by means of a stream interface: either external
+files or through STDIN and STDOUT, the prefered method when
+interfacing with bi-directional pipes. The actual file format borrows
+from the GrADS classic I<User Defined Functions> (UDFs), with extensions
+to allow exporting/importing of timeseries (more generally, a
+collection of 2D slices). See TRANSFER FILE FORMAT below for a
+description of this format.
+
+=cut
+
+(see end of file for the rest of the documentation)
+
+..........................................................................
+# 948 "libipc.c"
+=head1 COMMANDS PROVIDED
+
+=head2 B<ipc_open> I<FILENAME> I<MODE>
+
+=over 4
+
+This command opens a file for exporting or importing gridded fields
+from or into GrADS. On iput,
+
+=over 4
+
+I<FILENAME> is the name of the file to open; specify "-" for selecting
+standard input/output instead of a disk file.
+
+I<MODE> - it can be either I<w> for exporting gridded data from GrADS
+or I<r> for importing gridded data into GrADS. All data is exchanged
+using the native binary format.
+
+B<IMPORTANT>. When standard output is selected, the verbose mode is
+automatically turned off to avoid corrupting the output stream.
+
+=back
+
+=back
+
+=head2 B<ipc_save> I<EXPR> [I<FILENAME>]
+
+=over 4
+
+This command evaluates the GrADS expression I<EXPR> and saves the
+resulting gridded field to a file or to standard output. On input,
+
+=over 4
+
+I<EXPR> is a gridded GrADS expression
+
+I<FILENAME> is an optional parameter specifying a file name to export
+the data to, or "-" for exporting the data to standard output. When
+I<FILENAME> is specified as a disk file, the file is opened, written
+to and closed upon completion. Therefore, I<FILENAME> should not be
+specified in the presence of a looping dimension (animation sequence),
+or else the file will be overwritten for each instance of the looping
+dimension. In such cases, explicity B<open> and B<close> the file
+before and after exporting to it.
+
+=back
+
+=back
+
+=head2 B<ipc_close> [I<MODE>]
+
+=over 4
+
+This command closes the streams used for exporting/importing gridded
+data. It has no effect when the streams are standard input/output. On input,
+
+=over 4
+
+=item I<MODE> is set to B<w> the file used for exporting data is
+closed; when I<MODE> is set to B<r> the file used for importing data
+is closed. If omitted, both streams are closed.
+
+=back
+
+=back
+
+=head2 B<ipc_verb> [I<ON|OFF>]
+
+=over 4
+
+This command toggles verbose ON/OFF; do not use it when using
+STDIN/STDOUT as transfer streams. If not argument is provided
+it will toggle the verbose mode ON or OFF.
+
+=back
+
+=head2 B<ipc_error>
+
+=over 4
+
+This command reprints the last IPC error message, returning its error code.
+This is useful when exchanging data using bi-directional pipes.
+
+=back
+
+=head1 FUNCTIONS PROVIDED
+
+=head2 define I<void> = B<ipc_save> ( I<EXPR> [, I<FILENAME>] )
+
+=over 4
+
+This function is similar to the B<ipc_save> command above. It is
+provided as a function for symmetry with the B<imp> function below,
+and to allow exporting a timeseries to a single file using the GrADS
+B<define> command. For saving a timeseries, setup the dimension
+environment in GrADS as usual for an animation sequence and issue a
+C<define> command such as
+
+        define void = ipc_save(sqrt(ua*ua+va*va))
+
+Remember not to specify a disk I<FILENAMNE> as an argument to
+B<ipc_save()> when intending to save a timeseries to a single file, or
+else your file will contain only the last 2D field in the sequence.
+
+=back
+
+=head2 define C<var> = B<ipc_load> ( [I<FILENAME>] )
+
+=over 4
+
+This function imports gridded data from the currently open stream or
+from file I<FILENAME>, if specified. Do not specify I<FILENAMNE> when
+intending to import a timeseries from a single file. In such cases,
+explicity B<open> and B<close> the file before and after exporting to
+it.
+
+=back
+
+=head1 EXAMPLES
+
+Saving/loading simple variables with only 2 varying dimensions (say,
+fixed time), specifying a transfer file:
+
+        ga-> ipc_save ps ps.bin
+        ga-> define saved = ipc_load("ps.bin")
+        ga-> display ps-saved
+
+The same example, using B<open> and B<close>:
+
+        ga-> ipc_open ps.bin w
+        ga-> ipc_save ps
+        ga-> ipc_close
+
+        ga-> ipc_open ps.bin r
+        ga-> display ps-ipc_load()
+        ga-> ipc_close
+
+Saving a timeseries:
+
+        ga-> set lon 0 360
+        ga-> set lat -90 90
+        ga-> set lev 300
+        ga-> set t 1 5
+        ga-> ipc_open zg.bin w
+        ga-> define void = ipc_save(zg)
+        ga-> ipc_close
+
+Retrieving the same time series:
+
+        ga-> set t 1 5
+        ga-> ipc_open zg.bin r
+        ga-> define saved = ipc_load()
+        ga-> display saved
+        ga-> ipc_close
+
+
+=head1 TRANSFER FILE FORMAT
+
+The format of the transfer file borrows from GrADS traditional UDF
+transfer files, but it has been simplified a bit since only gridded
+fields need to be exchanged. It has also been slightly extended to
+allow the saving/loading of a collection of 2D fields to a single
+file, as is the case when dealing with timeseries data. In particular,
+the first header record with 20 float point numbers used in
+traditional UDF files has been eliminated.
+
+Since the argument is always an expression, GrADS will evaluate the
+expression and write the result to the transfer file. Currently only
+gridded data is supported, but support of station data is planned for
+future releases. Several records will be written to the file for each
+value of the looping dimension (usually time).
+
+=head2 1st record: The dimension environment record.
+
+This record contains 20 values, all floating point. Note that some of
+the values are essentially integer, but for convenience they are
+written as a floating point array. Appropriate care should be taken
+in converting these values back to integer. The description of each
+one of these 20 float point numbers follow:
+
+                 1: Undefined value for the grid
+                 2: i dimension (idim). Dimensions are:
+                     -1 - None
+                      0 - X dimension (lon)
+                      1 - Y dimension (lat)
+                      2 - Z dimension (lev)
+                      3 - T dimension (time)
+                 3: j dimension (jdim). Note: if idim and
+                     jdim are -1, the grid is a single value.
+                     If jdim is -1, the grid is a 1-D grid.
+                 4: number of elements in the i direction (isiz)
+                 5: number of elements in the j direction (jsiz)
+                     Array is dimensioned (isiz,jsiz).
+                 6: i direction linear flag. If 0, the
+                     i dimension has non-linear scaling.
+                 7: j dimension linear flag.
+                 8: istrt. This is the world coordinate value
+                     of the first i dimension, ONLY if the i dimension
+                     has linear scaling and the i dimension is not
+                     time.
+                 9: iincr. Increment in the i dimension of the
+                     world coordinate. ONLY if the i dimension has
+                     linear scaling.
+                 10: jstrt. World coordinate of the first j
+                     dimension, only if the j dimension has linear
+                     scaling, and the j dimension is not time.
+                 11: jincr. World coordinate increment for j
+                     dimension.
+                 12: If one of the dimensions is time, values
+                     12 to 16 are defined as the start time
+                     12 is the start year.
+                 13: start month
+                 14: start day
+                 15: start hour
+                 16: start minute
+                 17: Values 17 and 18 contain the time increment
+                     for the time dimension. 17 contains the
+                     increment in minutes.
+                 18: increment in months. (GrADS handles all
+                     increments in terms of minutes and months).
+                 19,20: reserved
+
+=head2 2nd record: This contains the gridded data.
+
+It has isiz*jsiz floating point numbers.
+
+=head2 3rd record. The i-dimension coordinate variable
+
+Whether or not the i or j dimension scaling is non-linear, the world
+coordinate values at each integral i(j) dimension value is written.
+Thus, isiz float point numbers will be written. Notice that this is a
+departure from the classic UDF format.
+
+=head2 4th record. The j-dimension coordinate variable
+
+This record has the j dimension world coordinate values; it contains
+jsiz floating point numbers.
+
+Unlike the classic UDF file format, the 3rd or 4th records are always
+written. Note that the time dimension is ALWAYS linear as currently
+implemented in GrADS.
+
+=head1 AUTHOR
+
+Arlindo da Silva (dasilva@opengrads.org), based on code fragments from GrADS.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2007 Arlindo da Silva; portions derived from GrADS source
+code Copyright (C) 1988-2007 by Brian Doty and the Institute of Global
+Environment and Society (IGES).
+
+This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.
+
+=cut

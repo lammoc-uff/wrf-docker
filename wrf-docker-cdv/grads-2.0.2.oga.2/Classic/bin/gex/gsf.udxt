@@ -1,0 +1,31 @@
+#
+# Sample GrADS table for Dynamic User Defined Commands/Functions.
+# There are 2 types of extensions: 
+#
+#    udc   user defined commands
+#    udf   user defined functions
+#
+# This feature requires GrADS v2.0.a4.oga.3 or later.
+#.................................................................
+
+#      A
+#      P   GrADS     Library      Library                 Short
+# Type I  Function   Function      Path                Description
+# ---- - ---------- ---------- -------------- -------------------------------  
+# udf  0   x_cdiff   f_gsudf    ^gsudf.gex    "Like cdiff() with larger domain"
+# udf  0   speed     f_gsudf    ^gsudf.gex    "The mag() function as gsUDF"
+  udf  0   " "       " "        " "           "Saakeskus Wx Function Collection"
+  udf  0   dewpt     f_gsudf    ^gsudf.gex    "Dew-point temperature"
+  udf  0   ept       f_gsudf    ^gsudf.gex    "Equivalent potential temperature"
+  udf  0   epi       f_gsudf    ^gsudf.gex    "Potential Instability"
+  udf  0   plcl      f_gsudf    ^gsudf.gex    "Pressure at LCL"
+  udf  0   shear     f_gsudf    ^gsudf.gex    "Wind Shear"
+  udf  0   srh1km    f_gsudf    ^gsudf.gex    "Storm-relative Helicity 0-1km'
+  udf  0   srh3km    f_gsudf    ^gsudf.gex    "Storm-relative Helicity 0-3km'
+  udf  0   tlcl      f_gsudf    ^gsudf.gex    "Temperature at LCL"#
+  udf  0   tsindex   f_gsudf    ^gsudf.gex    "Chance of T-storm Initiation"
+  udf  0   ttindex   f_gsudf    ^gsudf.gex    "Total Totals Index"
+  udf  0   wchill    f_gsudf    ^gsudf.gex    "Wind Chill Index (New)"
+  udf  0   " "       " "        " "           "Masking functions"
+  udf  0   maskcirc  f_gsudf    ^gsudf.gex    "Circular mask around (lon.lat) point"
+#.............................................................................

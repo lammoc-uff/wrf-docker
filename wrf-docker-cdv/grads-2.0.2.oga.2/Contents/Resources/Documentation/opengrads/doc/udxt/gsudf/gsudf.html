@@ -1,0 +1,213 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>gsudf.gex - Writing Expression Functions as GrADS Scripts</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_www@b70.apple.com" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;gsudf.gex - Writing Expression Functions as GrADS Scripts</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#using_gsudf_for_computing_wind_speed">Using <em>gsudf</em> for Computing Wind Speed</a></li>
+		<li><a href="#returning_defined_variables">Returning defined variables</a></li>
+		<li><a href="#returning_an_error_condition">Returning an error condition</a></li>
+	</ul>
+
+	<li><a href="#function_provided">FUNCTION PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#gsudf__arguments_"><strong>gsudf</strong> <em>[ARGUMENTS]</em></a></li>
+	</ul>
+
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>gsudf.gex - Writing Expression Functions as GrADS Scripts</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  ga-&gt; display myfunc(args)</pre>
+<p>where <strong>myfunc</strong> is implemented in a GrADS script file named <code>myfunc.gsf</code></p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Traditionally, there are two kinds of functions in GrADS: script
+functions and expression functions, and up to now these two did not
+mix. <em>Scripting functions</em> are user defined and called from any GrADS
+script. Such functions are not directly available at the command
+line, or cannot be used inside GrADS expressions. <em>Expression
+functions</em> are usually used in conjunction with the <code>display</code> and
+<code>define</code> commands such as</p>
+<pre>
+   ga-&gt; display aave(myfunc(u), global)</pre>
+<p>where <code>aave</code> is an intrinsic function and <code>myfunc</code> is a user
+defined function.</p>
+<p>The dynamic extension <em>gsudf</em> allows you to write <em>expression
+functions</em> as GrADS <em>script functions</em>. This is better explained with
+the following examples.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h2><a name="using_gsudf_for_computing_wind_speed">Using <em>gsudf</em> for Computing Wind Speed</a></h2>
+<p>Let us reimplement the intrinsic function <code>mag</code> which compute the
+wind speed given the <code>u</code> and <code>v</code> components of the wind; we will
+call this new function <code>speed</code>. The first step is to create a text
+file called <code>speed.gsf</code> with the implementation of this function:</p>
+<pre>
+   function speed ( u, v )
+      expr = 'sqrt(' u '*' u '+' v '*' v ')'
+      return expr</pre>
+<p>Notice that this function simply returns a string which will
+eventually be evaluated by the GrADS expression parser; more on that
+later. The second step in the implementation of this function is to
+add an entry for this function in your User Defined eXtenfion (UDXT)
+file:</p>
+<pre>
+      Type  API   Name      Function       Library
+     ------ --- ---------  -----------  --------------
+      udf    0    speed      f_gsudf     gsudf.gex.so</pre>
+<p>The generic handler <code>f_gsudf</code> in the shared library <code>gsudf.gex</code>
+executes the file <code>speed.gsf</code>, evaluates the string output of this
+function using the GrADS expression parser and returns the result. The
+net effect is that <code>speed.gsf</code>, with the help of its agent <code>gsudf</code>,
+implements a bonafide GrADS expression function.</p>
+<p>Finally, you no longer need to initialize the <em>gsudf</em>
+package in GrADS v2.0.</p>
+<pre>
+   ga-&gt; open model.ctl
+   ga-&gt; display speed(ua,va)</pre>
+<p>
+</p>
+<h2><a name="returning_defined_variables">Returning defined variables</a></h2>
+<p>Although your GrADS script must always return a string, it does not
+mean that all it can do is string maniputation. By using the <code>define</code>
+command one can always pre-computed intermediate values, and return
+the name of the defined variable. Here is an example where the
+dimension environment is modified, a variable defined in this enlarged
+dimension environment, and then the dimension reset to its original
+state:</p>
+<pre>
+   function x_cdiff ( var, dim )
+      'set x 0 74'
+      'define gsudf = cdiff('var','dim')'
+      'set x 1 73'
+      return 'gsudf'</pre>
+<p>This function enlarges the domain as to avoid missing undefined values
+on the longitudinal boundaries (but not at the latitudinal boundary.)
+A more generic version of this function is included with the source
+distribution for this extension.</p>
+<p>
+</p>
+<h2><a name="returning_an_error_condition">Returning an error condition</a></h2>
+<p>Returning an empty string will signal an error condition</p>
+<pre>
+   function errfunc(arg)
+      say 'errfunc: error found, cannot proceed'
+      return</pre>
+<p>
+</p>
+<hr />
+<h1><a name="function_provided">FUNCTION PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="gsudf__arguments_"><strong>gsudf</strong> <em>[ARGUMENTS]</em></a></h2>
+<p>This function is not directly callable as such from GrADS. Rather it
+works as a <em>proxy</em> for the user defined functions written as GrADS
+scripts. There 2 steps involved in defining your user defined function
+through gsudf:</p>
+<ol>
+<li>
+<p>For each function named <em>$func</em>, create a script library file called
+<em>$func.gsf</em> and placed in a directory where GrADS can locate scripts
+(for example, in a directory listed in your <code>GASCRP</code> environment
+variable.) The GrADS script must return a string with a valid GrADS
+expression, or an empty string in case of an abnormal exit.</p>
+</li>
+<li>
+<p>Have a corresponding entry in your User Defined eXtension (UDXT) file, e.g.,</p>
+<pre>
+ #      A
+ #      P   GrADS     Library      Library                 Short
+ # Type I  Function   Function      Path                Description
+ # ---- - ---------- ---------- -------------- -------------------------------  
+   udf  0   speed     f_gsudf    ^gsudf.gex    &quot;The mag() function as gsUDF&quot;</pre>
+</ol>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>There is not much in terms of garbage collection. Any local variable
+defined by the GrADS script implementing the expression function stays
+around until explicitly undefined. To minimize memory usage explicitly
+undefine any variabled you defined, and when defined variables are
+involved, return your result in defined variable called <strong>gsudf</strong>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2007-2009 Arlindo da Silva; All Rights Reserved.</p>
+<p>This is free software; see the source for copying conditions.  There is
+NO  warranty;  not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;gsudf.gex - Writing Expression Functions as GrADS Scripts</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

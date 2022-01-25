@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="792pt"
+   height="612pt"
+   id="svg2160"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   sodipodi:docbase="/home/dasilva/www/opengrads.org/images"
+   sodipodi:docname="opengrads.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:modified="true">
+  <sodipodi:namedview
+     inkscape:document-units="in"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.86831672"
+     inkscape:cx="370.26461"
+     inkscape:cy="446.86322"
+     inkscape:current-layer="layer1"
+     id="namedview2164"
+     inkscape:window-width="1280"
+     inkscape:window-height="885"
+     inkscape:window-x="0"
+     inkscape:window-y="25" />
+  <defs
+     id="defs2162" />
+  <metadata
+     id="metadata2166">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1">
+    <text
+       xml:space="preserve"
+       style="font-size:144px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monaco"
+       x="131.2885"
+       y="517.39447"
+       id="text2249"><tspan
+         sodipodi:role="line"
+         id="tspan2251"
+         x="131.2885"
+         y="517.39447"
+         style="font-family:Ruach LET;fill:#008000">Open</tspan><tspan
+         sodipodi:role="line"
+         x="131.2885"
+         y="697.39447"
+         id="tspan2253" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:144px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monaco"
+       x="225.72409"
+       y="677.4743"
+       id="text2263"><tspan
+         sodipodi:role="line"
+         id="tspan2265"
+         x="225.72409"
+         y="677.4743">   GrADS</tspan></text>
+    <g
+       id="g2322"
+       transform="translate(-10.364878,54.127709)">
+      <text
+         transform="scale(1.1533736,0.8670217)"
+         inkscape:export-ydpi="21.908476"
+         inkscape:export-xdpi="21.908476"
+         sodipodi:linespacing="125%"
+         y="91.068932"
+         x="330.61407"
+         xml:space="preserve"
+         style="font-size:94.95066833px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monaco"
+         id="text2173"><tspan
+           sodipodi:role="line"
+           x="330.61407"
+           id="tspan2175"
+           y="91.068932"><tspan
+             style="font-size:94.95066833px;fill:#008000;font-family:Ruach LET"
+             id="tspan2181">Open</tspan><tspan
+             style="font-size:94.95066833px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Courier"
+             id="tspan2195">GrADS</tspan></tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text2310"
+         y="126.98395"
+         x="385.80392"
+         style="font-size:36px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#008000;font-family:Monaco"
+         xml:space="preserve"><tspan
+           y="126.98395"
+           x="385.80392"
+           id="tspan2312"
+           sodipodi:role="line"><tspan
+             id="tspan2314"
+             style="font-size:22px">&quot;Openning GrADS to a World Of Extensions&quot;</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,157 @@
+
+<font face="Verdana, Arial, Helvetica">   
+
+<center>
+<H1><font color=#ff0000>
+
+                     Using GrADS with Athena Widgets 
+</font>
+</H1>
+</center>
+
+<p>
+<hr>
+<p>
+
+<h1>Contents</h1>
+<ol>
+<li> <a href=gagui_intro.html>Introduction  </a>
+<li> <a href=gagui_run.html>Running the sample script  </a>
+<li> <a href=gagui_simple.html>Writing simple scripts  </a>
+<li> <a href=gagui_sample.html>Writing the sample script  </a>
+<li> <a href=gagui_further.html>Going further...  </a>
+<li> <a href=gagui_ref.html>Reference Section  </a>
+</ol>
+
+<h1>
+Introduction
+</h1>
+
+Starting with version 1.7, GrADS offers a simpler way of creating a
+Graphical User Interface (GUI) based on <b>libsx</b>, the <i> Simple X
+Library</i> by Dominic Giampaolo. Libsx is a C library layered on top of
+the Athena widget set which allows the programming reasonable interfaces
+with minimum effort.  We have built a GrADS interface to libsx, so that
+users can enjoy the same simplicity when creating basic graphical user
+interfaces in GrADS.  In this document we will refer to this GrADS
+interface to libsx as <b>GAGUI</b>.  Parts of this documentation
+are adapted from the libsx manual by Dominic Giampaolo. 
+<p>
+
+If you've ever wanted to just open a window with a few buttons and
+automate some of the GrADS functions, but were turned away by the
+complexity of trying to do that with a <b>gs</b> script, then GAGUI may
+be your ticket.  GAGUI is capable of easily creating many types of
+user-interface components each with a single function call of a few
+arguments.  The interface supports the following ``widgets'':
+<ul>
+              <li> Labels
+              <li> Buttons
+	      <li> Menus
+              <li> Toggle buttons
+              <li> File finder
+              <li> Variable selection
+              <li> Opened file selection
+              <li> Display of GrADS expressions
+	      <li> Text file browser for help files
+              <li> GrADS command window with scrollable history
+              <li> Access to GrADS commands
+</ul>
+
+The goal of GAGUI is to make the creation and manipulation of each of
+these items as simple as possible.  The standard simplicity litmus
+test is a <i>Hello World</i> script, which in GAGUI is:
+<blockquote><b>
+	        MakeLabel(w,"Hello World")<br>
+		MainLoop()
+</b></blockquote>
+
+More complicated interfaces use a similar style of creation and complete
+applications usually require less than 30 lines of user defined script
+to create an
+entire user interface complete with menus, buttons, file finder, etc.
+For example, to create a script that opens a window with a file finder
+and a <font color=#ff0000>Quit</font> button, all one must do is:
+<blockquote>
+<b>
+        MakeButton( open,  "Open",  Load,         "open" )<br>
+        MakeButton( close, "Close", CloseWindow,  NULL )<br>
+        SetWidgetPos(close, PLACE_RIGHT, open, NO_CARE, NULL)<br>
+	MainLoop()
+</b>
+</blockquote>
+
+The precise meaning of each of the arguments of <b> MakeButton()</b> 
+and the other GUI functions is discussed is subsequent sections.
+<p>
+
+If you are familiar X Widgets available with the <b>gs</b> scripting
+language, you will notice that GAGUI, unlike the gs X widgets, uses the
+<i> event driven</i> paradigm for building widgets. The actual function
+to be executed when the user clicks on a button is specified during the
+definition of the widgets; there is no need for the user to write
+additional code to handle the widget selection beyond this definition
+step.  This provides for fewer lines of code and ease of maintenance.
+<p> 
+
+GAGUI was originally written to facilitate the development of Graphical
+User Interface for data CDROMs produced at NASA's Data Assimilation
+Office (DAO). Please notice that the current version of GAGUI is still
+experimental. Function arguments as well as the syntax of the GUI
+scripting language is likely to undergo changes in the near future. 
+<p>
+
+This document is organized as follows:
+
+<ul>
+<li> Section <a href=gagui_run.html>Running the sample script</a>
+     explains how to run one of the provided sample scripts, introducing
+     the main features of GAGUI from the <i>user</i> point of view.
+     If you don't plan to do any programming with GAGUI you should
+     stop here.
+
+<li> Section <a href=gagui_simple.html>Writing simple scripts</a>
+     introduces the main features of GAGUI scripting through
+     a simple example.
+
+<li> Section <a href=gagui_sample.html>Writing the sample script</a>
+     gives a walkthrough of a relatively complex GAGUI script, the
+     same one we showed you how to run.
+
+<li> Section <a href=gagui_further.html>Going further...  </a> wraps things 
+     up, indicating which additional features not covered in the
+     previous sections can be found in other provided sample scripts.<br>
+     <b>DAO users: </b> Also discussed here is a script customized for
+     use on melrose.
+
+<li> Section <a href=gagui_ref.html>Reference Section  </a> lists
+     alphabetically all GUI functions and callbacks available.
+
+</ul>
+
+
+<h3>If you don't like reading documentation</h3>
+
+Then don't read this document. You should be able to get by reading one of the 
+annotated sample scripts, say <a href=sample.gui>sample.gui</a>. Take a look
+at the <a href=gagui_further.html>Going further...  </a> section
+for a list of additional sample scripts. With a bit of hacking you should
+be able to customize these scripts for your own taste and needs.
+The <a href=gagui_ref.html>Reference Section  </a> can be consulted
+if you are unsure about some specific syntax.
+ 
+<p>
+Good Luck!
+<p>
+
+<center>
+<b><font color=#ff0000>Next section: </font></b> 
+<a href=gagui_run.html>Running the sample script</a>
+</center>
+
+
+
+
+
+
+

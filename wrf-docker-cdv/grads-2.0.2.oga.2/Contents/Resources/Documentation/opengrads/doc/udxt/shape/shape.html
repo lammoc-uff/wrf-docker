@@ -1,0 +1,277 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>shape - GrADS Extensions for Shapefile support</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:dasilva@mcjuba.home" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;shape - GrADS Extensions for Shapefile support</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#commands_provided">COMMANDS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#shp_polyf_shapefile__object_"><strong>shp_polyf</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</a></li>
+		<li><a href="#shp_lines_shapefile__object_"><strong>shp_lines</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</a></li>
+		<li><a href="#shp_print_shapefile"><strong>shp_print</strong> <em>SHAPEFILE</em></a></li>
+	</ul>
+
+	<li><a href="#obtaining_shapefiles">OBTAINING SHAPEFILES</a></li>
+	<ul>
+
+		<li><a href="#suggested_installation_procedure">Suggested Installation Procedure</a></li>
+		<li><a href="#esri_first_level_world_administrative_boundaries_1998">ESRI First Level World Administrative Boundaries 1998</a></li>
+		<li><a href="#gshhs__a_global_selfconsistent__hierarchical__highresolution_shoreline_database">GSHHS - A Global Self-consistent, Hierarchical, High-resolution Shoreline Database</a></li>
+		<li><a href="#fao_geonetwork">FAO GeoNetwork</a></li>
+		<li><a href="#american_geological_institute_global_gis_dvd">American Geological Institute Global GIS DVD</a></li>
+		<li><a href="#if_you_know_of_another_good_source_of_shapefiles___">If you know of another good source of shapefiles...</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#display_administrative_boundaries">Display Administrative Boundaries</a></li>
+		<li><a href="#display_a_solid_basemap">Display a Solid Basemap</a></li>
+		<li><a href="#changing_the_color_of_the_map">Changing the color of the map</a></li>
+	</ul>
+
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#credits">CREDITS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>shape - GrADS Extensions for Shapefile support</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>shp_polyf</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</p>
+<p><strong>shp_lines</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</p>
+<p><strong>shp_print</strong> <em>SHAPEFILE</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library of GrADS extensions provides commands for the display and output
+of shapefiles. Quoting from the <code>Shapefile C Library</code> documentation by Frank 
+Warmerdam:</p>
+<p>The Shapefile format is a new working and interchange format promulagated by 
+ESRI (http://www.esri.com/) for simple vector data with attributes. It
+is apparently the only file format that can be edited in ARCView 2/3, and 
+can also be exported and imported in Arc/Info.
+An excellent white paper on the shapefile format is available from ESRI:</p>
+<pre>
+        <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf">http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf</a></pre>
+<p>The file format actually consists of three files.</p>
+<pre>
+ XXX.shp - holds the actual vertices.
+ XXX.shx - hold index data pointing to the structures in XXX.shp
+ XXX.dbf - holds the attributes in xBase (dBase) format.</pre>
+<p>
+</p>
+<hr />
+<h1><a name="commands_provided">COMMANDS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="shp_polyf_shapefile__object_"><strong>shp_polyf</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</a></h2>
+<p>For each polygon object defined in <em>SHAPEFILE</em>, a filled polygon is
+plotted as overlay on GrADS plots using the current line attributes.
+Optionally, one can specify a particular <em>OBJECT</em> to plot.</p>
+<p>
+</p>
+<h2><a name="shp_lines_shapefile__object_"><strong>shp_lines</strong> <em>SHAPEFILE</em> [<em>OBJECT</em>]</a></h2>
+<p>Each object contained in <em>SHAPEFILE</em> is plotted as a continous line
+joining vertexes as overlay on GrADS plots using the current line
+attributes. Optionally, one can specify a particular <em>OBJECT</em> to
+plot.</p>
+<p>
+</p>
+<h2><a name="shp_print_shapefile"><strong>shp_print</strong> <em>SHAPEFILE</em></a></h2>
+<p>This function has NOT been implemented yet.</p>
+<p>
+</p>
+<hr />
+<h1><a name="obtaining_shapefiles">OBTAINING SHAPEFILES</a></h1>
+<p>Here is a very partial list of free (as in beer) shapefiles, as well
+for a DVD that you can buy. We do not support or endorse these
+products, we list them here for reference only.</p>
+<p>
+</p>
+<h2><a name="suggested_installation_procedure">Suggested Installation Procedure</a></h2>
+<p>We recommend that you install each triplet
+<strong>(XXX.shp,XXX.shx,XXX.dbf)</strong> of files in your GrADS data directory
+(GADDIR), along with the other font and map databases. This way you
+will be able to refer to them without entering the full pathname.</p>
+<p>
+</p>
+<h2><a name="esri_first_level_world_administrative_boundaries_1998">ESRI First Level World Administrative Boundaries 1998</a></h2>
+<p>This shapefile contains the political boundaries for each country, and
+states/provinces within each country as of 1998. The data is freely
+available from:</p>
+<pre>
+ <a href="http://geodata.grid.unep.ch/download/admin98_li_shp.zip">http://geodata.grid.unep.ch/download/admin98_li_shp.zip</a></pre>
+<p>
+</p>
+<h2><a name="gshhs__a_global_selfconsistent__hierarchical__highresolution_shoreline_database">GSHHS - A Global Self-consistent, Hierarchical, High-resolution Shoreline Database</a></h2>
+<p>GSHHS contain contains shapefiles of varying complexity:</p>
+<dl>
+<dt><strong><a name="item_gshhs_land">gshhs_land</a></strong>
+
+<dd>
+<p>contains the basic coastline shapefile</p>
+</dd>
+</li>
+<dt><strong><a name="item_gshhs_lake">gshhs_lake</a></strong>
+
+<dd>
+<p>contains the shapefile of lakes within land</p>
+</dd>
+</li>
+<dt><strong><a name="item_gshhs_isl">gshhs_isl</a></strong>
+
+<dd>
+<p>contains the shapefile of islands within lakes</p>
+</dd>
+</li>
+<dt><strong><a name="item_gshhs_pond">gshhs_pond</a></strong>
+
+<dd>
+<p>contains the shapefile of ponds within islands within lakes</p>
+</dd>
+</li>
+</dl>
+<p>The data is freely available from NOAA:</p>
+<pre>
+   <a href="http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.5/shapefiles/">http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.5/shapefiles/</a></pre>
+<p>
+</p>
+<h2><a name="fao_geonetwork">FAO GeoNetwork</a></h2>
+<p>The GeoNetwork opensource allows to easily share geographically
+referenced thematic information between different FAO Units, other UN
+Agencies, NGO's and other institutions. You can find more information here:</p>
+<pre>
+   <a href="http://www.fao.org/geonetwork/srv/en/main.home">http://www.fao.org/geonetwork/srv/en/main.home</a></pre>
+<p>For example, if you search for <em>Administrative Boundaries shapefile</em>
+in this site you get a list of administrative boundaries for many
+countries.</p>
+<p>
+</p>
+<h2><a name="american_geological_institute_global_gis_dvd">American Geological Institute Global GIS DVD</a></h2>
+<p>This DVD is a product of an agreement between the U.S. Geological Survey
+(USGS) and The American Geological Institute (AGI) for making the USGS
+Global Geographic Information System (GIS) database readily available
+to educators and the general public in the form of a DVD based world
+atlas. Quoting from the AGI website:</p>
+<pre>
+   The USGS Global GIS database contains a wealth of USGS and other
+   public domain data, including global coverages of elevation,
+   landcover, seismicity, and resources of minerals and energy at a
+   nominal scale of 1:1 million</pre>
+<p>Unfortunately, this DVD is not free and carries a restrictive
+license. You can obtain additional information here:</p>
+<pre>
+   <a href="http://www.agiweb.org/pubs/globalgis/index.html">http://www.agiweb.org/pubs/globalgis/index.html</a></pre>
+<p>
+</p>
+<h2><a name="if_you_know_of_another_good_source_of_shapefiles___">If you know of another good source of shapefiles...</a></h2>
+<p>Please drop us a note.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>For trying these examples you will need to download the freely
+available ESRI First Level World Administrative Boundaries 1998 (see 
+OBTAINING SHAPEFILES above). Place the files</p>
+<pre>
+   admin98.dbf
+   admin98.shp
+   admin98.shx</pre>
+<p>either in your local directory or in your GrADS data directory
+<code>GADDIR</code> (recommended.)</p>
+<p>
+</p>
+<h2><a name="display_administrative_boundaries">Display Administrative Boundaries</a></h2>
+<p>Start by disabling the map drawing by GrADS</p>
+<pre>
+   ga-&gt; set mpdraw off</pre>
+<p>Then display something and add a new map:</p>
+<pre>
+   ga-&gt; d ts
+   ga-&gt; shp_lines admin98</pre>
+<p>
+</p>
+<h2><a name="display_a_solid_basemap">Display a Solid Basemap</a></h2>
+<p>Similarly,</p>
+<pre>
+   ga-&gt; d ts
+   ga-&gt; shp_polyf admin98</pre>
+<p>
+</p>
+<h2><a name="changing_the_color_of_the_map">Changing the color of the map</a></h2>
+<p>You can use the <code>set line</code> command of GrADS to change the color, thickness and
+line style of the shapefile being drawn:</p>
+<pre>
+   ga-&gt; set line 9
+   ga-&gt; shp_lines admin98</pre>
+<p>will plot the map in magenta. See the GrADS documentation for more
+information.</p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Only shapefiles having longitude/latitude coordinates are
+supported. Shapefiles in UTM coordinates cannot yet be read by this
+extension. The work around is to convert your shapefile to lat/lon
+using an utility such as <code>ogr2ogr</code> that comes with <em>GDAL</em>:</p>
+<pre>
+    <a href="http://www.gdal.org/">http://www.gdal.org/</a></pre>
+<p>
+</p>
+<hr />
+<h1><a name="credits">CREDITS</a></h1>
+<p>Graziano Giuliani wrote the first version of <code>shp_polyf()</code> as a bult-in patch 
+for GrADS v1.b4. Arlindo da Silva converted it to a GrADS extension and introduced 
+<code>shp_print()</code> based on his <code>gxyat</code> utility; as of this writing 
+<code>shp_print()</code> is just a stub.</p>
+<p>The Shapefile C Library by Frank Warmerdam is extensively used for the 
+manipulation of shapefiles.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (c) 2007 Graziano Giuliani</p>
+<p>Copyright (c) 2007 Arlindo da Silva</p>
+<p>This is free software released under the GNU General Public
+License; see the source for copying conditions.
+There is NO  warranty;  not even for MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;shape - GrADS Extensions for Shapefile support</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

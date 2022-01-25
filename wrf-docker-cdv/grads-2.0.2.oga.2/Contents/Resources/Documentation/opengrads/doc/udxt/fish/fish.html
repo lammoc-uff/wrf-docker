@@ -1,0 +1,413 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>fish.gex - GrADS Extension Library for Calculating Streamfunction/Velocity Potential</title>
+<link rel="stylesheet" href="/pod.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:_locationd@tennine-slave.macports.org" />
+</head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;fish.gex - GrADS Extension Library for Calculating Streamfunction/Velocity Potential</span></strong></big>
+</td></tr>
+</table>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#grads_functions_">GrADS Functions:</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#computing_streamfunction_from_vorticity">Computing Streamfunction from Vorticity</a></li>
+		<li><a href="#computing_streamfunction_from_wind_components">Computing Streamfunction from Wind Components</a></li>
+		<li><a href="#computing_the_rotational_wind">Computing the Rotational Wind</a></li>
+		<li><a href="#computing_velocity_potential_from_divergence">Computing Velocity Potential from Divergence</a></li>
+		<li><a href="#computing_velocity_potential_from_wind_components">Computing Velocity Potential from Wind Components</a></li>
+		<li><a href="#calculating_the_divergent_wind">Calculating the Divergent Wind</a></li>
+		<li><a href="#computing_vorticity_and_divergence">Computing Vorticity and Divergence</a></li>
+	</ul>
+
+	<li><a href="#functions_provided">FUNCTIONS PROVIDED</a></li>
+	<ul>
+
+		<li><a href="#fish_uexpr_vexpr__mbdcnd_____poisson_solver"><strong>fish</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Poisson Solver</a></li>
+		<li><a href="#fish_psi_uexpr_vexpr__mbdcnd_____computes_stream_function"><strong>fish_psi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Stream Function</a></li>
+		<li><a href="#fish_chi_uexpr_vexpr__mbdcnd_____computes_velocity_potential"><strong>fish_chi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Velocity Potential</a></li>
+		<li><a href="#fish_vor_uexpr_vexpr____computes_relative_vorticity"><strong>fish_vor</strong>(<em>UEXPR,VEXPR</em>) - Computes Relative Vorticity</a></li>
+		<li><a href="#fish_div_uexpr_vexpr____computes_divergence"><strong>fish_div</strong>(<em>UEXPR,VEXPR</em>) - Computes Divergence</a></li>
+	</ul>
+
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>fish.gex - GrADS Extension Library for Calculating Streamfunction/Velocity Potential</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h3><a name="grads_functions_">GrADS Functions:</a></h3>
+<dl>
+<dt>
+<dd>
+<p><strong>fish</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Poisson Solver</p>
+</dd>
+<dt>
+<dd>
+<p><strong>fish_psi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Stream Function</p>
+</dd>
+<dt>
+<dd>
+<p><strong>fish_chi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Velocity Potential</p>
+</dd>
+<dt>
+<dd>
+<p><strong>fish_vor</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Relative Vorticity</p>
+</dd>
+<dt>
+<dd>
+<p><strong>fish_div</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Divergence</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This library provides GrADS extensions (<em>gex</em>) with functions for
+computation of streamfunction and velocity potential from zonal and
+meridional wind components:</p>
+<pre>
+   laplacian(psi) = vorticity (1)
+   laplacian(chi) = divergence (2)</pre>
+<p>where <code>psi</code> is the streamfunction and <code>chi</code> is the velocity
+potential. (See Wikipedia links below for more information on
+streamfunction/velocity potential.) The vorticity and divergence
+computation relies on functions <strong>madvu</strong> and <strong>madvv</strong> provided in the
+OpenGrADS extension <em>Libbjt</em> by B.-J. Tsuang. The Poisson equations
+(1)-(2) above are solved using the classic <code>Fishpak</code> Fortran
+library. Documentation for <code>FISHPAK</code> is given in:</p>
+<p>Swarztrauber, P. and R. Sweet, 1975: Efficient Fortran Subprograms for
+the Solution of Elliptic Partial Differential Equations. <em>Technical Note
+TN/IA-109</em>. National Center for Atmospheric Research, Boulder, Colorado 80307.</p>
+<p>All functions provided require a global, uniform lat/lon grid.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>For the following examples it is suggested that you open the following
+OPeNDAP dataset with a GFS forecast. Fire up <code>gradsdods</code> and then</p>
+<pre>
+   ga-&gt; sdfopen <a href="http://nomad2.ncep.noaa.gov:9090/dods/gfs/rotating/gfs_00z">http://nomad2.ncep.noaa.gov:9090/dods/gfs/rotating/gfs_00z</a></pre>
+<p>
+</p>
+<h2><a name="computing_streamfunction_from_vorticity">Computing Streamfunction from Vorticity</a></h2>
+<p>If you have the relative vorticity field available, say <code>vor</code>, you
+can easily compute streamfunction</p>
+<pre>
+   ga-&gt; psi = fish(vor)</pre>
+<p>
+</p>
+<h2><a name="computing_streamfunction_from_wind_components">Computing Streamfunction from Wind Components</a></h2>
+<p>The first step is to evaluate the streamfunction:</p>
+<pre>
+  ga-&gt; set lev 200
+  ga-&gt; psi = fish_psi(ugrd,vgrd)</pre>
+<p>It is often convenient to <em>center</em> the streamfunction by
+subtracting its global mean:</p>
+<pre>
+  ga-&gt; psi = psi - aave(psi,global)</pre>
+<p>We can finally display it:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display psi/1e7
+  draw title Streamfunction</pre>
+<p>
+</p>
+<h2><a name="computing_the_rotational_wind">Computing the Rotational Wind</a></h2>
+<p>Although the intrinsc GrADS function <code>cdiff</code> could be used for
+numerically diffferentiating the streamfunction, we use here functions
+<code>mvadv/muadv</code> from <em>Libbjt</em> because of its handling of the
+boundaries:</p>
+<pre>
+  ga-&gt; one = 1 + 0 * lat
+  ga-&gt; upsi = mvadv(one,psi)
+  ga-&gt; vpsi = - muadv(one,psi)</pre>
+<p>We then plot the rotational streamlines on top of the streamfunction:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display psi/1e7
+  ga-&gt; set gxout stream
+  ga-&gt; display upsi;vpsi
+  ga-&gt; draw title Streamfunction/Rotational Wind</pre>
+<p>
+</p>
+<h2><a name="computing_velocity_potential_from_divergence">Computing Velocity Potential from Divergence</a></h2>
+<p>If you have the divergence field available, say <code>div</code>, you
+can easily compute streamfunction</p>
+<pre>
+   ga-&gt; chi = fish(div)</pre>
+<p>
+</p>
+<h2><a name="computing_velocity_potential_from_wind_components">Computing Velocity Potential from Wind Components</a></h2>
+<p>Start by computing the velocity potential:</p>
+<pre>
+  ga-&gt; set lev 200
+  ga-&gt; chi = fish_chi(ugrd,vgrd)</pre>
+<p>It is often convenient to <em>center</em> the velocity potential by
+subtracting its global mean:</p>
+<pre>
+  ga-&gt; psi = psi - aave(psi,global)</pre>
+<p>We can finally display it:</p>
+<pre>
+  ga-&gt; set gxout shaded
+  ga-&gt; display chi/1e6
+  draw title Velocity</pre>
+<p>
+</p>
+<h2><a name="calculating_the_divergent_wind">Calculating the Divergent Wind</a></h2>
+<p>Although the intrinsc GrADS function <code>cdiff</code> could be used for
+numerically diffferentiating the velocity potential, we use here
+functions <code>mvadv/muadv</code> from <em>Libbjt</em> because of its handling of the
+boundaries:</p>
+<pre>
+  ga-&gt; uchi = - muadv(one,chi)
+  ga-&gt; vchi = - mvadv(one,chi)</pre>
+<p>We finally display the divergent wind as vectors on top of the
+velocity potential:</p>
+<pre>
+  ga-&gt; display chi/1e6
+  ga-&gt; set gxout vector
+  ga-&gt; set cmin 2
+  ga-&gt; set cmax 20
+  ga-&gt; display skip(uchi,6,6);vchi
+  ga-&gt; draw title Velocity Potential/Divergent Wind</pre>
+<p>
+</p>
+<h2><a name="computing_vorticity_and_divergence">Computing Vorticity and Divergence</a></h2>
+<p>As an alternative to the intrinsic GrADS functions <code>hcurl/hdivg</code>,
+functions <code>fish_vor</code> and <code>fish_div</code> uses the advention functions in
+<em>Libbjt</em> to numerically evaluate vorticity and divergence</p>
+<pre>
+   ga-&gt; vor = fish_vor(ugrd,vgrd)
+   ga-&gt; div = fish_div(ugrd,vgrd)</pre>
+<p>These functions provide a better handling of the boundaries compared
+to their intrinsic counterparts.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions_provided">FUNCTIONS PROVIDED</a></h1>
+<p>
+</p>
+<h2><a name="fish_uexpr_vexpr__mbdcnd_____poisson_solver"><strong>fish</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Poisson Solver</a></h2>
+<p>This function uses routine <code>PWSSSP</code> in <code>Fishpak</code> to solve the
+poisson equation. The default parameter <code>MBDCND=9</code> solves a Helmholts
+equation with a very small random term to provide a &quot;unique&quot; solution.</p>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+<dt><strong><a name="mbdcnd_optional" class="item"><em>MBDCND</em> - optional</a></strong></dt>
+
+<dd>
+<p>Meridional boundary condition; the default <code>MBDCND=9</code> should work in
+most cases. See <code>FISHPAK</code> documentation for additional information.</p>
+<pre>
+      MBDCND = 1 ! BC: solution specified at both poles
+      MBDCND = 5 ! BC: solution specified at TF (South Pole) and
+      MBDCND = 7 ! BC: solution specified at TS (North Pole) and
+      MBDCND = 9 ! BC: solution unspecified at both poles</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fish_psi_uexpr_vexpr__mbdcnd_____computes_stream_function"><strong>fish_psi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Stream Function</a></h2>
+<p>This function computes vorticity as in <strong>fish_vor</strong> and uses <strong>fish</strong> to
+solve the Poisson equation for the streamfunction <code>psi</code>:</p>
+<pre>
+   laplacian(psi) = vorticity</pre>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required2" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+<dt><strong><a name="mbdcnd_optional2" class="item"><em>MBDCND</em> - optional</a></strong></dt>
+
+<dd>
+<p>Meridional boundary condition; the default <code>MBDCND=9</code> should work in
+most cases. See <code>FISHPAK</code> documentation for additional information.</p>
+<pre>
+      MBDCND = 1 ! BC: solution specified at both poles
+      MBDCND = 5 ! BC: solution specified at TF (South Pole) and
+      MBDCND = 7 ! BC: solution specified at TS (North Pole) and
+      MBDCND = 9 ! BC: solution unspecified at both poles</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fish_chi_uexpr_vexpr__mbdcnd_____computes_velocity_potential"><strong>fish_chi</strong>(<em>UEXPR,VEXPR[,MBDCND]</em>) - Computes Velocity Potential</a></h2>
+<p>This function computes divergence as in <strong>fish_div</strong> and uses <strong>fish</strong> to
+solve the Poisson equation for the velocity potential <code>chi</code>:</p>
+<pre>
+   laplacian(chi) = divergence</pre>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required3" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+<dt><strong><a name="mbdcnd_optional3" class="item"><em>MBDCND</em> - optional</a></strong></dt>
+
+<dd>
+<p>Meridional boundary condition; the default <code>MBDCND=9</code> should work in
+most cases. See <code>FISHPAK</code> documentation for additional information.</p>
+<pre>
+      MBDCND = 1 ! BC: solution specified at both poles
+      MBDCND = 5 ! BC: solution specified at TF (South Pole) and
+      MBDCND = 7 ! BC: solution specified at TS (North Pole) and
+      MBDCND = 9 ! BC: solution unspecified at both poles</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fish_vor_uexpr_vexpr____computes_relative_vorticity"><strong>fish_vor</strong>(<em>UEXPR,VEXPR</em>) - Computes Relative Vorticity</a></h2>
+<p>This function computes the vorticity using the expression:</p>
+<pre>
+   vorticity = - ( madvu(v,one) - madvv(u,cosphi) / cosphi )</pre>
+<p>where <code>u</code> and <code>v</code> are the zonal/meridional wind components, <code>one</code>
+is a constant field equal to 1, and <code>cosphi</code> is the cosine of
+latitude. The functions <strong>madvu</strong> and <strong>madvv</strong> are provided in the OpenGrADS
+extension library <em>Libbjt</em>.</p>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required4" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fish_div_uexpr_vexpr____computes_divergence"><strong>fish_div</strong>(<em>UEXPR,VEXPR</em>) - Computes Divergence</a></h2>
+<p>This function computes the divergence using the expression:</p>
+<pre>
+   divergence = - ( madvu(u,one) + madvv(v,cosphi) / cosphi )</pre>
+<p>where <code>u</code> and <code>v</code> are the zonal/meridional wind components, <code>one</code>
+is a constant field equal to 1, and <code>cosphi</code> is the cosine of
+latitude. The functions <strong>madvu</strong> and <strong>madvv</strong> are provided in the OpenGrADS
+extension library <em>Libbjt</em>.</p>
+<dl>
+<dt><strong><a name="uexpr_vexpr_required5" class="item"><em>UEXPR,VEXPR</em> - required</a></strong></dt>
+
+<dd>
+<p>GrADS expressions with zonal and meridional wind components</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>The function <code>fish</code> assumes a global and uniform longitude/latitude grid. If
+your grid is not uniform, consider using <code>re()</code> for interpolating to
+a uniform grid. When doing so, do not make the poles gridpoints. (The
+function <code>muadv</code> from <em>Libbjt</em> produces undefined values if the first
+and last latitudinal gridpoints are at the poles.)</p>
+<p>Undefined values are handled in a less than idea way by the Poisson
+solver <code>fish</code>. If undefined values of vortivity/divergence occur at
+the first and last latitudinal gridpoint, the following <em>polar fix</em>
+is applied depending on whether these gridpoints are the poles or not:</p>
+<p>Notice that <code>fish()</code> becomes numerically unstable for horizontal
+resolutions finer that 1/2 degrees or so. In such cases use the
+spherical harmonic based <strong>sh_fish</strong> given in extension <em>shfilt</em>.</p>
+<dl>
+<dt><strong><a name="poles_are_gridpoints" class="item">Poles are gridpoints</a></strong></dt>
+
+<dd>
+<p>If the first and last latitudinal gridpoints are at the poles, the
+zonal average of the adjascent latitudinal band is computed and this
+zonal averaged value is used at the pole.</p>
+</dd>
+<dt><strong><a name="poles_are_not_gridpoints" class="item">Poles are not gridpoints</a></strong></dt>
+
+<dd>
+<p>The value at the same longitude in the adjascent latitudinal band is
+used.</p>
+</dd>
+</dl>
+<p>For interior points, undefined values are set to zero before solving
+the Poisson equation.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<ul>
+<li>
+<p><a href="http://opengrads.org/">http://opengrads.org/</a> - OpenGrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://opengrads.org/wiki/index.php?title=User_Defined_Extensions">http://opengrads.org/wiki/index.php</a> - OpenGrADS User Defined Extensions</p>
+</li>
+<li>
+<p><a href="http://www.iges.org/grads/">http://www.iges.org/grads/</a> - Official GrADS Home Page</p>
+</li>
+<li>
+<p><a href="http://en.wikipedia.org/wiki/Velocity_potential">http://en.wikipedia.org/wiki/Velocity_potential</a> - Velocity Potential definition on Wikipedia.</p>
+</li>
+<li>
+<p><a href="http://en.wikipedia.org/wiki/Stream_function">http://en.wikipedia.org/wiki/Stream_function</a> - Stream function
+definition on Wikipedia.</p>
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Arlindo da Silva (<a href="mailto:dasilva@opengrads.org">dasilva@opengrads.org</a>)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2007-2008 Arlindo da Silva; All Rights Reserved.</p>
+<p>This is free software; see the source for copying conditions. There is
+NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" valign="middle">
+<big><strong><span class="block">&nbsp;fish.gex - GrADS Extension Library for Calculating Streamfunction/Velocity Potential</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

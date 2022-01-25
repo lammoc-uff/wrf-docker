@@ -1,0 +1,32 @@
+#
+# Sample GrADS table for Dynamic User Defined Commands/Functions.
+# There are 2 types of extensions: 
+#
+#    udc   user defined commands
+#    udf   user defined functions
+#
+# This feature requires OpenGrADS v2.0.a4.oga.3 or later.
+#.................................................................
+
+#      A
+#      P   GrADS     Library      Library                 Short
+# Type I  Function   Function      Path                Description
+# ---- - ---------- ---------- -------------- ------------------------------- 
+   udc 0  " "        " "        " "    "Mike Fiorino's Extensions"
+   udc 0   mfhilo    c_mfhilo   ^libmf.gex    "Find max/min or H/L in 2D field"
+   udc 0   tcprop    c_tcprop   ^libmf.gex    "Properties radinf from central lon/lat"
+   udc 0   tcxy2rt   c_tcxy2rt  ^libmf.gex    "cartesian -> cylindrical coords results only scriptvar RESULT"
+   udc 0   grhist    c_grhist   ^libmf.gex    "histogram of expr"
+#
+   udf  0  " "        " "        " "    "Mike Fiorino's Extensions"
+   udf 0   smth2d    f_smth2d   ^libmf.gex    "Shuman smoother/de-smoother"
+   udf 0   xy2rt     f_xy2rt    ^libmf.gex    "cartesian -> cylindrical coord"
+   udf 0   uv2trw    f_uv2trw   ^libmf.gex    "Find radial/tangential velocity"
+   udf 0   re2       f_re2      ^libmf.gex    "General interpolator (regrid2)"
+   udf 0   esmrf     f_esmrf    ^libmf.gex    "Saturation vapor pressure (old MRF)"
+   udf 0   linreg    f_linreg   ^libmf.gex    "Linear regression: mx + b"
+#..............................................................................
+
+
+
+
