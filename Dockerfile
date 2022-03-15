@@ -5,7 +5,7 @@ FROM gcc:8.5.0
 LABEL version="0.0.1"
 LABEL description="Instalação do modelo WRFv4 pelo Laboratório de Monitoramento \
 e Modelagem de Sistemas Climáticos (LaMMoC) da Universidade Federal Fluminense (UFF)"
-LABEL maintainer="ericmiguel@id.uff.br"
+LABEL maintainers="ericmiguel@id.uff.br, louisefonseca@id.uff.br, rodrigocaldas@id.uff.br"
 
 COPY paralelo /paralelo
 COPY scripts /scripts
